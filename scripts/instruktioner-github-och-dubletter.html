@@ -105,41 +105,53 @@
   <main class="wrap">
     <section class="hero">
       <h1>Din superenkla fusklapp: GitHub + Dubbletter</h1>
-      <p class="small">Skriven sa enkelt som mojligt. Tank sa har: du har en leksakslada (projektet), och GitHub ar din extra trygg lada pa internet.</p>
-      <p class="small"><strong>Tips:</strong> Oppna terminal i VS Code med <code>Ctrl+o</code> (knappen med o/oe pa svenskt tangentbord).</p>
+      <p class="small">Skriven så enkelt som möjligt. Tänk så här: du har en leksakslåda (projektet), och GitHub är din extra trygga låda på internet.</p>
+      <p class="small"><strong>Tips:</strong> Öppna terminal i VS Code med <code>Ctrl+ö</code>.</p>
     </section>
 
     <section class="card">
-      <span class="tag">VARJE GANG DU HAR ANDRAT KOD</span>
-      <h2>Skicka upp nya andringar till GitHub</h2>
+      <span class="tag">VARJE GÅNG DU HAR ÄNDRAT KOD</span>
+      <h2>Skicka upp nya ändringar till GitHub</h2>
       <ol>
-        <li>Samla alla andringar.</li>
+        <li>Samla alla ändringar.</li>
         <li>Skriv en kort text om vad du gjorde.</li>
         <li>Skicka upp till GitHub.</li>
       </ol>
       <div class="cmd">
         <code id="cmd-push">git add .
-git commit -m "Min andring"
+git commit -m "Min ändring"
 git push</code>
         <button data-copy="cmd-push">Kopiera</button>
       </div>
-      <p class="note">Byt texten <code>"Min andring"</code> till vad du faktiskt gjorde.</p>
+      <p class="note">Byt texten <code>"Min ändring"</code> till vad du faktiskt gjorde.</p>
+    </section>
+
+    <section class="card">
+      <span class="tag">OM DET BLIR FEL (EXIT CODE 1)</span>
+      <h2>Vad hände nyss? Enkel förklaring</h2>
+      <p class="small">Du gjorde inget farligt. Din commit blev sparad lokalt, men Git visste inte vart den skulle skickas första gången på denna branch.</p>
+      <p class="small">Lösning: koppla branchen till GitHub en gång. Sen räcker vanligt <code>git push</code>.</p>
+      <div class="cmd">
+        <code id="cmd-upstream">git push --set-upstream origin main</code>
+        <button data-copy="cmd-upstream">Kopiera</button>
+      </div>
+      <p class="note">Efter detta: kör vanligt flöde igen: <code>git add .</code> + <code>git commit -m "..."</code> + <code>git push</code>.</p>
     </section>
 
     <section class="card">
       <span class="tag">KOLLA DUBLETTER</span>
-      <h2>Se om samma pizza_namn finns flera ganger i samma pizzeria</h2>
+      <h2>Se om samma pizza_namn finns flera gånger i samma pizzeria</h2>
       <div class="cmd">
         <code id="cmd-check">node scripts/hitta-dubletter.js</code>
         <button data-copy="cmd-check">Kopiera</button>
       </div>
-      <p class="note">Detta uppdaterar ocksa rapporten: <code>scripts/dubletter-rapport.html</code></p>
+      <p class="note">Detta uppdaterar också rapporten: <code>scripts/dubletter-rapport.html</code></p>
     </section>
 
     <section class="card">
       <span class="tag">TA BORT DUBLETTER AUTOMATISKT</span>
       <h2>Auto-fix av dubbletter</h2>
-      <p class="small"><span class="warn">Viktigt:</span> Scriptet behaller forsta posten och tar bort resten.</p>
+      <p class="small"><span class="warn">Viktigt:</span> Scriptet behåller första posten och tar bort resten.</p>
       <div class="cmd">
         <code id="cmd-fix">node scripts/hitta-dubletter.js --fixa</code>
         <button data-copy="cmd-fix">Kopiera</button>
@@ -148,8 +160,8 @@ git push</code>
     </section>
 
     <section class="card">
-      <span class="tag">OPPNA RAPPORTEN DIREKT</span>
-      <h2>Visa rapporten i webblasaren</h2>
+      <span class="tag">ÖPPNA RAPPORTEN DIREKT</span>
+      <h2>Visa rapporten i webbläsaren</h2>
       <div class="cmd">
         <code id="cmd-open">start scripts/dubletter-rapport.html</code>
         <button data-copy="cmd-open">Kopiera</button>
@@ -157,9 +169,9 @@ git push</code>
     </section>
 
     <section class="card">
-      <span class="tag">OM DU VILL ANGRA EN AUTO-FIX</span>
+      <span class="tag">OM DU VILL ÅNGRA EN AUTO-FIX</span>
       <h2>Byt tillbaka till senaste backup</h2>
-      <p class="small">1) Se backup-filer. 2) Kopiera filnamnet. 3) Ersatt pizzor.json med backup-filen.</p>
+      <p class="small">1) Se backup-filer. 2) Kopiera filnamnet. 3) Ersätt pizzor.json med backup-filen.</p>
       <div class="cmd">
         <code id="cmd-list-backup">Get-ChildItem data\*.backup-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 5 Name, LastWriteTime</code>
         <button data-copy="cmd-list-backup">Kopiera</button>
@@ -173,11 +185,11 @@ git push</code>
 
     <section class="card">
       <span class="tag">LITEN MINNESREGEL</span>
-      <h2>Som for en 5-aring</h2>
+      <h2>Som för en 5-åring</h2>
       <ol>
         <li>Du bygger sandslott (kodar lokalt).</li>
-        <li>Du tar foto pa sandslottet (git commit).</li>
-        <li>Du lagger fotot i molnlada (git push till GitHub).</li>
+        <li>Du tar foto på sandslottet (git commit).</li>
+        <li>Du lägger fotot i molnlåda (git push till GitHub).</li>
         <li>Om sandslottet blir konstigt: titta i rapporten och fixa.</li>
       </ol>
     </section>
