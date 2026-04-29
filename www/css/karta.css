@@ -1724,6 +1724,21 @@
   }
 }
 
+  html.native-app .leaflet-control-zoom {
+    display: none !important;
+  }
+
+  html.native-app #karta-app-topbar {
+    display: none !important;
+  }
+
+  html.native-app #karta-filter-knapp {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 14px);
+    left: 16px;
+    z-index: 1210;
+  }
+
   /* ============================================================
      App Topbar
      ============================================================ */
@@ -1994,23 +2009,24 @@
   /* Center-knapp: Pizzagubbe */
   .karta-bnav-item--center {
     flex: 1.3;
-    color: transparent;
+    color: #ffffff;
+    gap: 0;
   }
 
   .karta-bnav-center-ring {
     width: 54px;
     height: 54px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #d53838, #b82525);
-    border: 3px solid rgba(255, 255, 255, 0.92);
+    background: linear-gradient(145deg, #27c94f, #169c38);
+    border: 4px solid rgba(15, 15, 15, 0.96);
     box-shadow:
-      0 4px 20px rgba(205, 33, 42, 0.6),
-      0 0 0 1px rgba(205, 33, 42, 0.3);
+      0 10px 28px rgba(21, 170, 58, 0.42),
+      0 0 0 1px rgba(21, 170, 58, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    top: -10px;
+    top: -16px;
     transition: transform 0.15s, box-shadow 0.15s;
   }
 
@@ -2018,15 +2034,15 @@
   .karta-bnav-item--center:focus .karta-bnav-center-ring {
     transform: scale(1.1) translateY(-2px);
     box-shadow:
-      0 8px 28px rgba(205, 33, 42, 0.7),
-      0 0 0 1px rgba(205, 33, 42, 0.4);
+      0 12px 30px rgba(21, 170, 58, 0.52),
+      0 0 0 1px rgba(21, 170, 58, 0.32);
   }
 
-  .karta-bnav-center-ring img {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  .karta-bnav-center-ring svg {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.28));
   }
 
   /* iPhone safe area */

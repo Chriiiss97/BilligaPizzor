@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "pizzeria": "Nisses Pizzeria",
     "adress": "Hagabäcksleden 9, 428 32 Kållered",
@@ -17518,8 +17518,7 @@
     "telefon": "0317103811",
     "hemsida": "https://www.pizzeriamums.se/pedagogen/",
     "oppettider": {
-      "mån-fre (lunch)": "11:00-14:00",
-      "ons-fre": "15:00-21:00",
+      "mån-fre": "11:00-21:00",
       "lör-sön": "12:00-21:00"
     },
     "pizza_namn": "Margherita (vegetarisk)",

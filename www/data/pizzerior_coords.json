@@ -172,5 +172,80 @@
     "adress": "Mölndalsvägen 89E, 412 84 Göteborg",
     "lat": 57.68012699128313,
     "lng": 12.002379095008312
+  },
+   {
+    "pizzeria": "Domino's Pizza Johanneberg",
+    "adress": "Frida Hjertbergs Gata 10, 412 81 Göteborg",
+    "lat": 57.68775561529044,
+    "lng": 11.986673352098975
+  },
+  {
+    "pizzeria": "Annebergs Pizza & Grill",
+    "adress": "Älvsåkersvägen 2, 434 96 Kungsbacka",
+    "lat": 57.53844970566255,
+    "lng": 12.10290348126579
+  },
+  {
+    "pizzeria": "Björkris Pizzeria",
+    "adress": "Björkrisvägen 30, 434 60 Kungsbacka",
+    "lat": 57.51810593642173,
+    "lng": 12.076973546807265
+  },
+   {
+    "pizzeria": "Pizzeria Gibraltar",
+    "adress": "Gibraltargatan 36, 412 58 Göteborg",
+    "lat": 57.68961029418494,
+    "lng": 11.980716942780623
+  },
+  {
+    "pizzeria": "Pizzeria Peperoni",
+    "adress": "Rosensköldsgatan 1, 412 58 Göteborg",
+    "lat": 57.69023189172789,
+    "lng": 11.982351952908068
+  },
+  {
+    "pizzeria": "Svennepizzan",
+    "adress": "Eklandagatan 41B, 412 61 Göteborg",
+    "lat": 57.69101486533492,
+    "lng": 11.98779769344178
+  },
+  {
+    "pizzeria": "I Love Pizza  Högsbo 421",
+    "adress": "Lona Knapes g 1, 421 32 Västra Frölunda",
+    "lat": 57.65072481029466,
+    "lng": 11.948571378249213
+  },
+   {
+    "pizzeria": "GIGI pizzeria, cucina & bar",
+    "adress": "Radiov. 1, 421 33 Västra Frölunda",
+    "lat": 57.65722496163912,
+    "lng": 11.93229370141011
+  },
+  {
+    "pizzeria": "Saray grill & kök",
+    "adress": "Datavägen 15, 436 32 Askim",
+    "lat": 57.640374763510295,
+    "lng": 11.952096794223007
+  },
+  {
+    "pizzeria": "Vivaldi Pizzeria",
+    "adress": "Askims Backaväg 1, 436 39 Askim",
+    "lat": 57.63517404238591,
+    "lng": 11.94181028219977
+  },
+  {
+    "pizzeria": "Gatsby Pizzeria",
+    "adress": "Långlyckevägen 12, 436 43 Askim",
+    "lat": 57.63374345784059,
+    "lng": 11.936871898052026
+  },
+  {
+    "pizzeria": "Sannegårdens Pizzeria Hovås",
+    "adress": "Klåvavägen 20, 436 55 Hovås",
+    "lat": 57.608459844762514,
+    "lng": 11.947214534950406
   }
+  
+  
+
 ]

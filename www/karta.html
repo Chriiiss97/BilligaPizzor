@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
@@ -21,6 +21,15 @@
 
   <link rel="stylesheet" href="/css/index.css" />
   <link rel="stylesheet" href="/css/karta.css" />
+  <script>
+    (function () {
+      try {
+        if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
+          document.documentElement.classList.add('native-app');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <script type="application/ld+json">
 {
@@ -407,9 +416,6 @@
           <input type="text" id="karta-sok" placeholder="Sök pizzeria, område eller stad…" autocomplete="off" />
           <ul id="karta-sok-resultat"></ul>
         </div>
-        <button id="karta-narmast-knapp" onclick="kartaNarmastMig()" type="button" aria-label="Hämta min position">
-          📍 Min position
-        </button>
       </div>
       <div id="karta-container"></div>
       <div id="karta-info">Laddar pizzerior…</div>
@@ -425,6 +431,12 @@
         <a href="/pizzerior" class="karta-bnav-item" aria-label="Pizzerior">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           <span>Pizzerior</span>
+        </a>
+        <a href="/karta" class="karta-bnav-item karta-bnav-item--center is-aktiv" aria-label="Karta">
+          <span class="karta-bnav-center-ring" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5l3.8 6.2-6.2-3.8z" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span>Karta</span>
         </a>
         <a href="/statistik" class="karta-bnav-item" aria-label="Statistik">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
@@ -446,11 +458,23 @@
 
   <script>
     (function () {
-      // Positionera kartan under navbaren
+      if (!document.documentElement.classList.contains('native-app')) return;
+
+      var filterKnapp = document.getElementById('karta-filter-knapp');
+      if (filterKnapp) {
+        document.body.appendChild(filterKnapp);
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      // Positionera kartan — i Capacitor-appen börjar kartan från toppen
+      var isApp = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
       var appTopbar = document.getElementById('karta-app-topbar');
-      var navH = appTopbar ? appTopbar.getBoundingClientRect().height : 56;
-      if (navH === 0) navH = 56;
-      var bottomNavH = 72;
+      var navH = isApp ? 0 : (appTopbar ? appTopbar.getBoundingClientRect().height : 56);
+      if (!isApp && navH === 0) navH = 56;
+      var bottomNavH = isApp ? 64 : 72;
       var mapEl = document.getElementById('karta-container');
       mapEl.style.position = 'fixed';
       mapEl.style.top = navH + 'px';
@@ -1120,9 +1144,10 @@
         var sida1 = '<div class="karta-popup-sida karta-popup-sida--aktiv">' +
           namnRad +
           '<p class="karta-popup-adress">' + (obj.adress || '') + '</p>' +
+          prisRad +
           oppetRad +
           menyKnapp +
-          prisRad +
+          (ringKnapp ? ringKnapp : '') +
           distRad +
           utilRad +
           '</div>';
@@ -1130,7 +1155,6 @@
         var sidaVag = '<div class="karta-popup-sida">' +
           oppetTiderHtml +
           '<div class="karta-popup-knappar">' +
-          ringKnapp +
           '<a href="' + mapsUrl + '" class="karta-popup-btn karta-popup-btn--maps" target="_blank" rel="noopener noreferrer">🗺 Vägbeskrivning (' + modeText + ')</a>' +
           '</div>' +
           '</div>';
@@ -2140,5 +2164,6 @@
   </div>
 </footer>
 
+<script src="/js/analytics.js"></script>
 </body>
 </html>

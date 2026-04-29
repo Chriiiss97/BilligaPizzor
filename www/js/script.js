@@ -3114,6 +3114,193 @@ function initStickyMobileCta() {
     visaVidScroll();
 }
 
+function hamtaAktivAppNavSektion() {
+    const path = (window.location.pathname || '').toLowerCase();
+
+    if (path.includes('/karta')) return 'karta';
+    if (path.includes('/statistik')) return 'statistik';
+    if (path.includes('/om-oss')) return 'om-oss';
+    if (path.includes('/pizzerior/')) return 'pizzerior';
+    if (path.includes('/pizzerior')) return 'pizzerior';
+    return 'pizzor';
+}
+
+function injiceraGemensamAppNavStil() {
+    if (document.getElementById('gemensam-app-nav-stil')) return;
+
+    const style = document.createElement('style');
+    style.id = 'gemensam-app-nav-stil';
+    style.textContent = `
+html.native-app-shell .navbar,
+html.native-app-shell .bottom-nav,
+html.native-app-shell #app-tab-bar {
+    display: none !important;
+}
+
+html.native-app-shell body {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+#native-app-bottom-nav,
+#karta-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    z-index: 1005;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 4px;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.45);
+}
+
+#native-app-bottom-nav .karta-bnav-item,
+#karta-bottom-nav .karta-bnav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    padding: 6px 2px;
+    color: rgba(255, 255, 255, 0.42);
+    text-decoration: none;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    min-height: 56px;
+    font-family: inherit;
+}
+
+#native-app-bottom-nav .karta-bnav-item:hover,
+#native-app-bottom-nav .karta-bnav-item:focus,
+#native-app-bottom-nav .karta-bnav-item.is-aktiv,
+#karta-bottom-nav .karta-bnav-item:hover,
+#karta-bottom-nav .karta-bnav-item:focus,
+#karta-bottom-nav .karta-bnav-item.is-aktiv {
+    color: #fff;
+    outline: none;
+}
+
+#native-app-bottom-nav .karta-bnav-item svg,
+#karta-bottom-nav .karta-bnav-item svg {
+    transition: transform 0.15s;
+    flex-shrink: 0;
+}
+
+#native-app-bottom-nav .karta-bnav-item:hover svg,
+#native-app-bottom-nav .karta-bnav-item.is-aktiv svg,
+#karta-bottom-nav .karta-bnav-item:hover svg,
+#karta-bottom-nav .karta-bnav-item.is-aktiv svg {
+    transform: scale(1.12);
+}
+
+#native-app-bottom-nav .karta-bnav-item--center,
+#karta-bottom-nav .karta-bnav-item--center {
+    flex: 1.3;
+    color: #ffffff;
+    gap: 0;
+}
+
+#native-app-bottom-nav .karta-bnav-center-ring,
+#karta-bottom-nav .karta-bnav-center-ring {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #27c94f, #169c38);
+    border: 4px solid rgba(15, 15, 15, 0.96);
+    box-shadow: 0 10px 28px rgba(21, 170, 58, 0.42), 0 0 0 1px rgba(21, 170, 58, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -16px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+#native-app-bottom-nav .karta-bnav-item--center:hover .karta-bnav-center-ring,
+#native-app-bottom-nav .karta-bnav-item--center:focus .karta-bnav-center-ring,
+#karta-bottom-nav .karta-bnav-item--center:hover .karta-bnav-center-ring,
+#karta-bottom-nav .karta-bnav-item--center:focus .karta-bnav-center-ring {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(21, 170, 58, 0.52), 0 0 0 1px rgba(21, 170, 58, 0.32);
+}
+
+#native-app-bottom-nav .karta-bnav-center-ring svg,
+#karta-bottom-nav .karta-bnav-center-ring svg {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.28));
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    #native-app-bottom-nav,
+    #karta-bottom-nav {
+        height: calc(72px + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+`;
+
+    document.head.appendChild(style);
+}
+
+function skapaGemensamAppNav() {
+    if (!arAppWebViewMiljo()) return;
+
+    document.documentElement.classList.add('native-app-shell');
+    injiceraGemensamAppNavStil();
+
+    if (document.getElementById('karta-bottom-nav') || document.getElementById('native-app-bottom-nav')) {
+        return;
+    }
+
+    const aktiv = hamtaAktivAppNavSektion();
+    const nav = document.createElement('nav');
+    nav.id = 'native-app-bottom-nav';
+    nav.setAttribute('aria-label', 'Appnavigation');
+
+    const href = (path) => arLokalUtveckling() ? hamtaLokalHref(path) : path;
+
+    nav.innerHTML = `
+        <a href="${href('/')}" class="karta-bnav-item ${aktiv === 'pizzor' ? 'is-aktiv' : ''}" aria-label="Pizzor">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+          <span>Pizzor</span>
+        </a>
+        <a href="${href('/pizzerior')}" class="karta-bnav-item ${aktiv === 'pizzerior' ? 'is-aktiv' : ''}" aria-label="Pizzerior">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span>Pizzerior</span>
+        </a>
+        <a href="${href('/karta')}" class="karta-bnav-item karta-bnav-item--center ${aktiv === 'karta' ? 'is-aktiv' : ''}" aria-label="Karta">
+          <span class="karta-bnav-center-ring" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5l3.8 6.2-6.2-3.8z" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span>Karta</span>
+        </a>
+        <a href="${href('/statistik')}" class="karta-bnav-item ${aktiv === 'statistik' ? 'is-aktiv' : ''}" aria-label="Statistik">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
+          <span>Statistik</span>
+        </a>
+        <a href="${href('/om-oss')}" class="karta-bnav-item ${aktiv === 'om-oss' ? 'is-aktiv' : ''}" aria-label="Om oss">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Om oss</span>
+        </a>
+    `;
+
+    document.body.appendChild(nav);
+}
+
 // --- App Bootstrap ---
 // Körs när sidan laddas - kollar om vi ska visa pop-upen
 window.addEventListener("load", function() {
@@ -3126,6 +3313,7 @@ window.addEventListener("load", function() {
     initSchemaGenerellSida();
     initPrisSlider();
     initTangentbordsGenvag();
+    skapaGemensamAppNav();
     gtmInitNavbarTracking(); // GTM tracking
     gtmInitPizzaKortTracking(); // GTM tracking
     window.addEventListener('scroll', gtmTrackScrollDjup); // GTM tracking
@@ -3137,6 +3325,19 @@ window.addEventListener("load", function() {
 
 function registrerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
+
+    const arNativeApp = !!(
+        window.Capacitor &&
+        typeof window.Capacitor.isNativePlatform === 'function' &&
+        window.Capacitor.isNativePlatform()
+    );
+
+    if (arNativeApp) {
+        navigator.serviceWorker.getRegistrations().then((registreringar) => {
+            registreringar.forEach((registrering) => registrering.unregister());
+        });
+        return;
+    }
 
     navigator.serviceWorker
         .register('/service-worker.js', { scope: '/' })

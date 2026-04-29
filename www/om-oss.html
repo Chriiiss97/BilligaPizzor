@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="sv">
   <head>
     <meta charset="UTF-8" />
@@ -19,6 +19,8 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="css/om-oss.css" />
+    <link rel="stylesheet" href="/css/app-native.css" />
+    <script>(function(){try{if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){document.documentElement.classList.add('app-native-early');}}catch(e){}})();</script>
   </head>
   <body class="om-oss-page">
     <nav class="navbar">
@@ -195,6 +197,8 @@
   </div>
 </footer>
 
+  <script src="/js/app-native.js"></script>
+<script src="/js/analytics.js"></script>
 </body>
 </html>
 

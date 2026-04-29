@@ -1,0 +1,353 @@
+/* ================================================================
+   APP-NATIVE.CSS
+   Laddas på alla sidor men aktiveras BARA när body har klassen
+   .app-native — det vill säga enbart i Capacitor-appen.
+   Webbversionen påverkas inte alls.
+   ================================================================ */
+
+/* --- Dölj webb-navbar i appen (tidigt via html-klass, innan JS hinner köra) */
+html.app-native-early .navbar,
+body.app-native .navbar {
+  display: none !important;
+}
+
+/* --- Dölj hamburger-meny-knapp i appen ------------------------ */
+body.app-native .hamburger-ikon {
+  display: none !important;
+}
+
+/* --- Dölj karta-topbar i appen (FB/IG/logo-baren) ------------ */
+html.app-native-early #karta-app-topbar,
+body.app-native #karta-app-topbar {
+  display: none !important;
+}
+
+/* --- Dölj webb-kontroller på kartan (sök + min position) ----- */
+html.app-native-early #karta-kontroller,
+body.app-native #karta-kontroller {
+  display: none !important;
+}
+/* Dölj speciellt den gamla Min position-knappen */
+html.app-native-early #karta-narmast-knapp,
+body.app-native #karta-narmast-knapp {
+  display: none !important;
+}
+/* --- Dölj webb-footer-nav (bottom-nav med FB/IG + länkar) ----- */
+html.app-native-early .bottom-nav,
+body.app-native .bottom-nav {
+  display: none !important;
+}
+
+/* --- Filter-knappen flyter fritt uppe till vänster på kartan - */
+body.app-native #karta-filter-knapp {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+  left: 16px !important;
+  z-index: 9000 !important;
+  display: flex !important;
+}
+
+/* --- Dölj zoom-knappar (+/-) i appen ------------------------- */
+html.app-native-early .leaflet-control-zoom,
+body.app-native .leaflet-control-zoom {
+  display: none !important;
+}
+
+/* --- Safe area överst (t.ex. notch) --------------------------- */
+body.app-native {
+  --app-tab-height: 64px;
+  padding-top: env(safe-area-inset-top, 0px);
+  /* Ge plats för tab bar längst ned */
+  padding-bottom: calc(var(--app-tab-height) + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* --- Karta-sidan: flytta kartyta upp för att tab bar ska synas */
+body.app-native #karta-yta {
+  bottom: calc(var(--app-tab-height) + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* ================================================================
+   APP: FLYTANDE SÖKFÄLT - DÖLJ (enkel tab-bar layout istället)
+   ================================================================ */
+
+body.app-native #app-sok-knapp,
+body.app-native #app-sok-falt,
+body.app-native #app-sok-resultat {
+  display: none !important;
+}
+
+/* --- Min position-knapp: DÖLJ (keepas i tab bar center istället) --- */
+body.app-native #app-position-knapp {
+  display: none !important;
+}
+
+   ================================================================ */
+#app-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--app-tab-height, 64px);
+  background: #161616;
+  border-top: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 10000;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -2px 24px rgba(0, 0, 0, 0.7);
+  /* Hindra "gummiband"-scroll att visa bakgrunden */
+  overscroll-behavior: none;
+}
+
+/* --- Enskild tab-knapp ---------------------------------------- */
+.app-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #565656;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  padding: 8px 2px;
+  flex: 1;
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app-tab-item svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.15s ease;
+}
+
+/* Aktiv tab */
+.app-tab-item.active {
+  color: #1f7a4c;
+}
+
+/* Tryck-feedback */
+.app-tab-item:active {
+  opacity: 0.6;
+}
+
+/* --- Center-tab (Karta) — upphöjd cirkel ---------------------- */
+.app-tab-center {
+  position: relative;
+  top: -16px;
+  width: 62px;
+  height: 62px;
+  background: #1f7a4c;
+  border-radius: 50%;
+  flex: none;
+  color: #ffffff !important;
+  padding: 0;
+  /* Ring runt cirkeln som matchar bar-bakgrunden */
+  box-shadow:
+    0 0 0 4px #161616,
+    0 6px 24px rgba(31, 122, 76, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.app-tab-center:active {
+  transform: scale(0.93);
+  opacity: 1;
+}
+
+.app-tab-center svg {
+  width: 28px;
+  height: 28px;
+  stroke: #ffffff !important;
+}
+
+/* Dölj textetiketten inuti center-cirkeln (ser bättre ut utan) */
+.app-tab-center .app-tab-label {
+  display: none;
+}
+
+/* --- Aktiv center-tab (om kartan är aktiv sida) --------------- */
+.app-tab-center.active {
+  background: #15aa3a;
+  box-shadow:
+    0 0 0 4px #161616,
+    0 6px 28px rgba(21, 170, 58, 0.65),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+  color: #ffffff !important;
+}
+
+/* ================================================================
+   APP: DÖLJ HERO-SEKTION PÅ STARTSIDAN
+   ================================================================ */
+html.app-native-early .hero-sektion,
+body.app-native .hero-sektion {
+  display: none !important;
+}
+
+/* ================================================================
+   APP: KOMPAKTARE MELLANRUM (startsidan)
+   ================================================================ */
+
+/* Stats-bar: lite mindre vertikal padding */
+body.app-native .stats-bar {
+  padding: 7px 16px;
+}
+
+/* Söksektion: dra ner toppadding rejält */
+body.app-native #huvud-sok-sektion {
+  padding: 10px 16px 8px;
+}
+
+/* Kategori-strip: tätare */
+body.app-native .kategori-strip {
+  padding: 6px 0 2px;
+}
+body.app-native .kategori-strip-inner {
+  gap: 8px;
+  padding: 2px 4px 8px;
+}
+
+/* Kategori-chips: lite mindre ikoncirkel */
+body.app-native .kategori-chip-ikon {
+  width: 58px;
+  height: 58px;
+  font-size: 1.65rem;
+}
+body.app-native .kategori-chip {
+  gap: 5px;
+}
+
+/* --- AI-hint: tätare --- */
+body.app-native .ai-hint-text {
+  margin-top: 4px;
+}
+
+/* --- Filter-knappar / sortering: tätare --- */
+body.app-native .filter-bottom-row {
+  margin-top: 8px !important;
+  padding-top: 10px !important;
+}
+
+/* --- Gap mellan "Hittade X pizzor" och filtersektionen --- */
+body.app-native #filter-sektion {
+  margin-top: 8px;
+}
+
+/* --- Mindre padding inuti varje filter-grupp --- */
+body.app-native .filter-grupp {
+  padding: 12px 16px;
+}
+
+/* --- Pris-sektion: mindre intern luft --- */
+body.app-native #pris-slider-wrap {
+  padding: 4px 6px 8px;
+}
+
+body.app-native .pris-slider-header {
+  margin-bottom: 8px;
+}
+
+body.app-native .pris-slider-track-wrap {
+  margin: 10px 0 6px;
+}
+
+body.app-native .pris-slider-zoner {
+  margin-top: 8px;
+}
+
+/* --- "?" info-knapp ------------------------------------------- */
+#app-info-knapp {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  right: 14px;
+  z-index: 9500;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(31, 122, 76, 0.92);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- Info-modal overlay --------------------------------------- */
+#app-info-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+#app-info-modal.synlig {
+  opacity: 1;
+  pointer-events: auto;
+}
+#app-info-modal-box {
+  background: #1a1a1a;
+  border-radius: 20px 20px 0 0;
+  padding: 24px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(30px);
+  transition: transform 0.25s ease;
+  text-align: center;
+}
+#app-info-modal.synlig #app-info-modal-box {
+  transform: translateY(0);
+}
+#app-info-modal-box img {
+  width: 140px;
+  height: auto;
+  margin: 0 auto 16px;
+  display: block;
+}
+#app-info-modal-box h2 {
+  color: #fff;
+  font-size: 1.15rem;
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+#app-info-modal-box p {
+  color: #bbb;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+#app-info-modal-stang {
+  margin-top: 18px;
+  background: #1f7a4c;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
