@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "Set-Content": true,
+        "java": true,
+        "Test-Path": true,
+        "&": true
+    }
+}

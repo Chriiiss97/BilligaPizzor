@@ -1,0 +1,251 @@
+[
+  {
+    "pizzeria": "Almedal restaurang och pizzeria",
+    "adress": "Ebbe Lieberathsgatan 18C, 412 83 Göteborg",
+    "lat": 57.678780560856765,
+    "lng": 12.001555746970997
+  },
+  {
+    "pizzeria": "Bella Ciao Pizzeria Lindome",
+    "adress": "Almvägen 1, 437 40 Lindome",
+    "lat": 57.57625943210764,
+    "lng": 12.077626188486716
+  },
+  {
+    "pizzeria": "Bergmans Pizza (Endast avhämtning)",
+    "adress": "Bergmansgatan 2, 431 30 Mölndal",
+    "lat": 57.65645205917292,
+    "lng": 12.015788913408048
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "adress": "Toltorpsgatan 100, 431 47 Mölndal",
+    "lat": 57.66295486513238,
+    "lng": 11.996615599497552
+  },
+  {
+    "pizzeria": "Dorado pizzaplace",
+    "adress": "Fridkullagatan 20A, 412 65 Göteborg",
+    "lat": 57.68081080151207,
+    "lng": 11.988372750536955
+  },
+  {
+    "pizzeria": "Dr Fries Pizzeria",
+    "adress": "Doktor Fries Torg 5, 413 23 Göteborg",
+    "lat": 57.68384051534883,
+    "lng": 11.972044906954313
+  },
+  {
+    "pizzeria": "Eklanda Krog och Pizzeria",
+    "adress": "Eklanda Gård 2, 431 59 Mölndal",
+    "lat": 57.6509592941336,
+    "lng": 11.964736290563355
+  },
+  {
+    "pizzeria": "Grand Krokslätt",
+    "adress": "Fredåsgatan 22, 431 67 Mölndal",
+    "lat": 57.67400930213774,
+    "lng": 12.00747381950892
+  },
+  {
+    "pizzeria": "HemPizza",
+    "adress": "Konditorivägen 1, 437 33 Lindome",
+    "lat": 57.58311052627653,
+    "lng": 12.101085673029644
+  },
+  {
+    "pizzeria": "Hills Pizzeria",
+    "adress": "Peppareds Torg 2, 431 50 Mölndal",
+    "lat": 57.63072017856685,
+    "lng": 12.022941424669657
+  },
+  {
+    "pizzeria": "Jungfruplatsens Pizzeria",
+    "adress": "Jungfruplatsen 2, 431 48 Mölndal",
+    "lat": 57.659597642784284,
+    "lng": 12.00120420928919
+  },
+  {
+    "pizzeria": "Kebnekaise",
+    "adress": "Gamla riksvägen 4, 428 32 Kållered",
+    "lat": 57.61918507865715,
+    "lng": 12.045531071851816
+  },
+  {
+    "pizzeria": "Kållereds Pizzeria",
+    "adress": "Gamla riksvägen 38, 428 32 Kållered",
+    "lat": 57.6117035,
+    "lng": 12.048463
+  },
+  {
+    "pizzeria": "Mossens Pizzeria",
+    "adress": "Gibraltargatan 37, 412 79 Göteborg",
+    "lat": 57.68244633240344,
+    "lng": 11.98396366255999
+  },
+  {
+    "pizzeria": "Nisses Pizzeria",
+    "adress": "Hagabäcksleden 9, 428 32 Kållered",
+    "lat": 57.61044988231961,
+    "lng": 12.050049639446506
+  },
+  {
+    "pizzeria": "Pizza Marcus",
+    "adress": "Hagåkersgatan 2, 431 41 Mölndal",
+    "lat": 57.66393185063194,
+    "lng": 12.01140214671535
+  },
+  {
+    "pizzeria": "Pizza4You",
+    "adress": "Krokslätts Parkgata 57, 431 68 Mölndal",
+    "lat": 57.67584405850491,
+    "lng": 11.992750548293245
+  },
+  {
+    "pizzeria": "Pizzeria Druvan",
+    "adress": "Almåsgången 1, 437 30 Lindome",
+    "lat": 57.57741280354221,
+    "lng": 12.08883852855671
+  },
+  {
+    "pizzeria": "Pizzeria Mums - Krokslätt",
+    "adress": "Bergskroken 13, 431 37 Mölndal",
+    "lat": 57.66939200460609,
+    "lng": 12.009811044910702
+  },
+  {
+    "pizzeria": "Pizzeria Mums | Pedagogen Park",
+    "adress": "Bifrostgatan 50D, 431 44 Mölndal",
+    "lat": 57.65064073563359,
+    "lng": 11.986936360411454
+  },
+  {
+    "pizzeria": "Pizzeria Mölndal Corpus",
+    "adress": "Gamla Torget 45, 431 34 Mölndal",
+    "lat": 57.65707132525212,
+    "lng": 12.027584868462625
+  },
+  {
+    "pizzeria": "Portens pizzeria",
+    "adress": "Göteborgsvägen 1, 431 30 Mölndal",
+    "lat": 57.655985420205624,
+    "lng": 12.016876298944483
+  },
+  {
+    "pizzeria": "Resturang Perla",
+    "adress": "Gamla riksvägen 54, 428 30 Kållered",
+    "lat": 57.60921305872952,
+    "lng": 12.049684033097218
+  },
+  {
+    "pizzeria": "Sannegårdens Pizzeria Johanneberg",
+    "adress": "Gibraltargatan 52, 412 58 Göteborg",
+    "lat": 57.68788961762229,
+    "lng": 11.982272369866141
+  },
+  {
+    "pizzeria": "Sannegårdens Pizzeria Åby",
+    "adress": "Frölundagatan 35, 431 44 Mölndal",
+    "lat": 57.65390771621102,
+    "lng": 12.004604983644933
+  },
+  {
+    "pizzeria": "Stensjöns Restaurang & Pizzeria",
+    "adress": "Tallkottegatan 1, 431 36 Mölndal",
+    "lat": 57.66338428877989,
+    "lng": 12.041718283183144
+  },
+  {
+    "pizzeria": "Tampico pizzeria",
+    "adress": "Smörgatan 2, 412 76 Göteborg",
+    "lat": 57.680323010949,
+    "lng": 12.014139846335455
+  },
+  {
+    "pizzeria": "Vita Huset Pizzeria",
+    "adress": "Katrinebergsgatan 6, 431 61 Mölndal",
+    "lat": 57.64949483982415,
+    "lng": 12.014068254894125
+  },
+  {
+    "pizzeria": "Mölndals Döner",
+    "adress": "Mölndalsvägen 89E, 412 84 Göteborg",
+    "lat": 57.68012699128313,
+    "lng": 12.002379095008312
+  },
+   {
+    "pizzeria": "Domino's Pizza Johanneberg",
+    "adress": "Frida Hjertbergs Gata 10, 412 81 Göteborg",
+    "lat": 57.68775561529044,
+    "lng": 11.986673352098975
+  },
+  {
+    "pizzeria": "Annebergs Pizza & Grill",
+    "adress": "Älvsåkersvägen 2, 434 96 Kungsbacka",
+    "lat": 57.53844970566255,
+    "lng": 12.10290348126579
+  },
+  {
+    "pizzeria": "Björkris Pizzeria",
+    "adress": "Björkrisvägen 30, 434 60 Kungsbacka",
+    "lat": 57.51810593642173,
+    "lng": 12.076973546807265
+  },
+   {
+    "pizzeria": "Pizzeria Gibraltar",
+    "adress": "Gibraltargatan 36, 412 58 Göteborg",
+    "lat": 57.68961029418494,
+    "lng": 11.980716942780623
+  },
+  {
+    "pizzeria": "Pizzeria Peperoni",
+    "adress": "Rosensköldsgatan 1, 412 58 Göteborg",
+    "lat": 57.69023189172789,
+    "lng": 11.982351952908068
+  },
+  {
+    "pizzeria": "Svennepizzan",
+    "adress": "Eklandagatan 41B, 412 61 Göteborg",
+    "lat": 57.69101486533492,
+    "lng": 11.98779769344178
+  },
+  {
+    "pizzeria": "I Love Pizza  Högsbo 421",
+    "adress": "Lona Knapes g 1, 421 32 Västra Frölunda",
+    "lat": 57.65072481029466,
+    "lng": 11.948571378249213
+  },
+   {
+    "pizzeria": "GIGI pizzeria, cucina & bar",
+    "adress": "Radiov. 1, 421 33 Västra Frölunda",
+    "lat": 57.65722496163912,
+    "lng": 11.93229370141011
+  },
+  {
+    "pizzeria": "Saray grill & kök",
+    "adress": "Datavägen 15, 436 32 Askim",
+    "lat": 57.640374763510295,
+    "lng": 11.952096794223007
+  },
+  {
+    "pizzeria": "Vivaldi Pizzeria",
+    "adress": "Askims Backaväg 1, 436 39 Askim",
+    "lat": 57.63517404238591,
+    "lng": 11.94181028219977
+  },
+  {
+    "pizzeria": "Gatsby Pizzeria",
+    "adress": "Långlyckevägen 12, 436 43 Askim",
+    "lat": 57.63374345784059,
+    "lng": 11.936871898052026
+  },
+  {
+    "pizzeria": "Sannegårdens Pizzeria Hovås",
+    "adress": "Klåvavägen 20, 436 55 Hovås",
+    "lat": 57.608459844762514,
+    "lng": 11.947214534950406
+  }
+  
+  
+
+]

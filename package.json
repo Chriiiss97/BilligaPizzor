@@ -1,0 +1,30 @@
+{
+  "name": "billiga-pizzor---live",
+  "version": "1.0.0",
+  "description": "",
+  "main": "service-worker.js",
+  "scripts": {
+    "test": "echo \"No tests configured\"",
+    "pizzerior:sync": "node ./scripts/sync-pizzeria-pages.js",
+    "cap:sync": "npx cap sync",
+    "cap:sync:android": "npx cap sync android",
+    "cap:open:android": "npx cap open android",
+    "cap:assets": "npx @capacitor/assets generate --android",
+    "prenetlify:prepare": "npm run pizzerior:sync",
+    "netlify:prepare": "powershell -ExecutionPolicy Bypass -File ./scripts/prepare-netlify-deploy.ps1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Enforces HTTPS-only network traffic for the release build.
+    Cleartext (HTTP) connections are already blocked by Capacitor's
+    "cleartext: false" setting, but this file makes the OS-level
+    enforcement explicit and shows Google Play that the app does
+    not transmit data over unencrypted channels.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust the standard system CA store (covers billigapizzor.se). -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

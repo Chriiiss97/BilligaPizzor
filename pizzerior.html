@@ -1,0 +1,407 @@
+﻿<!doctype html>
+<html lang="sv">
+  <head>
+    
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Title -->
+  <title>Pizzerior i M&ouml;lndal &ndash; Billig Pizza</title>
+
+  <!-- Meta Description -->
+  <meta name="description" content="Hitta alla pizzerior i M&ouml;lndal, Lindome, K&aring;llered och Kroksl&auml;tt. J&auml;mf&ouml;r priser och menyer fr&aring;n lokala pizzarestauranger.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://billigapizzor.se/pizzerior.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pizzerior i M&ouml;lndal &ndash; Billig Pizza">
+  <meta property="og:description" content="Hitta alla pizzerior i M&ouml;lndal och j&auml;mf&ouml;r priser fr&aring;n lokala restauranger.">
+  <meta property="og:url" content="https://billigapizzor.se/pizzerior.html">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pizzerior i M&ouml;lndal &ndash; Billig Pizza">
+  <meta name="twitter:description" content="Hitta alla pizzerior i M&ouml;lndal och j&auml;mf&ouml;r priser fr&aring;n lokala restauranger.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pizzerior i M&ouml;lndal &ndash; Billig Pizza">
+  <meta property="og:description" content="Se alla pizzerior i M&ouml;lndal och j&auml;mf&ouml;r deras pizzor och priser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://billigapizzor.se/pizzerior">
+  <meta property="og:locale" content="sv_SE">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pizzerior i M&ouml;lndal &ndash; Billig Pizza">
+  <meta name="twitter:description" content="Se alla pizzerior i M&ouml;lndal och j&auml;mf&ouml;r priser snabbt.">
+
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Billig Pizza",
+    "url": "https://billigapizzor.se/"
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/css/index.css" />
+  <style>
+    .pizzerior-hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(28px, 4vw, 54px);
+    }
+
+    .pizzerior-hero-layout .hero-text {
+      max-width: none;
+    }
+
+    .pizzerior-hero-layout .hero-text h1 {
+      font-size: clamp(2.1rem, 4.2vw, 3.15rem);
+      line-height: 1.08;
+      margin-bottom: 14px;
+    }
+
+    .pizzerior-hero-layout .hero-text p {
+      opacity: 0.88;
+      max-width: 58ch;
+      margin: 0;
+    }
+
+    .pizzerior-hero-media {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 0;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .pizzerior-hero-media::before {
+      content: "";
+      position: absolute;
+      inset: -8% -6% -8% -6%;
+      background:
+        radial-gradient(circle at 30% 45%, rgba(255, 89, 89, 0.24), rgba(255, 89, 89, 0) 58%),
+        radial-gradient(circle at 70% 52%, rgba(52, 194, 122, 0.22), rgba(52, 194, 122, 0) 64%);
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .pizzerior-hero-image {
+      width: min(100%, 440px);
+      max-height: 360px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.58);
+      animation: pizzeria-hero-float 6s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .pizzerior-hero-image:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.62);
+    }
+
+    @keyframes pizzeria-hero-float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-7px);
+      }
+    }
+
+    #pizzerior-lista {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    #pizzerior-lista .pizza-kort {
+      width: 325px;
+      max-width: 325px;
+      padding: 25px;
+      box-sizing: border-box;
+    }
+
+    #pizzerior-lista .pizza-kort p {
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .pizzerior-hero-layout {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .pizzerior-hero-layout .hero-text {
+        text-align: center;
+      }
+
+      .pizzerior-hero-layout .hero-text p {
+        margin: 0 auto;
+      }
+
+      .pizzerior-hero-media {
+        order: 2;
+      }
+
+      .pizzerior-hero-image {
+        width: min(82vw, 330px);
+        max-height: 280px;
+      }
+
+      #pizzerior-lista {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+      }
+
+      #pizzerior-lista .pizza-kort {
+        width: 100%;
+        max-width: 420px;
+      }
+    }
+
+    /* === S&ouml;kf&auml;lt & N&auml;rmast mig - matchar index.html === */
+    .pizzerior-filter-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 0 20px 20px;
+    }
+
+    #pizzerior-sokruta {
+      width: 90%;
+      max-width: 600px;
+      padding: 15px 28px;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    #pizzerior-sokruta:hover {
+      border-color: rgba(255, 255, 255, 0.32);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    #pizzerior-sokruta:focus {
+      outline: none;
+      border-color: #cd212a;
+      box-shadow: 0 0 0 3px rgba(205, 33, 42, 0.18), 0 4px 18px rgba(205, 33, 42, 0.12);
+    }
+
+    #pizzerior-narmast-btn {
+      border-color: #22a04a;
+      color: #22a04a;
+      background-color: rgba(34, 160, 74, 0.08);
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(34, 160, 74, 0.3), 0 0 22px rgba(34, 160, 74, 0.14);
+      transition: all 0.25s ease;
+    }
+
+    #pizzerior-narmast-btn:hover,
+    #pizzerior-narmast-btn:focus-visible {
+      border-color: #22a04a;
+      background-color: rgba(34, 160, 74, 0.16);
+      color: #22a04a;
+      box-shadow: 0 0 16px rgba(34, 160, 74, 0.5), 0 0 36px rgba(34, 160, 74, 0.25), 0 4px 14px rgba(34, 160, 74, 0.2);
+      transform: translateY(-2px);
+    }
+
+    #pizzerior-narmast-btn.narmast-aktiv {
+      background-color: #1f7a4c;
+      border-color: #1f7a4c;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(31, 122, 76, 0.2), 0 5px 18px rgba(31, 122, 76, 0.4);
+    }
+
+    #pizzerior-narmast-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    #pizzerior-traffar {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #999999;
+      margin-top: 0;
+      min-height: 1.2em;
+      letter-spacing: 0.1px;
+      text-align: center;
+    }
+  </style>
+</head>
+  <body class="index-kort-lage">
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="nav-logo">
+          <img src="/images/Pizza _Gubbe.png" alt="Pizza Gubbe - Billiga Pizzor">
+        </a>
+
+        <div class="hamburger-ikon" onclick="toggleMobilMeny()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="nav-social">
+          <span class="nav-social-label">Följ oss</span>
+          <a href="https://www.facebook.com/profile.php?id=61588728802691" class="social-btn social-btn--fb" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg class="social-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.81c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 16.99 22 12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/billigapizzor/" class="social-btn social-btn--ig" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg class="social-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/" onclick="closeMobilMeny()">PIZZOR</a></li>
+          <li><a href="/pizzerior" onclick="closeMobilMeny()">PIZZERIOR</a></li>
+          <li><a href="/karta" onclick="closeMobilMeny()">KARTA</a></li>
+          <li><a href="/statistik" onclick="closeMobilMeny()">STATISTIK</a></li>
+          <li><a href="/om-oss" onclick="closeMobilMeny()">OM OSS</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <button id="topp-knapp" title="G&aring; till toppen">&#9650;</button>
+
+    <header class="hero-sektion">
+      <div class="hero-inner pizzerior-hero-layout">
+        <div class="hero-text">
+          <h1>Pizzerior i M&ouml;lndal &#127829;</h1>
+          <p>
+           Uppt&auml;ck alla pizzerior i M&ouml;lndal &#127829; - se menyer, &ouml;ppettider och kontaktuppgifter fr&aring;n lokala pizzerior p&aring; ett st&auml;lle.
+          Hitta snabbt en pizzeria n&auml;ra dig och v&auml;lj r&auml;tt baserat p&aring; utbud, pris och l&auml;ge.
+          </p>
+        </div>
+        <div class="pizzerior-hero-media" aria-hidden="true">
+          <img
+            class="pizzerior-hero-image"
+            src="/images/Pizza_gubbe_Pizzeria.png"
+            alt=""
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </header>
+
+    <div class="pizzerior-container">
+      <h2>Alla pizzerior i M&ouml;lndal</h2>
+      <div class="pizzerior-filter-bar">
+        <input
+          type="text"
+          id="pizzerior-sokruta"
+          placeholder="S&ouml;k bland pizzerior..."
+          aria-label="S&ouml;k bland pizzerior"
+          autocomplete="off"
+        />
+        <div id="pizzerior-traffar"></div>
+        <button id="pizzerior-narmast-btn" class="pizzeria-btn" type="button">&#128205; N&auml;rmast mig</button>
+      </div>
+      <div id="pizzerior-lista">
+        <!-- Pizzerior kort kommer att genereras h&auml;r -->
+      </div>
+    </div>
+
+    <div id="policy-overlay" class="policy-overlay"></div>
+    <div id="policy-modal" class="policy-box">
+      <div class="policy-innehall">
+        <div class="policy-ikon">&#128737;&#65039;</div>
+        <h3>Cookies & Integritet</h3>
+        <p>
+          Vi anv&auml;nder Google Analytics f&ouml;r att f&ouml;rst&aring; hur sidan anv&auml;nds. All
+          data samlas in anonymt.
+        </p>
+        <div class="policy-knappar">
+          <button onclick="sparaCookieVal(true)" class="stang-btn">
+            Acceptera alla
+          </button>
+          <button onclick="sparaCookieVal(false)" class="sekundar-btn">
+            Endast n&ouml;dv&auml;ndiga
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section id="policy-sektion" class="dold-sektion">
+      <div class="om-oss-container">
+        <h2>Cookies & Integritet &#128737;&#65039;</h2>
+        <p>
+          Vi anv&auml;nder Google Analytics f&ouml;r att f&ouml;rst&aring; hur sidan anv&auml;nds. All
+          data samlas in anonymt och anv&auml;nds endast f&ouml;r att f&ouml;rb&auml;ttra tj&auml;nsten
+          f&ouml;r dig.
+        </p>
+        <p>
+          Genom att anv&auml;nda sidan godk&auml;nner du att cookies anv&auml;nds. Du kan n&auml;r
+          som helst &auml;ndra ditt val genom att rensa webbl&auml;sarens cookies.
+        </p>
+
+        <button onclick="togglaPolicySektion()" class="stang-btn">St&auml;ng</button>
+      </div>
+    </section>
+
+<script src="/js/script.js" defer></script>
+
+
+<nav class="bottom-nav" aria-label="Sidobottennav">
+  <div class="bottom-nav-social">
+    <a href="https://www.facebook.com/profile.php?id=61588728802691" class="social-btn social-btn--fb" target="_blank" rel="noopener noreferrer">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.81c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 16.99 22 12z"/></svg>
+      Facebook
+    </a>
+    <a href="https://www.instagram.com/billigapizzor/" class="social-btn social-btn--ig" target="_blank" rel="noopener noreferrer">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      Instagram
+    </a>
+  </div>
+  <div class="bottom-nav-links">
+    <a href="/" class="bottom-nav-link">Pizzor</a>
+    <a href="/pizzerior" class="bottom-nav-link">Pizzerior</a>
+    <a href="/karta" class="bottom-nav-link">Karta</a>
+    <a href="/statistik" class="bottom-nav-link">Statistik</a>
+    <a href="/om-oss" class="bottom-nav-link">Om oss</a>
+  </div>
+</nav>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-heading">Info</p>
+      <ul class="footer-links">
+        <li><a href="/integritetspolicy">Integritetspolicy</a></li>
+        <li><a href="mailto:kontakt@billigapizzor.se">Kontakt</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+

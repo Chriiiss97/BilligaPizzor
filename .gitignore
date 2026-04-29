@@ -1,0 +1,22 @@
+# Local Netlify folder
+.netlify
+netlify-dist/
+
+# Backup-filer från dubblettscriptet
+data/*.backup-*.json
+
+# Lokal rapport (ska inte upp på GitHub)
+scripts/dubletter-rapport.html
+
+# Android build-filer
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+
+# Node
+node_modules/
+
+# OS-filer
+.DS_Store
+Thumbs.db

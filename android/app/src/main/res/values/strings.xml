@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Billiga Pizzor</string>
+    <string name="title_activity_main">Billiga Pizzor</string>
+    <string name="package_name">se.billigapizzor.app</string>
+    <string name="custom_url_scheme">se.billigapizzor.app</string>
+</resources>
