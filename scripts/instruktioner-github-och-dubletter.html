@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instruktioner: GitHub + Dubbletter</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #14213d;
+      --muted: #5c677d;
+      --ok: #2a9d8f;
+      --warn: #e76f51;
+      --line: #dbe4f0;
+      --btn: #1d3557;
+      --btnText: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top right, #d6ecff 0%, var(--bg) 45%, #eef4ff 100%);
+      color: var(--ink);
+      line-height: 1.6;
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(20, 33, 61, 0.08);
+    }
+
+    h1, h2 { margin: 0 0 8px; }
+    h1 { font-size: 1.55rem; }
+    h2 { font-size: 1.1rem; }
+
+    .small { color: var(--muted); font-size: 0.95rem; margin: 0; }
+    .note { color: var(--muted); font-size: 0.92rem; }
+
+    .cmd {
+      margin-top: 8px;
+      background: #0f172a;
+      color: #e5edff;
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #26354f;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.92rem;
+    }
+
+    button {
+      border: 0;
+      background: var(--btn);
+      color: var(--btnText);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.08); }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+
+    ol { margin: 8px 0 0 22px; padding: 0; }
+    li { margin-bottom: 6px; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #0b3d2e;
+      background: #d7f7ea;
+      border: 1px solid #98e8ca;
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Din superenkla fusklapp: GitHub + Dubbletter</h1>
+      <p class="small">Skriven sa enkelt som mojligt. Tank sa har: du har en leksakslada (projektet), och GitHub ar din extra trygg lada pa internet.</p>
+      <p class="small"><strong>Tips:</strong> Oppna terminal i VS Code med <code>Ctrl+o</code> (knappen med o/oe pa svenskt tangentbord).</p>
+    </section>
+
+    <section class="card">
+      <span class="tag">VARJE GANG DU HAR ANDRAT KOD</span>
+      <h2>Skicka upp nya andringar till GitHub</h2>
+      <ol>
+        <li>Samla alla andringar.</li>
+        <li>Skriv en kort text om vad du gjorde.</li>
+        <li>Skicka upp till GitHub.</li>
+      </ol>
+      <div class="cmd">
+        <code id="cmd-push">git add .
+git commit -m "Min andring"
+git push</code>
+        <button data-copy="cmd-push">Kopiera</button>
+      </div>
+      <p class="note">Byt texten <code>"Min andring"</code> till vad du faktiskt gjorde.</p>
+    </section>
+
+    <section class="card">
+      <span class="tag">KOLLA DUBLETTER</span>
+      <h2>Se om samma pizza_namn finns flera ganger i samma pizzeria</h2>
+      <div class="cmd">
+        <code id="cmd-check">node scripts/hitta-dubletter.js</code>
+        <button data-copy="cmd-check">Kopiera</button>
+      </div>
+      <p class="note">Detta uppdaterar ocksa rapporten: <code>scripts/dubletter-rapport.html</code></p>
+    </section>
+
+    <section class="card">
+      <span class="tag">TA BORT DUBLETTER AUTOMATISKT</span>
+      <h2>Auto-fix av dubbletter</h2>
+      <p class="small"><span class="warn">Viktigt:</span> Scriptet behaller forsta posten och tar bort resten.</p>
+      <div class="cmd">
+        <code id="cmd-fix">node scripts/hitta-dubletter.js --fixa</code>
+        <button data-copy="cmd-fix">Kopiera</button>
+      </div>
+      <p class="note"><span class="ok">Tryggt:</span> backup-fil skapas automatiskt i data-mappen.</p>
+    </section>
+
+    <section class="card">
+      <span class="tag">OPPNA RAPPORTEN DIREKT</span>
+      <h2>Visa rapporten i webblasaren</h2>
+      <div class="cmd">
+        <code id="cmd-open">start scripts/dubletter-rapport.html</code>
+        <button data-copy="cmd-open">Kopiera</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="tag">OM DU VILL ANGRA EN AUTO-FIX</span>
+      <h2>Byt tillbaka till senaste backup</h2>
+      <p class="small">1) Se backup-filer. 2) Kopiera filnamnet. 3) Ersatt pizzor.json med backup-filen.</p>
+      <div class="cmd">
+        <code id="cmd-list-backup">Get-ChildItem data\*.backup-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 5 Name, LastWriteTime</code>
+        <button data-copy="cmd-list-backup">Kopiera</button>
+      </div>
+      <div class="cmd">
+        <code id="cmd-restore">Copy-Item "data\pizzor.json.backup-XXXXXXXXXXXX.json" "data\pizzor.json" -Force</code>
+        <button data-copy="cmd-restore">Kopiera</button>
+      </div>
+      <p class="note">Byt <code>XXXXXXXXXXXX</code> till riktig sifferserie i backup-filens namn.</p>
+    </section>
+
+    <section class="card">
+      <span class="tag">LITEN MINNESREGEL</span>
+      <h2>Som for en 5-aring</h2>
+      <ol>
+        <li>Du bygger sandslott (kodar lokalt).</li>
+        <li>Du tar foto pa sandslottet (git commit).</li>
+        <li>Du lagger fotot i molnlada (git push till GitHub).</li>
+        <li>Om sandslottet blir konstigt: titta i rapporten och fixa.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script>
+    function copyText(id, btn) {
+      var txt = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(txt).then(function () {
+        var old = btn.textContent;
+        btn.textContent = "Kopierat";
+        setTimeout(function () { btn.textContent = old; }, 1400);
+      }).catch(function () {
+        window.prompt("Kunde inte kopiera automatiskt. Kopiera manuellt:", txt);
+      });
+    }
+
+    document.querySelectorAll("button[data-copy]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        copyText(btn.getAttribute("data-copy"), btn);
+      });
+    });
+  </script>
+</body>
+</html>
