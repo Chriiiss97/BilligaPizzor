@@ -1,0 +1,27 @@
+{
+  "appId": "se.billigapizzor.app",
+  "appName": "Billiga Pizzor",
+  "webDir": "www",
+  "loggingBehavior": "none",
+  "plugins": {
+    "StatusBar": {
+      "backgroundColor": "#121212",
+      "style": "DARK",
+      "overlaysWebView": false
+    },
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "launchFadeOutDuration": 250,
+      "backgroundColor": "#121212",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "automatic"
+  }
+}

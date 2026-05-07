@@ -1,0 +1,55 @@
+name: Publish netlify-dist
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Select deploy source directory
+        run: |
+          if [ -d "netlify-dist" ]; then
+            echo "DEPLOY_SOURCE=netlify-dist" >> "$GITHUB_ENV"
+          elif [ -d "www" ]; then
+            echo "DEPLOY_SOURCE=www" >> "$GITHUB_ENV"
+            echo "netlify-dist saknas i repo, använder www som fallback"
+          else
+            echo "Varken netlify-dist eller www finns i repo"
+            exit 1
+          fi
+
+      - name: Prepare deploy directory
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+          cp -R "$DEPLOY_SOURCE"/. deploy/
+
+      - name: Push deploy directory to target repo
+        env:
+          TARGET_REPO: ${{ secrets.DIST_REPO }}
+          PAT: ${{ secrets.DIST_REPO_PAT }}
+        run: |
+          if [ -z "$TARGET_REPO" ] || [ -z "$PAT" ]; then
+            echo "Missing secrets DIST_REPO or DIST_REPO_PAT"
+            exit 1
+          fi
+
+          cd deploy
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy from ${GITHUB_REPOSITORY}@${GITHUB_SHA}" || echo "No changes to commit"
+          git branch -M main
+          git remote add origin "https://x-access-token:${PAT}@github.com/${TARGET_REPO}.git"
+          git push --force origin main

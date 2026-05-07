@@ -1,0 +1,348 @@
+[
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Mozzarellasticks",
+    "pris": 65,
+    "beskrivning": "6 st mozzarellasticks"
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Lökringar (6 st)",
+    "pris": 55,
+    "beskrivning": "6 st lökringar"
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Chili cheese (6 st)",
+    "pris": 55,
+    "beskrivning": "6 st chili cheese"
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Chicken Nuggets (6 st)",
+    "pris": 65,
+    "beskrivning": "6 st chicken nuggets"
+  },
+  {
+  "pizzeria": "Daléns Gatukök & Pizzeria",
+  "kategori": "Dryck",
+  "namn": "Coca-Cola Original Taste 33 cl",
+  "pris": 20,
+  "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Zero 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Fanta Exotic 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Sprite 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Ramlösa Naturell 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Ramlösa Citron 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pepsi Max 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pommac Original 33 cl",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Ayran 250 ml",
+    "pris": 20,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Red Bull Original 250 ml",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Original Taste 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Zero 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Ramlösa Naturell 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Ramlösa Citron 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pepsi Max 50 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Original Taste 1,5 liter",
+    "pris": 45,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Zero 1,5 liter",
+    "pris": 45,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 1,5 liter",
+    "pris": 45,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pepsi Max 1,5 liter",
+    "pris": 45,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pucko 20 cl",
+    "pris": 15,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Pucko 27 cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "MER Apelsin 20 cl",
+    "pris": 15,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "MER Päron 20 cl",
+    "pris": 15,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Daléns Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "MER Jordgubbe 20 cl",
+    "pris": 15,
+    "beskrivning": ""
+  },
+
+
+
+  {
+  "pizzeria": "Pizzeria Ferrari",
+  "kategori": "Snacks",
+  "namn": "Pommestallrik",
+  "pris": 69,
+  "beskrivning": "Valfri sås"
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Snacks",
+    "namn": "6st Chicken Nuggets",
+    "pris": 84,
+    "beskrivning": "Pommes och dryck ingår"
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Snacks",
+    "namn": "Pommes Meny",
+    "pris": 69,
+    "beskrivning": "Pommes och dryck ingår"
+  },
+  {
+  "pizzeria": "Pizzeria Ferrari",
+  "kategori": "Dryck",
+  "namn": "Coca-Cola 33cl",
+  "pris": 25,
+  "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Zero 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Fanta Exotic 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Bonaqua Citron 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Bonaqua Original 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Ramlösa Original 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Sprite 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Mer Apelsin 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Mer Päron 33cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Redbull 25cl",
+    "pris": 25,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola 1,5L",
+    "pris": 50,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Zero 1,5L",
+    "pris": 50,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 1,5L",
+    "pris": 50,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Fanta Exotic 1,5L",
+    "pris": 50,
+    "beskrivning": ""
+  },
+  {
+    "pizzeria": "Pizzeria Ferrari",
+    "kategori": "Dryck",
+    "namn": "Sprite 1,5L",
+    "pris": 50,
+    "beskrivning": ""
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "pizzeria": "Dalens Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Mozzarellasticks",
+    "pris": 65,
+    "beskrivning": "6 st mozzarellasticks"
+  },
+  {
+    "pizzeria": "Dalens Gatukök & Pizzeria",
+    "kategori": "Snacks",
+    "namn": "Chicken Nuggets",
+    "pris": 65,
+    "beskrivning": "6 st chicken nuggets"
+  },
+  {
+    "pizzeria": "Dalens Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Coca-Cola Original Taste 33 cl",
+    "pris": 20
+  },
+  {
+    "pizzeria": "Dalens Gatukök & Pizzeria",
+    "kategori": "Dryck",
+    "namn": "Fanta Orange 33 cl",
+    "pris": 20
+  },
+  {
+    "pizzeria": "Dalens Gatukök & Pizzeria",
+    "kategori": "Såser",
+    "namn": "Vitlökssås",
+    "pris": 10
+  }
+]
