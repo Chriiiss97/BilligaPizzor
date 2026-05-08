@@ -1,3 +1,90 @@
+// Maps each pizza to the same category id as the index strip uses
+function kategoriseraPizzeriaItem(pizza) {
+    if (pizza && typeof pizza._bpKategoriId === 'string' && pizza._bpKategoriId) {
+        return pizza._bpKategoriId;
+    }
+
+    // Name-based checks run first so e.g. "Amerikansksallad" → sallader, not amerikanska
+    const namn = normaliseraText(pizza.pizza_namn || '');
+    const LASAGNE_ORD = ['lasagne', 'lasagna'];
+    const PASTA_ORD   = ['pasta', 'spaghetti', 'tagliatelle', 'penne', 'linguine', 'fettuccine', 'rigatoni', 'carbonara', 'bolognese'];
+    const SALLAD_ORD  = ['sallad', 'salad'];
+
+    if (SALLAD_ORD.some((o) => namn.includes(o)))  return 'sallader';
+    if (LASAGNE_ORD.some((o) => namn.includes(o))) return 'lasagne';
+    if (PASTA_ORD.some((o) => namn.includes(o)))   return 'pasta';
+
+    // Ingredient/name-based category checks
+    if (matcharKategori(pizza, 'Amerikanska pannpizzor')) return 'amerikanska';
+    if (matcharKategori(pizza, 'Burgare'))                return 'burgare';
+    if (matcharKategori(pizza, 'Inbakade'))               return 'inbakade';
+    if (matcharKategori(pizza, 'Kebab'))                  return 'kebab';
+    if (matcharKategori(pizza, 'Kebab och grillrätter'))  return 'kebab';
+    if (matcharKategori(pizza, 'Kyckling'))               return 'kyckling';
+    if (matcharKategori(pizza, 'Oxfilé'))                 return 'oxfile';
+    if (matcharKategori(pizza, 'Fläskfilé'))              return 'flaskfile';
+    if (matcharKategori(pizza, 'Skaldjur'))               return 'skaldjur';
+    if (matcharKategori(pizza, 'Köttfärs'))               return 'kottfars';
+    if (matcharKategori(pizza, 'Salami'))                 return 'salami';
+    if (matcharKategori(pizza, 'Vegetariska'))            return 'vegetarisk';
+
+    return 'pizzor';
+}
+
+// Emoji for each pizzeria-page category id
+const PIZZERIA_KAT_EMOJI = {
+    pizzor:      '🍕',
+    amerikanska: '<img src="/images/icons8-usa-flag-50.png" alt="Amerikansk" style="width:1.3em;height:1.3em;border-radius:50%;object-fit:cover;vertical-align:middle;">',
+    burgare:     '🍔',
+    flaskfile:   '🍖',
+    inbakade:    '🫓',
+    kebab:       '🥙',
+    kottfars:    '🍕',
+    kyckling:    '🍗',
+    oxfile:      '🥩',
+    salami:      '🍕',
+    skaldjur:    '🦐',
+    vegetarisk:  '🥬',
+    lasagne:     '🫕',
+    pasta:       '🍝',
+    sallader:    '🥗',
+    dryck:       '🥤',
+    snacks:      '🍟',
+    saser:       '🧄',
+    tillbehor:   '🍽️',
+    dessert:     '🍰',
+};
+
+const PIZZERIA_EXTRA_KOMPAKTA = new Set(['dryck', 'snacks', 'saser', 'tillbehor', 'dessert']);
+
+function normaliseraExtraKategoriId(kategori) {
+    const k = normaliseraText(kategori || '');
+    if (!k) return 'tillbehor';
+    if (k === 'dryck' || k.includes('dryck')) return 'dryck';
+    if (k === 'snacks' || k.includes('snack')) return 'snacks';
+    if (k === 'saser' || k === 'sos' || k.includes('sas')) return 'saser';
+    if (k === 'dessert' || k.includes('efterratt')) return 'dessert';
+    return 'tillbehor';
+}
+
+function normaliseraExtraPoster(extraLista, soktNamnNormaliserat) {
+    if (!Array.isArray(extraLista)) return [];
+    return extraLista
+        .filter((row) => normaliseraText(row?.pizzeria || '') === soktNamnNormaliserat)
+        .map((row) => {
+            const beskrivning = String(row?.beskrivning || '').trim();
+            return {
+                pizzeria: row.pizzeria,
+                pizza_namn: String(row?.namn || '').trim(),
+                pris: Number(row?.pris) || 0,
+                ingredienser: beskrivning ? [beskrivning] : [],
+                beskrivning,
+                _bpKategoriId: normaliseraExtraKategoriId(row?.kategori),
+            };
+        })
+        .filter((row) => row.pizza_namn);
+}
+
 function initPizzeriaSida() {
     const sidaRoot = document.getElementById('pizzeria-sida-root');
     const titel = document.getElementById('pizzeria-sida-titel');
