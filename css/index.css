@@ -3447,25 +3447,46 @@ body.index-kort-lage .pizza-kort {
 }
 
 #resultat-lista .pizza-rad {
-  display: block;
-}
-
-#resultat-lista .pizza-top-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  align-self: stretch;
-  width: 100%;
-  gap: 8px;
+  gap: 14px;
 }
 
-#resultat-lista .pizza-bottom-row {
+#resultat-lista .pizza-body {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.pizza-hoger {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  align-self: stretch;
-  width: 100%;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.pizza-pizzeria-detaljer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pizza-oppettider {
+  font-size: clamp(0.82rem, 1.35vw, 1rem);
+  color: rgba(126, 244, 163, 0.85);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.pizza-oppettider--stangt {
+  color: rgba(255, 102, 112, 0.85);
+}
+
+.pizza-kat-emoji {
+  display: inline-block;
+  font-size: 0.9em;
 }
 
 .pizza-kort h3 {

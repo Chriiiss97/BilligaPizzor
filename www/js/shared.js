@@ -2445,6 +2445,40 @@ function uppdateraVisning() {
     visaPizzor(nuvarandeFiltreradLista);
 }
 
+function hamtaOppetText(oppettider) {
+    if (!oppettider || typeof oppettider !== 'object') return '';
+    const nu = new Date();
+    const dag = nu.getDay();
+    const nuMin = nu.getHours() * 60 + nu.getMinutes();
+    const dagIndex = { man:1,mandag:1,tis:2,tisdag:2,ons:3,onsdag:3,tor:4,tors:4,torsdag:4,fre:5,fredag:5,lor:6,lordag:6,son:0,sondag:0 };
+    function norm(s) { return String(s||'').toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[–—−-]/g,'-').replace(/\s+/g,' ').trim(); }
+    function hamtaDag(t) { return dagIndex[norm(t).replace(/\./g,'').replace(/\s+/g,'')]; }
+    function tidMin(s) { const m=String(s||'').match(/^(\d{1,2})[:.](\d{1,2})$/); if(!m)return null; return parseInt(m[1],10)*60+parseInt(m[2],10); }
+    for (const nyckel of Object.keys(oppettider)) {
+        const delar = norm(nyckel).split('-').map(s=>s.trim()).filter(Boolean);
+        let matchar = false;
+        if (delar.length === 2) {
+            const f=hamtaDag(delar[0]), t=hamtaDag(delar[1]);
+            if (f!==undefined && t!==undefined) matchar = f<=t ? (dag>=f&&dag<=t) : (dag>=f||dag<=t);
+        } else if (delar.length === 1) {
+            matchar = hamtaDag(delar[0]) === dag;
+        }
+        if (matchar) {
+            const tidText = String(oppettider[nyckel]||'');
+            const m = tidText.match(/(\d{1,2}[:.]\d{1,2})\s*[-–—]\s*(\d{1,2}[:.]\d{1,2})/);
+            if (m) {
+                const oppMin=tidMin(m[1]), stangMin=tidMin(m[2]);
+                if (oppMin!==null && stangMin!==null) {
+                    const oppet = oppMin<stangMin ? (nuMin>=oppMin&&nuMin<stangMin) : (nuMin>=oppMin||nuMin<stangMin);
+                    const stangTid = m[2].replace('.', ':');
+                    return oppet ? `Öppet till ${stangTid}` : 'Stängt';
+                }
+            }
+        }
+    }
+    return '';
+}
+
 function visaPizzor(pizzor) {
     const lista = document.getElementById('resultat-lista');
     const laddaFlerSektion = document.getElementById('ladda-fler-sektion');
@@ -2460,7 +2494,6 @@ function visaPizzor(pizzor) {
 
     const urval = pizzor.slice(0, pizzorSomVisas);
     const minPris = urval.length > 0 ? Math.min(...urval.map(p => Number(p.pris))) : null;
-    // Batch DOM insertions via DocumentFragment to avoid a reflow per card.
     const fragment = document.createDocumentFragment();
     urval.forEach(pizza => {
         const kort = document.createElement('div');
@@ -2474,18 +2507,9 @@ function visaPizzor(pizzor) {
             ? pizza.ingredienser.join(', ')
             : 'Ingredienser saknas';
         const ingrediensTextSafe = escapaHtml(ingrediensText);
-        const pizzeriaDomannamn = (() => {
-            const url = saneraExternUrl(pizza.hemsida || '');
-            if (!url) return '';
-            try {
-                return new URL(url).hostname.replace(/^www\./i, '');
-            } catch {
-                return '';
-            }
-        })();
-        const pizzeriaNamnSafe = escapaHtml(pizzeriaDomannamn || pizza.pizzeria || 'Okand pizzeria');
+        const pizzeriaNamnSafe = escapaHtml(pizza.pizzeria || 'Okänd pizzeria');
         const avstandsDisplay = isNearbyActive && Number.isFinite(pizza.distansKm)
-            ? `<p class="avstand-badge">${pizza.distansKm < 1 ? Math.round(pizza.distansKm * 1000) + ' m' : pizza.distansKm.toFixed(1).replace('.', ',') + ' km'} fran dig</p>`
+            ? `<p class="avstand-badge">${pizza.distansKm < 1 ? Math.round(pizza.distansKm * 1000) + ' m' : pizza.distansKm.toFixed(1).replace('.', ',') + ' km'} från dig</p>`
             : '';
         const arBilligast = minPris !== null && Number(pizza.pris) === minPris;
         const billigastBadge = arBilligast
@@ -2512,27 +2536,31 @@ function visaPizzor(pizzor) {
             return valdaKategorier.length === 1 ? valdaKategorier[0] : 'Pizzor (alla)';
         })();
         const pizzaKategoriEmoji = hamtaPizzaKortEmoji(pizza, aktivKategoriForEmoji, document.getElementById('sokruta')?.value || '');
+        const oppetText = hamtaOppetText(pizza.oppettider);
+        const oppetHtml = oppetText
+            ? `<span class="pizza-oppettider${oppetText === 'Stängt' ? ' pizza-oppettider--stangt' : ''}">${escapaHtml(oppetText)}</span>`
+            : '';
 
         kort.innerHTML = `
             ${billigastBadge}
             <div class="pizza-rad">
                 <div class="pizza-body">
-                    <div class="pizza-top-row">
-                        <h3>${pizzaNamnSafe}</h3>
-                        <span class="${prisBadgeKlass}">${pizza.pris} kr</span>
-                    </div>
+                    <h3><span class="pizza-kat-emoji" aria-hidden="true">${pizzaKategoriEmoji}</span> ${pizzaNamnSafe}</h3>
                     <p class="pizza-beskrivning">${ingrediensTextSafe}</p>
-                    <div class="pizza-bottom-row">
-                        <div class="pizza-pizzeria-row">
-                            <a class="pizza-store-icon" href="${pizzeriaLankSafe}" aria-label="Visa meny hos ${pizzeriaNamnForAria}">${pizzaKategoriEmoji}</a>
-                            <p class="pizza-pizzeria"><a class="pizza-pizzeria-link" href="${pizzeriaLankSafe}">${pizzeriaNamnSafe}</a></p>
-                            <span class="pizza-verified-dot" aria-hidden="true"></span>
+                    <div class="pizza-pizzeria-row">
+                        <span class="pizza-store-icon" aria-hidden="true">🏪</span>
+                        <div class="pizza-pizzeria-detaljer">
+                            <a class="pizza-pizzeria-link" href="${pizzeriaLankSafe}" aria-label="Visa meny hos ${pizzeriaNamnForAria}">${pizzeriaNamnSafe}</a>
+                            ${oppetHtml}
                         </div>
-                        <a class="pizza-telefon-link" href="${kontaktHrefSafe}" aria-label="${kontaktAria}">
-                            <span class="pizza-telefon-ikon" aria-hidden="true">☎</span>
-                        </a>
                     </div>
                     ${avstandsDisplay}
+                </div>
+                <div class="pizza-hoger">
+                    <span class="${prisBadgeKlass}">${pizza.pris} kr</span>
+                    <a class="pizza-telefon-link" href="${kontaktHrefSafe}" aria-label="${kontaktAria}" onclick="event.stopPropagation()">
+                        <span class="pizza-telefon-ikon" aria-hidden="true">☎</span>
+                    </a>
                 </div>
             </div>
         `;
