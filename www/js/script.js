@@ -369,7 +369,7 @@ function matcharKategori(item, kategori) {
             return harIngrediens('fläskfilé');
 
         case 'Burgare':
-            return normNamn.includes('burgare') || normNamn.includes('burger') || normNamn.includes('hamburgare');
+            return normNamn.includes('burgare') || normNamn.includes('burger') || normNamn.includes('hamburg');
 
         default:
             return true;
@@ -456,7 +456,7 @@ const CATEGORY_MAP = {
     burgare: {
         label: 'Burgare',
         emoji: '🍔',
-        match: ['burgare', 'burger', 'hamburgare']
+        match: ['burgare', 'burger', 'hamburg']
     },
     sallad: {
         label: 'Sallader',
@@ -1965,44 +1965,60 @@ function arOppetNu(oppettider) {
     const dagIndex = { man:1,mandag:1,monday:1,tis:2,tisdag:2,tuesday:2,ons:3,onsdag:3,wednesday:3,tor:4,tors:4,torsdag:4,thursday:4,thu:4,fre:5,fredag:5,friday:5,lor:6,lordag:6,saturday:6,sat:6,son:0,sondag:0,sunday:0,sun:0 };
     function norm(s) { return String(s||'').toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[._]/g,' ').replace(/[–—−]/g,'-').replace(/\s+/g,' ').trim(); }
     function hamtaDag(t) { return dagIndex[norm(t).replace(/\./g,'').replace(/\s+/g,'')]; }
-    function tidMin(s) { const m=String(s||'').trim().match(/^(\d{1,2})[:.](\d{1,2})$/); if(!m)return null; return parseInt(m[1],10)*60+parseInt(m[2],10); }
-    function arInomIntervall(tidText) {
-        let re=/(\d{1,2}[:.]\d{1,2})\s*[-–—]\s*(\d{1,2}[:.]\d{1,2})/g, m2, hittade=false;
-        while((m2=re.exec(tidText))!==null){ hittade=true; const o=tidMin(m2[1]),s=tidMin(m2[2]); if(o===null||s===null)continue; if(o===s)return true; if(o<s){if(nuMinuter>=o&&nuMinuter<s)return true;}else{if(nuMinuter>=o||nuMinuter<s)return true;} }
-        return hittade?false:null;
-    }
+    function tidMin(s) { const m=String(s||'').trim().match(/^(\d{1,2})[:.](\d{1,2})$/); if(!m)return null; const h=parseInt(m[1],10),min=parseInt(m[2],10); if(h<0||h>23||min<0||min>59)return null; return h*60+min; }
     function extractDagText(t) { return norm(t).replace(/\d{1,2}[:.]\d{1,2}/g,' ').replace(/[0-9]/g,' ').replace(/\s+/g,' ').trim(); }
-    function dagMatchar(nyckelNorm, tidText) {
+    function tolkaDagNyckel(nyckelNorm, tidText, checkDag) {
         const allaDagar=['alla dagar','alladagar','alla dag','man-son','man-sondag'];
-        if(allaDagar.indexOf(nyckelNorm)!==-1) return {hde:true,mat:true};
+        if(allaDagar.indexOf(nyckelNorm)!==-1) return { hadeDag:true, matchar:true };
         let hadeDag=false, matchar=false;
         [nyckelNorm, extractDagText(tidText)].forEach(src=>{
             src.split(',').map(s=>s.trim()).filter(Boolean).forEach(del=>{
                 const delar=del.split(/[-–—]/).map(d=>d.trim()).filter(Boolean);
-                if(delar.length===2){const f=hamtaDag(delar[0]),t=hamtaDag(delar[1]);if(f!==undefined&&t!==undefined){hadeDag=true;const tr=(f<=t)?(dag>=f&&dag<=t):(dag>=f||dag<=t);if(tr)matchar=true;}}
-                if(delar.length===1){const idx=hamtaDag(delar[0]);if(idx!==undefined){hadeDag=true;if(dag===idx)matchar=true;}}
+                if(delar.length===2){const f=hamtaDag(delar[0]),t=hamtaDag(delar[1]);if(f!==undefined&&t!==undefined){hadeDag=true;const tr=(f<=t)?(checkDag>=f&&checkDag<=t):(checkDag>=f||checkDag<=t);if(tr)matchar=true;}}
+                if(delar.length===1){const idx=hamtaDag(delar[0]);if(idx!==undefined){hadeDag=true;if(checkDag===idx)matchar=true;}}
             });
         });
-        return {hde:hadeDag,mat:matchar};
+        return {hadeDag, matchar};
+    }
+    function arNuInom(tidText) {
+        const re=/(\d{1,2}[:.]\d{1,2})\s*[-–—]\s*(\d{1,2}[:.]\d{1,2})/g;
+        let m, hittade=false;
+        while((m=re.exec(tidText))!==null){
+            hittade=true;
+            const o=tidMin(m[1]),s=tidMin(m[2]);
+            if(o===null||s===null)continue;
+            if(o===s) return true;
+            if(o<s){ if(nuMinuter>=o&&nuMinuter<s) return true; }
+            else { if(nuMinuter>=o||nuMinuter<s) return true; }
+        }
+        return hittade ? false : null;
     }
     const kandidater=[];
     let hadeDagNyckel=false;
     Object.keys(oppettider).forEach(nyckel=>{
         const nyckelNorm=norm(nyckel);
+        if(!nyckelNorm) return;
         const tidText=String(oppettider[nyckel]||'');
-        const res=dagMatchar(nyckelNorm,tidText);
-        if(res.hde){hadeDagNyckel=true; if(res.mat)kandidater.push(tidText);}
+        const tolkad=tolkaDagNyckel(nyckelNorm, tidText, dag);
+        if(tolkad.hadeDag){ hadeDagNyckel=true; if(tolkad.matchar) kandidater.push(tidText); return; }
+        const tolkadVal=tolkaDagNyckel(extractDagText(tidText), '', dag);
+        if(tolkadVal.hadeDag){ hadeDagNyckel=true; if(tolkadVal.matchar) kandidater.push(tidText); }
     });
-    if(!kandidater.length) return hadeDagNyckel?false:null;
+    if(!kandidater.length) return hadeDagNyckel ? false : null;
     let hadeTolkbarTid=false;
-    for(let i=0;i<kandidater.length;i++){const s=arInomIntervall(kandidater[i]);if(s===true)return true;if(s!==null)hadeTolkbarTid=true;}
-    return hadeTolkbarTid?false:null;
+    for(let i=0;i<kandidater.length;i++){
+        const status=arNuInom(kandidater[i]);
+        if(status===true) return true;
+        if(status!==null) hadeTolkbarTid=true;
+    }
+    return hadeTolkbarTid ? false : null;
 }
 
 function stangerOppnarOm(oppettider) {
     if (!oppettider || typeof oppettider !== 'object') return '';
     const nu = new Date();
-    let dag = nu.getDay();
+    const dag = nu.getDay();
+    const dagIgar = (dag + 6) % 7;
     const nuMin = nu.getHours() * 60 + nu.getMinutes();
     const dagIndex = { man:1,mandag:1,monday:1,tis:2,tisdag:2,tuesday:2,ons:3,onsdag:3,wednesday:3,tor:4,tors:4,torsdag:4,thursday:4,thu:4,fre:5,fredag:5,friday:5,lor:6,lordag:6,saturday:6,sat:6,son:0,sondag:0,sunday:0,sun:0 };
     function norm(s){return String(s||'').toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[._]/g,' ').replace(/[–—−]/g,'-').replace(/\s+/g,' ').trim();}
@@ -2024,8 +2040,7 @@ function stangerOppnarOm(oppettider) {
     }
     function formatMin(m){if(m<=0)return'';const h=Math.floor(m/60),min=m%60;if(h>0&&min>0)return h+'h '+min+'m';if(h>0)return h+'h';return min+'m';}
     const imorgon=(dag+1)%7;
-    const idag=dag;
-    const intervallerIdag=[], intervallerImorgon=[];
+    const intervallerIdag=[], intervallerImorgon=[], intervallerIgar=[];
     Object.keys(oppettider).forEach(nyckel=>{
         const tidText=String(oppettider[nyckel]||'');
         const nyckelNorm=norm(nyckel);
@@ -2034,15 +2049,34 @@ function stangerOppnarOm(oppettider) {
         while((m2=re.exec(tidText))!==null){
             const o=tidMin(m2[1]),s=tidMin(m2[2]);
             if(o===null||s===null)continue;
-            if(dagMatcharFor(nyckelNorm,tidText,idag))intervallerIdag.push({o,s});
+            if(dagMatcharFor(nyckelNorm,tidText,dagIgar))intervallerIgar.push({o,s});
+            if(dagMatcharFor(nyckelNorm,tidText,dag))intervallerIdag.push({o,s});
             if(dagMatcharFor(nyckelNorm,tidText,imorgon))intervallerImorgon.push({o,s});
         }
     });
+
+    // First check if we are in an overnight spill from yesterday.
+    for(let i=0;i<intervallerIgar.length;i++){
+        const {o,s}=intervallerIgar[i];
+        if(o>s && nuMin<s){
+            return '⏳ Stänger om '+formatMin(s-nuMin);
+        }
+    }
+
     for(let i=0;i<intervallerIdag.length;i++){
         const {o,s}=intervallerIdag[i];
-        const inne=(o<s)?(nuMin>=o&&nuMin<s):(nuMin>=o||nuMin<s);
-        if(inne){const kvar=(s>nuMin)?s-nuMin:(1440-nuMin+s);return '⏳ Stänger om '+formatMin(kvar);}
+        if(o<s){
+            if(nuMin>=o&&nuMin<s){
+                return '⏳ Stänger om '+formatMin(s-nuMin);
+            }
+        }else if(o>s){
+            // Overnight interval for today only counts before midnight on the same day.
+            if(nuMin>=o){
+                return '⏳ Stänger om '+formatMin(1440-nuMin+s);
+            }
+        }
     }
+
     let nastaIdag=null;
     intervallerIdag.forEach(({o})=>{if(o>nuMin){const d=o-nuMin;if(nastaIdag===null||d<nastaIdag)nastaIdag=d;}});
     if(nastaIdag!==null)return '🕐 Öppnar om '+formatMin(nastaIdag);
@@ -2131,10 +2165,159 @@ function initPizzeriorSida() {
     let aktivtOmrade = null;
     let visaBaraOppna = false;
     let omradestatistik = {};
+    const kartaIframeEl = document.getElementById('pizzerior-karta-iframe');
+    const kartaIframeStorEl = document.getElementById('pizzerior-karta-iframe-stor');
+    const kartaExpandBtn = document.getElementById('pizzerior-map-expand');
+    const kartaModal = document.getElementById('pizzerior-karta-modal');
+    const kartaModalCloseBtn = document.getElementById('pizzerior-karta-modal-close');
+
+    function appliceraKartaIframeLayout(iframeEl) {
+        if (!iframeEl) return;
+
+        iframeEl.src = hamtaNavigeringsLankForPizzeria('/karta');
+        iframeEl.addEventListener('load', () => {
+            try {
+                const doc = iframeEl.contentDocument;
+                if (!doc) return;
+
+                const doljSelectors = [
+                    '.navbar',
+                    '#karta-filter-knapp',
+                    '#karta-kontroller',
+                    '#karta-prishjul',
+                    '#karta-bottom-nav',
+                    '#karta-vanster-meny',
+                    '#karta-meny-overlay',
+                    '#karta-help-overlay'
+                ];
+
+                doljSelectors.forEach((selector) => {
+                    doc.querySelectorAll(selector).forEach((el) => {
+                        el.style.display = 'none';
+                    });
+                });
+
+                const mapEl = doc.getElementById('karta-container');
+                if (mapEl) {
+                    mapEl.style.position = 'absolute';
+                    mapEl.style.top = '0';
+                    mapEl.style.left = '0';
+                    mapEl.style.right = '0';
+                    mapEl.style.bottom = '0';
+                }
+
+                const yta = doc.getElementById('karta-yta');
+                if (yta) {
+                    yta.style.position = 'relative';
+                    yta.style.height = '100%';
+                    yta.style.minHeight = '0';
+                }
+
+                doc.documentElement.style.overflow = 'hidden';
+                doc.body.style.overflow = 'hidden';
+                doc.body.style.margin = '0';
+            } catch (_error) {
+                // Ignore iframe styling errors and keep default karta view.
+            }
+        });
+    }
+
+    function syncFilterTillIframe(iframe) {
+        try { iframe.contentWindow.postMessage({ type: 'setFilter', oppetNu: visaBaraOppna }, '*'); } catch (_) {}
+    }
+
+    function oppnaStorKarta() {
+        if (!kartaModal) return;
+        kartaModal.classList.add('is-open');
+        kartaModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (kartaIframeStorEl && !kartaIframeStorEl.src) {
+            appliceraKartaIframeLayout(kartaIframeStorEl);
+            kartaIframeStorEl.addEventListener('load', () => syncFilterTillIframe(kartaIframeStorEl), { once: true });
+        } else if (kartaIframeStorEl) {
+            syncFilterTillIframe(kartaIframeStorEl);
+        }
+    }
+
+    function stangStorKarta() {
+        if (!kartaModal) return;
+        kartaModal.classList.remove('is-open');
+        kartaModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function initieraKartaIframe() {
+        if (!kartaIframeEl) return;
+
+        appliceraKartaIframeLayout(kartaIframeEl);
+
+        if (kartaExpandBtn) {
+            kartaExpandBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                oppnaStorKarta();
+            });
+        }
+
+        if (kartaModalCloseBtn) {
+            kartaModalCloseBtn.addEventListener('click', stangStorKarta);
+        }
+
+        if (kartaModal) {
+            kartaModal.addEventListener('click', (event) => {
+                if (event.target === kartaModal) {
+                    stangStorKarta();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && kartaModal && kartaModal.classList.contains('is-open')) {
+                stangStorKarta();
+            }
+        });
+
+        const minPositionBtn = document.getElementById('pizzerior-min-position-btn');
+        if (minPositionBtn) {
+            minPositionBtn.addEventListener('click', () => {
+                if (minPositionBtn.classList.contains('aktiv')) {
+                    minPositionBtn.classList.remove('aktiv');
+                    [kartaIframeEl, kartaIframeStorEl].filter(Boolean).forEach((iframe) => {
+                        try { iframe.contentWindow.postMessage({ type: 'clearView' }, '*'); } catch (_) {}
+                    });
+                    return;
+                }
+                if (!navigator.geolocation) return;
+                minPositionBtn.disabled = true;
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        [kartaIframeEl, kartaIframeStorEl].filter(Boolean).forEach((iframe) => {
+                            try {
+                                iframe.contentWindow.postMessage({ type: 'setView', lat, lng, zoom: 14 }, '*');
+                            } catch (_) {}
+                        });
+                        minPositionBtn.classList.add('aktiv');
+                        minPositionBtn.disabled = false;
+                    },
+                    () => { minPositionBtn.disabled = false; }
+                );
+            });
+        }
+    }
 
     function visaPizzerior(pizzerior) {
         lista.innerHTML = '';
-        pizzerior.forEach((p) => lista.appendChild(skapaPizzeriaKort(p)));
+        if (pizzerior.length === 0) {
+            const tomRuta = document.createElement('div');
+            tomRuta.className = 'ingen-traff';
+            tomRuta.innerHTML = visaBaraOppna
+                ? '<h3>Just nu hittar vi inga öppna pizzerior 🍕</h3><p>Det känns ungefär som att stå utanför kebabstället 02:31 och se personalen låsa medan man fortfarande har menyn uppe.<br><br>Men håll ut — någon där ute har säkert deg på gång 👨‍🍳🔥</p>'
+                : '<h3>Inga pizzerior hittades</h3><p>Testa en annan sökning eller ett annat område.</p>';
+            lista.appendChild(tomRuta);
+        } else {
+            pizzerior.forEach((p) => lista.appendChild(skapaPizzeriaKort(p)));
+        }
 
         // Uppdatera antal-badge
         const antalSiffra = document.getElementById('pizzerior-antal-siffra');
@@ -2153,9 +2336,8 @@ function initPizzeriorSida() {
     }
 
     function updateraRubrik() {
-        const omradeText = aktivtOmrade ? ` i ${aktivtOmrade}` : ' i Göteborg';
-        if (rubriken) rubriken.textContent = `Alla pizzerior${omradeText}`;
-        if (omradeNamnet) omradeNamnet.textContent = aktivtOmrade || 'Göteborg';
+        if (rubriken) rubriken.textContent = 'Hitta Sveriges bästa pizzerior';
+        if (omradeNamnet) omradeNamnet.textContent = aktivtOmrade || 'Alla pizzerior';
     }
 
     function filtreraPizzerior() {
@@ -2265,7 +2447,9 @@ function initPizzeriorSida() {
             });
 
             standardSorteradLista = [...allaPizzeriorData].sort((a, b) => a.namn.localeCompare(b.namn, 'sv'));
-            allaPizzeriorLista = [...standardSorteradLista];
+            allaPizzeriorLista = coordsKoppladLista.length > 0
+                ? [...coordsKoppladLista]
+                : [...standardSorteradLista];
             
             byggaOmradeFilter();
             updateraRubrik();
@@ -2289,8 +2473,13 @@ function initPizzeriorSida() {
             visaBaraOppna = !visaBaraOppna;
             oppetNuToggle.classList.toggle('aktiv', visaBaraOppna);
             uppdateraVisningPizzerior();
+            [kartaIframeEl, kartaIframeStorEl].filter(Boolean).forEach((iframe) => {
+                try { iframe.contentWindow.postMessage({ type: 'setFilter', oppetNu: visaBaraOppna }, '*'); } catch (_) {}
+            });
         });
     }
+
+    initieraKartaIframe();
 
     if (narmastBtn) {
         narmastBtn.addEventListener('click', async () => {
@@ -2300,7 +2489,9 @@ function initPizzeriorSida() {
                 narmastAktiv = false;
                 narmastBtn.classList.remove('narmast-aktiv');
                 narmastBtn.textContent = '📍 Närmast mig';
-                allaPizzeriorLista = standardSorteradLista.map(({ distansKm, ...rest }) => rest);
+                allaPizzeriorLista = coordsKoppladLista.length > 0
+                    ? [...coordsKoppladLista]
+                    : standardSorteradLista.map(({ distansKm, ...rest }) => rest);
                 uppdateraVisningPizzerior();
                 return;
             }
@@ -2518,8 +2709,8 @@ function initPizzeriaSida() {
                     if (oppBox && oppLista) {
                         const DAGORDNING = ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'];
                         const DAGKORT = {
-                            'mån':'måndag','tis':'tisdag','ons':'onsdag','tor':'torsdag',
-                            'fre':'fredag','lör':'lördag','sön':'söndag',
+                            'mån':'måndag','man':'måndag','tis':'tisdag','ons':'onsdag','tor':'torsdag','tors':'torsdag',
+                            'fre':'fredag','lör':'lördag','lor':'lördag','sön':'söndag','son':'söndag',
                             'måndag':'måndag','tisdag':'tisdag','onsdag':'onsdag','torsdag':'torsdag',
                             'fredag':'fredag','lördag':'lördag','söndag':'söndag',
                             'mon':'måndag','tue':'tisdag','wed':'onsdag','thu':'torsdag',
@@ -2847,7 +3038,7 @@ function initPizzeriaSida() {
             ];
 
             const tabContainer = document.getElementById('pizzeria-kategori-tabs');
-            let aktivPizzeriaTabId = 'alla';
+            let aktivaPizzeriaTabs = new Set();
             const FOKUS_INITIAL = 4;
             const FOKUS_STEP = 8;
 
@@ -2879,8 +3070,9 @@ function initPizzeriaSida() {
 
             function uppdateraAktivTabVisning() {
                 if (!tabContainer) return;
+                const ingenAktiv = aktivaPizzeriaTabs.size === 0;
                 tabContainer.querySelectorAll('.pizzeria-kategori-tab').forEach((t) => {
-                    const aktiv = t.dataset.tabId === aktivPizzeriaTabId;
+                    const aktiv = t.dataset.tabId === 'alla' ? ingenAktiv : aktivaPizzeriaTabs.has(t.dataset.tabId);
                     t.classList.toggle('pizzeria-kategori-tab--active', aktiv);
                     t.setAttribute('aria-selected', String(aktiv));
                 });
@@ -2947,11 +3139,18 @@ function initPizzeriaSida() {
 
                 tabContainer.querySelectorAll('.pizzeria-kategori-tab').forEach((btn) => {
                     btn.addEventListener('click', () => {
-                        aktivPizzeriaTabId = btn.dataset.tabId;
+                        const tabId = btn.dataset.tabId;
+                        if (tabId === 'alla') {
+                            aktivaPizzeriaTabs.clear();
+                        } else if (aktivaPizzeriaTabs.has(tabId)) {
+                            aktivaPizzeriaTabs.delete(tabId);
+                        } else {
+                            aktivaPizzeriaTabs.add(tabId);
+                        }
                         uppdateraAktivTabVisning();
                         scrollaAktivTabTillSikt();
                         sokruta.value = '';
-                        pizzorSomVisasPizzeria = aktivPizzeriaTabId === 'alla' ? 100 : FOKUS_INITIAL;
+                        pizzorSomVisasPizzeria = aktivaPizzeriaTabs.size === 0 ? 100 : FOKUS_INITIAL;
                         uppdateraPizzeriaVisning();
                     });
                 });
@@ -3076,20 +3275,10 @@ function initPizzeriaSida() {
                     return;
                 }
 
-                const aktivTab = PIZZERIA_TAB_DEF.find((t) => t.id === aktivPizzeriaTabId);
-                if (aktivTab && aktivPizzeriaTabId !== 'alla') {
-                    const fokusHeader = document.createElement('div');
-                    fokusHeader.className = `pizzeria-fokus-header pizzeria-sektion--${aktivPizzeriaTabId}`;
-                    fokusHeader.innerHTML = `
-                        <div class="pizzeria-fokus-title">${aktivTab.emoji} ${escapaHtml(aktivTab.label)}</div>
-                        <div class="pizzeria-fokus-sub">${pizzorAttVisa.length} rätter i kategorin</div>
-                    `;
-                    lista.appendChild(fokusHeader);
-                }
-
+                const ingenTabAktiv2 = aktivaPizzeriaTabs.size === 0;
                 const urval = pizzorAttVisa;
                 const wrapper = document.createElement('div');
-                wrapper.className = `pizzeria-lista-full${aktivPizzeriaTabId !== 'alla' ? ' pizzeria-lista-full--fokus' : ''}`;
+                wrapper.className = `pizzeria-lista-full${!ingenTabAktiv2 ? ' pizzeria-lista-full--fokus' : ''}`;
                 urval.forEach((pizza) => wrapper.appendChild(skapaPizzeriaItemRad(pizza)));
                 lista.appendChild(wrapper);
                 laddaFlerSektion.style.display = 'none';
@@ -3107,19 +3296,20 @@ function initPizzeriaSida() {
                     })
                     : huvudRatter;
 
-                if (aktivPizzeriaTabId !== 'alla') {
-                    resultatHuvud = resultatHuvud.filter((p) => kategoriseraPizzeriaItem(p) === aktivPizzeriaTabId);
+                if (aktivaPizzeriaTabs.size > 0) {
+                    resultatHuvud = resultatHuvud.filter((p) => aktivaPizzeriaTabs.has(kategoriseraPizzeriaItem(p)));
                 }
 
                 filtreradLista = resultatHuvud;
-                const totalTraffar = aktivPizzeriaTabId === 'alla'
+                const ingenTabAktiv = aktivaPizzeriaTabs.size === 0;
+                const totalTraffar = ingenTabAktiv
                     ? (resultatHuvud.length + extraRatter.length)
                     : resultatHuvud.length;
                 antalTraffar.innerText = totalTraffar > 0
-                    ? `Hittade ${totalTraffar} ${aktivPizzeriaTabId === 'sallader' ? 'sallader' : 'rätter'}`
+                    ? `Hittade ${totalTraffar} ${aktivaPizzeriaTabs.has('sallader') ? 'sallader' : 'rätter'}`
                     : 'Inga rätter matchar din sökning';
 
-                if (aktivPizzeriaTabId === 'alla' && !harSok) {
+                if (ingenTabAktiv && !harSok) {
                     visaPizzeriaGrid(huvudRatter);
                 } else {
                     visaPizzorPizzeria(filtreradLista);

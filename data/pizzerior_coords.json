@@ -355,6 +355,16 @@
     "adress": "Kaveldunsvägen 1, 435 40 Mölnlycke",
     "lat": 57.65199246852096,
     "lng": 12.138188021554326
+  },
+  { "pizzeria": "Vickan Restaurang och Bar",
+    "adress": "Stationsvägen 2, 435 37 Mölnlycke",
+    "lat": 57.65765534071353,
+    "lng": 12.123919539895267
+  },
+  { "pizzeria": "La Luna",
+    "adress": "Biblioteksgatan 22, 435 30 Mölnlycke",
+    "lat": 57.65803384791355,
+    "lng": 12.114756420741397
   }
   
 

@@ -344,5 +344,139 @@
     "namn": "Sprite 1,5L",
     "pris": 50,
     "beskrivning": ""
-  }
+  },
+      {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Snacks",
+      "namn": "Barnpizza",
+      "pris": 15,
+      "beskrivning": "Mindre pizza"
+    },
+
+    {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Snacks",
+      "namn": "Glutenfri Botten",
+      "pris": 35,
+      "beskrivning": "Glutenfri pizzadeg"
+    },
+
+    {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Snacks",
+      "namn": "Tjock Botten",
+      "pris": 25,
+      "beskrivning": "Dubbel deg i botten"
+    },
+
+    {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Såser",
+      "namn": "Sås I Burk",
+      "pris": 15,
+      "beskrivning": "Sås att ta med"
+    },
+
+    {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Snacks",
+      "namn": "Grönsaker",
+      "pris": 15,
+      "beskrivning": "Extra grönsaker"
+    },
+
+    {
+      "pizzeria": "Vickan Restaurang och Bar",
+      "kategori": "Snacks",
+      "namn": "Skaldjur Eller Ost",
+      "pris": 20,
+      "beskrivning": ""
+    },
+        {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Vitlöksbröd med örtsolivolja & dipp",
+      "pris": 65,
+      "beskrivning": "Vitlöksbröd med örtsolivolja och dipp"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Marinerade oliver med timjan & vitlök",
+      "pris": 69,
+      "beskrivning": "Marinerade oliver med timjan och vitlök"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Patatas con chiliaioli",
+      "pris": 79,
+      "beskrivning": "Potatis med chiliaioli"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Olika ostar med fikonmarmelad",
+      "pris": 109,
+      "beskrivning": "Ostar serverade med fikonmarmelad"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Gratinerad chévre på lantbröd med honung & valnötter",
+      "pris": 99,
+      "beskrivning": "Gratinerad chévre på lantbröd med honung och valnötter"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Friterad mozzarella med dippsås",
+      "pris": 89,
+      "beskrivning": "Friterad mozzarella serverad med dippsås"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Baconlindade dadlar",
+      "pris": 89,
+      "beskrivning": "Dadlar lindade med bacon"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Grillad kronärtskocka & hyvlad parmesan",
+      "pris": 99,
+      "beskrivning": "Grillad kronärtskocka med hyvlad parmesan"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Kycklingspett med tryffelmojo",
+      "pris": 99,
+      "beskrivning": "Kycklingspett serverade med tryffelmojo"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Friterade calamari med aioli & citron",
+      "pris": 99,
+      "beskrivning": "Friterade calamari med aioli och citron"
+    },
+
+    {
+      "pizzeria": "La Luna",
+      "kategori": "Snacks",
+      "namn": "Vitlöksfrästa gambas & chili i vitt vin",
+      "pris": 109,
+      "beskrivning": "Vitlöksfrästa gambas och chili i vitt vin"
+    }
 ]

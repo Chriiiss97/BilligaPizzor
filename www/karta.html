@@ -525,6 +525,40 @@
       var favoriter = (function () {
         try { return JSON.parse(localStorage.getItem('billiga-favoriter') || '[]'); } catch(e) { return []; }
       })();
+      window.addEventListener('message', function (event) {
+        if (!event.data) return;
+        if (event.data.type === 'clearView') {
+          if (användarMarkör) {
+            användarMarkör.remove();
+            användarMarkör = null;
+          }
+          return;
+        }
+        if (event.data.type === 'setFilter' && typeof event.data.oppetNu === 'boolean') {
+          filterState.oppetNu = event.data.oppetNu;
+          var oppetNuToggle = document.getElementById('karta-oppet-nu');
+          if (oppetNuToggle) oppetNuToggle.checked = event.data.oppetNu;
+          uppdateraRadiusFilter('extern');
+          return;
+        }
+        if (event.data.type === 'setView' &&
+            typeof event.data.lat === 'number' && typeof event.data.lng === 'number') {
+          var z = typeof event.data.zoom === 'number' ? event.data.zoom : 14;
+          var lat = event.data.lat;
+          var lng = event.data.lng;
+          if (användarMarkör) {
+            användarMarkör.setLatLng([lat, lng]);
+          } else {
+            användarMarkör = L.marker([lat, lng], {
+              icon: skapaAnvändarIkon(),
+              zIndexOffset: 1000
+            })
+              .bindPopup('<div class="karta-popup"><p class="karta-popup-namn">📍 Din position</p></div>')
+              .addTo(karta);
+          }
+          karta.flyTo([lat, lng], z, { duration: 0.8 });
+        }
+      });
       var pizzaRättIndex = {};
       var menyStatsIndex = {};
       var visaPrisTyp = 'lagsta'; // 'lagsta' | 'snitt' | 'snitt_relativ'

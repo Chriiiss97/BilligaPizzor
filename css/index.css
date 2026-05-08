@@ -4544,31 +4544,34 @@ body.index-kort-lage .pizza-kort {
    Förbättrad "inga resultat"-vy
    ============================ */
 .ingen-traff {
+  grid-column: 1 / -1;
+  width: 100%;
   text-align: center;
-  padding: 52px 24px 40px;
+  padding: 72px 24px 56px;
   color: #aaa;
 }
 
 .ingen-traff-ikon {
-  font-size: 3rem;
-  margin-bottom: 14px;
+  font-size: 4rem;
+  margin-bottom: 18px;
   line-height: 1;
 }
 
 .ingen-traff h3 {
   color: #fff;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  font-weight: 600;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  font-weight: 700;
 }
 
 .ingen-traff p {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #888;
   margin-bottom: 22px;
-  max-width: 340px;
+  max-width: 360px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.55;
 }
 
 /* ============================
@@ -6497,7 +6500,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: calc((5 * 44px) + (4 * 2px));
+  max-height: 420px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 2px;
@@ -6518,28 +6521,28 @@ img {
   background: rgba(255,255,255,0.32);
 }
 .pizzeria-extra-items .pizzeria-item-rad {
-  padding: 7px 2px;
-  min-height: 44px;
+  padding: 10px 4px;
+  min-height: auto;
 }
 .pizzeria-extra-items .pizzeria-item-bild {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  font-size: 0.92rem;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  font-size: 1.1rem;
 }
 .pizzeria-extra-items .pizzeria-item-namn {
-  font-size: 0.76rem;
+  font-size: 0.88rem;
   text-transform: none;
+  white-space: normal;
+  word-break: break-word;
 }
 .pizzeria-extra-items .pizzeria-item-ingredienser {
-  font-size: 0.66rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 0.74rem;
+  white-space: normal;
+  word-break: break-word;
 }
 .pizzeria-extra-items .pizzeria-item-pris {
-  font-size: 0.84rem;
+  font-size: 0.94rem;
 }
 .pizzeria-extra-card-footer {
   margin-top: 6px;
