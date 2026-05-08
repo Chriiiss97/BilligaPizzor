@@ -1,15 +1,7 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="sv">
   <head>
 
-    <script>
-      // I appen (Capacitor) — gå direkt till karta vid appstart (ej om man navigerat hit)
-      if (location.hostname === 'localhost' || location.protocol === 'capacitor:') {
-        if (!document.referrer || document.referrer === '') {
-          location.replace('/karta.html');
-        }
-      }
-    </script>
     <script>
       if (location.hostname === 'billigapizzor.se') {
         var cb = document.createElement('script');
@@ -81,7 +73,7 @@
   <!-- Performance -->
   <link rel="preconnect" href="https://billigapizzor.se" />
   <link rel="preload" href="/css/index.css" as="style" />
-  <link rel="preload" href="/js/script.js" as="script" />
+  <link rel="preload" href="/js/shared.js" as="script" />
 
   <script type="application/ld+json">
   {
@@ -149,7 +141,6 @@
   </script>
 
   <link rel="stylesheet" href="/css/index.css" />
-  <link rel="stylesheet" href="/css/app-nav.css" />
 </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -555,8 +546,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </footer>
 
-    <script src="js/script.js"></script>
-    <script src="/js/app-nav.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/index-sida.js"></script>
 </body>
 </html>
 

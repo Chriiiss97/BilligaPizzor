@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pizzeriakarta Mölndal – Billiga Pizzor</title>
+  <title>Pizzeriakarta Göteborgsområdet – Billiga Pizzor</title>
   <meta name="description" content="Se alla pizzerior i Mölndal, Kållered och Lindome på karta. Klicka på en pizzeria för att se menyn.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://billigapizzor.se/karta" />
@@ -21,7 +21,6 @@
 
   <link rel="stylesheet" href="/css/index.css" />
   <link rel="stylesheet" href="/css/karta.css" />
-  <link rel="stylesheet" href="/css/app-nav.css" />
 
   <script type="application/ld+json">
 {
@@ -108,45 +107,26 @@
     /* Min position knapp - MODERN & WOW */
     #karta-narmast-knapp {
       position: relative;
-      padding: 14px 18px;
-      background: linear-gradient(135deg, rgba(169, 240, 181, 0.96), rgba(119, 219, 138, 0.88));
-      backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(103, 188, 118, 0.9);
-      border-radius: 22px;
-      color: #119536;
+      padding: 14px 32px;
+      background: rgba(21, 170, 58, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(31, 122, 76, 0.4);
+      border-radius: 16px;
+      color: #15aa3a;
       cursor: pointer;
-      font-weight: 800;
-      font-size: 0.98rem;
-      letter-spacing: 0.01em;
-      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
       white-space: nowrap;
       overflow: hidden;
       box-shadow:
-        0 10px 28px rgba(24, 108, 37, 0.24),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        0 0 20px rgba(21, 170, 58, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    #karta-narmast-knapp .karta-narmast-ikon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.4);
-      color: #11a13c;
-      flex-shrink: 0;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-
-    #karta-narmast-knapp .karta-narmast-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     #karta-narmast-knapp::before {
@@ -162,13 +142,14 @@
     }
 
     #karta-narmast-knapp:hover {
-      background: linear-gradient(135deg, rgba(184, 248, 193, 0.98), rgba(132, 226, 150, 0.92));
-      border-color: rgba(57, 145, 77, 0.95);
+      background: rgba(21, 170, 58, 0.25);
+      border-color: rgba(31, 122, 76, 0.7);
       box-shadow:
-        0 14px 34px rgba(24, 108, 37, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.42);
-      transform: translateY(-2px);
-      color: #0c8f31;
+        0 0 40px rgba(21, 170, 58, 0.4),
+        0 8px 32px rgba(21, 170, 58, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transform: translateY(-4px);
+      color: #0ed145;
     }
 
     #karta-narmast-knapp:hover::before {
@@ -176,10 +157,10 @@
     }
 
     #karta-narmast-knapp:active {
-      transform: translateY(0);
+      transform: translateY(-2px);
       box-shadow:
-        0 6px 18px rgba(24, 108, 37, 0.2),
-        inset 0 2px 8px rgba(0, 0, 0, 0.08);
+        0 0 25px rgba(21, 170, 58, 0.3),
+        inset 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     #karta-narmast-knapp:disabled {
@@ -189,61 +170,18 @@
     }
 
     @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 10px 28px rgba(24, 108, 37, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
-      50% { box-shadow: 0 12px 32px rgba(24, 108, 37, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+      0%, 100% { box-shadow: 0 0 20px rgba(21, 170, 58, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(21, 170, 58, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
     }
 
     #karta-narmast-knapp:focus {
       outline: none;
       animation: pulse-glow 2s ease-in-out infinite;
     }
-
-    @media (max-width: 600px) {
-      #karta-narmast-knapp {
-        position: fixed !important;
-        right: 12px !important;
-        left: auto !important;
-        bottom: 88px !important;
-        bottom: calc(88px + env(safe-area-inset-bottom)) !important;
-        width: 56px !important;
-        min-width: 56px !important;
-        height: 56px !important;
-        min-height: 56px !important;
-        padding: 0 !important;
-        border-radius: 50% !important;
-        white-space: nowrap !important;
-        pointer-events: auto !important;
-        z-index: 1002 !important;
-      }
-      #karta-narmast-knapp .karta-narmast-text {
-        display: none !important;
-      }
-    }
     </style>
 </head>
 <body>
   <div id="karta-yta">
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="/" class="nav-logo">
-          <img src="/images/Pizza _Gubbe.png" alt="Pizza Gubbe - Billiga Pizzor">
-        </a>
-
-        <div class="hamburger-ikon" onclick="toggleMobilMeny()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <ul class="nav-links">
-          <li><a href="/" onclick="closeMobilMeny()">PIZZOR</a></li>
-          <li><a href="/pizzerior" onclick="closeMobilMeny()">PIZZERIOR</a></li>
-          <li><a href="/karta" onclick="closeMobilMeny()">KARTA</a></li>
-          <li><a href="/statistik" onclick="closeMobilMeny()">STATISTIK</a></li>
-          <li><a href="/om-oss" onclick="closeMobilMeny()">OM OSS</a></li>
-        </ul>
-      </div>
-    </nav>
-
     <!-- Flytande filter-knapp -->
     <button id="karta-filter-knapp" class="karta-app-topbar-btn" type="button" aria-label="Öppna filter" aria-expanded="false" aria-controls="karta-vanster-meny">
       <span class="karta-app-topbar-btn-ikon" aria-hidden="true">
@@ -431,22 +369,25 @@
       <div id="karta-kontroller">
         <div id="karta-sok-wrap" class="is-collapsed">
           <button id="karta-sok-toggle" type="button" aria-label="Öppna sök">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
           </button>
           <svg id="karta-sok-ikon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-          <button id="karta-sok-stang" type="button" aria-label="Stäng sök">×</button>
           <input type="text" id="karta-sok" placeholder="Sök pizzeria, område eller stad…" autocomplete="off" />
+          <button id="karta-sok-stang" type="button" aria-label="Stäng sök">×</button>
           <ul id="karta-sok-resultat"></ul>
         </div>
         <button id="karta-narmast-knapp" onclick="kartaNarmastMig()" type="button" aria-label="Hämta min position">
-          <span class="karta-narmast-ikon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.33-6-11a6 6 0 1 1 12 0c0 5.67-6 11-6 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-          </span>
-          <span class="karta-narmast-text">Min position</span>
+          📍 Min position
+          <div id="karta-info">Laddar pizzerior…</div>
         </button>
       </div>
       <div id="karta-container"></div>
-      <div id="karta-info">Laddar pizzerior…</div>
+      <!-- Flytande prisväxlarhjul -->
+      <div id="karta-prishjul" aria-label="Byt prisvisning">
+        <button id="karta-prishjul-prev" type="button" aria-label="Föregående pristyp">‹</button>
+        <span id="karta-prishjul-label">💰 Fr X kr</span>
+        <button id="karta-prishjul-next" type="button" aria-label="Nästa pristyp">›</button>
+      </div>
     </div>
 
 
@@ -459,12 +400,6 @@
         <a href="/pizzerior" class="karta-bnav-item" aria-label="Pizzerior">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           <span>Pizzerior</span>
-        </a>
-        <a href="/karta" class="karta-bnav-item karta-bnav-item--karta karta-bnav-item--aktiv" aria-label="Karta" aria-current="page">
-          <span class="karta-bnav-karta-cirkel">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 1 8 8c0 5.25-8 14-8 14S4 15.25 4 10a8 8 0 0 1 8-8z"/></svg>
-          </span>
-          <span>Karta</span>
         </a>
         <a href="/statistik" class="karta-bnav-item" aria-label="Statistik">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
@@ -482,12 +417,11 @@
   <!-- Leaflet MarkerCluster -->
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
 
-  <script src="/js/script.js" defer></script>
-  <script src="/js/app-nav.js" defer></script>
+  <script src="/js/shared.js" defer></script>
 
   <script>
     (function () {
-      // Positionera kartan under navbaren
+      // Positionera kartan utan top-offset
       var appTopbar = document.getElementById('karta-app-topbar');
       var navH = appTopbar ? appTopbar.getBoundingClientRect().height : 0;
       var bottomNavH = 72;
@@ -501,7 +435,7 @@
       var karta = L.map('karta-container', {
         center: [57.655, 12.015],
         zoom: 12,
-          zoomControl: false,
+        zoomControl: true,
         closePopupOnClick: false
       });
 
@@ -563,7 +497,7 @@
       var menyStatsIndex = {};
       var visaPrisTyp = 'lagsta'; // 'lagsta' | 'snitt' | 'snitt_relativ'
       var FILTER_HELP_HINT_KEY = 'billiga-karta-filter-help-seen';
-      var DEBUG_POPUP_RACE = true;
+      var DEBUG_POPUP_RACE = false;
       var SNABBT_STOPP_KM = 3;
       var radiusStegKm = (function () {
         var arr = [0];
@@ -781,7 +715,7 @@
           if (!key) return;
           if (!stats[key]) stats[key] = { pizzor: 0, burgare: 0, sallader: 0, pasta: 0 };
           var namn = (rad.pizza_namn || '').toLowerCase();
-          if (namn.indexOf('sallad') !== -1) {
+          if (namn.indexOf('sallad') !== -1 || namn.indexOf('bowl') !== -1) {
             stats[key].sallader += 1;
           } else if (namn.indexOf('burger') !== -1 || namn.indexOf('burgare') !== -1 || namn.indexOf('hamburgare') !== -1 || namn.indexOf('hamburgertallrik') !== -1) {
             stats[key].burgare += 1;
@@ -1855,6 +1789,29 @@
         if (prisBtnSnitt) prisBtnSnitt.addEventListener('click', function () { sättPrisTyp('snitt'); });
         if (prisBtnRelativ) prisBtnRelativ.addEventListener('click', function () { sättPrisTyp('snitt_relativ'); });
 
+        // Flytande prisväxlarhjul
+        var prishjulTyper = [
+          { typ: 'lagsta',        label: '💰 Fr X kr' },
+          { typ: 'snitt',         label: '📊 Snitt' },
+          { typ: 'snitt_relativ', label: '🧠 Jämfört' }
+        ];
+        var prishjulIndex = 0;
+        var prishjulLabel = document.getElementById('karta-prishjul-label');
+        var prishjulPrev  = document.getElementById('karta-prishjul-prev');
+        var prishjulNext  = document.getElementById('karta-prishjul-next');
+        function uppdateraPrishjul() {
+          if (prishjulLabel) prishjulLabel.textContent = prishjulTyper[prishjulIndex].label;
+          sättPrisTyp(prishjulTyper[prishjulIndex].typ);
+        }
+        if (prishjulPrev) prishjulPrev.addEventListener('click', function () {
+          prishjulIndex = (prishjulIndex - 1 + prishjulTyper.length) % prishjulTyper.length;
+          uppdateraPrishjul();
+        });
+        if (prishjulNext) prishjulNext.addEventListener('click', function () {
+          prishjulIndex = (prishjulIndex + 1) % prishjulTyper.length;
+          uppdateraPrishjul();
+        });
+
         resetKnapp.addEventListener('click', function () {
           aktivRadieKm = 0;
           radiusInput.value = '0';
@@ -1938,52 +1895,9 @@
 
       // --- Sök ---
       function setupSök() {
-        var sokWrap = document.getElementById('karta-sok-wrap');
-        var sokToggle = document.getElementById('karta-sok-toggle');
-        var sokStang = document.getElementById('karta-sok-stang');
         var input = document.getElementById('karta-sok');
         var resultat = document.getElementById('karta-sok-resultat');
-        if (!sokWrap || !input || !resultat) return;
-
-        function arMobilLayout() {
-          return window.innerWidth <= 600;
-        }
-
-        function expanderaSok() {
-          sokWrap.classList.remove('is-collapsed');
-          setTimeout(function () { input.focus(); }, 0);
-        }
-
-        function kollapsaSok() {
-          if (!arMobilLayout()) return;
-          sokWrap.classList.add('is-collapsed');
-          resultat.style.display = 'none';
-        }
-
-        function synkaSokLayout() {
-          if (arMobilLayout()) {
-            sokWrap.classList.add('is-collapsed');
-          } else {
-            sokWrap.classList.remove('is-collapsed');
-            resultat.style.display = 'none';
-          }
-        }
-
-        if (sokToggle) {
-          sokToggle.addEventListener('click', function (e) {
-            e.stopPropagation();
-            expanderaSok();
-          });
-        }
-
-        if (sokStang) {
-          sokStang.addEventListener('click', function () {
-            input.value = '';
-            filterState.sokNamn = '';
-            uppdateraRadiusFilter('search');
-            kollapsaSok();
-          });
-        }
+        if (!input || !resultat) return;
 
         input.addEventListener('input', function () {
           var q = input.value.trim().toLowerCase();
@@ -2015,9 +1929,6 @@
               obj.markör.openPopup();
               input.value = obj.pizzeria;
               resultat.style.display = 'none';
-              if (arMobilLayout()) {
-                setTimeout(function () { kollapsaSok(); }, 120);
-              }
             });
             resultat.appendChild(li);
           });
@@ -2025,9 +1936,33 @@
         });
 
         document.addEventListener('click', function (e) {
-          if (!sokWrap.contains(e.target) && !resultat.contains(e.target)) {
+          if (!input.contains(e.target) && !resultat.contains(e.target)) {
             resultat.style.display = 'none';
-            kollapsaSok();
+          }
+        });
+
+        // Collapse/expand toggle
+        var sokWrap = document.getElementById('karta-sok-wrap');
+        var sokToggle = document.getElementById('karta-sok-toggle');
+        var sokStang = document.getElementById('karta-sok-stang');
+        if (sokToggle) sokToggle.addEventListener('click', function () {
+          sokWrap.classList.remove('is-collapsed');
+          input.focus();
+        });
+        if (sokStang) sokStang.addEventListener('click', function () {
+          sokWrap.classList.add('is-collapsed');
+          input.value = '';
+          resultat.style.display = 'none';
+          filterState.sokNamn = '';
+          uppdateraRadiusFilter('search');
+        });
+        document.addEventListener('click', function (e) {
+          if (sokWrap && !sokWrap.contains(e.target) && !sokWrap.classList.contains('is-collapsed')) {
+            sokWrap.classList.add('is-collapsed');
+            input.value = '';
+            resultat.style.display = 'none';
+            filterState.sokNamn = '';
+            uppdateraRadiusFilter('search');
           }
         });
 
@@ -2037,11 +1972,8 @@
             input.value = '';
             filterState.sokNamn = '';
             uppdateraRadiusFilter('search');
-            kollapsaSok();
           }
         });
-
-        synkaSokLayout();
       }
 
       // --- Popup-karusell ---
@@ -2242,6 +2174,5 @@
     </div>
   </div>
 </footer>
-
 </body>
 </html>
