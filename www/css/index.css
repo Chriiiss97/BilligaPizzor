@@ -1,4 +1,10 @@
 /* --- 1. GRUNDSTIL & ITALIENSKT TEMA --- */
+
+/* Dölj Leaflet attribution */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 html {
   overflow-x: hidden;
   box-sizing: border-box;

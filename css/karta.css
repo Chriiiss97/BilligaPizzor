@@ -2,6 +2,11 @@
    karta.css — Billiga Pizzor kartvy
    ============================================================ */
 
+/* Dölj Leaflet attribution */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 /* Kartan fyller hela höjden under navbar */
 #karta-container {
   position: absolute;
