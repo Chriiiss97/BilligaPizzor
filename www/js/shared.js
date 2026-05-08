@@ -374,8 +374,10 @@ function matcharKategori(item, kategori) {
         case 'Salami':
             return harIngrediens('salami');
 
-        case 'Kebab':
-            return harIngrediens('kebab');
+        case 'Kebab': {
+            const primarKat = hamtaPrimarKategoriForPizza(item);
+            return primarKat === 'kebab';
+        }
 
         case 'Köttfärs':
             return harIngrediens('köttfärs');
