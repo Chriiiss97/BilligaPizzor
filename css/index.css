@@ -3406,22 +3406,22 @@ body.index-kort-lage .pizza-kort {
 }
 
 .pizza-kort {
-  background: rgba(14, 22, 16, 0.92);
-  border: 1px solid rgba(109, 255, 123, 0.20);
-  border-bottom: 1px solid rgba(109, 255, 123, 0.20);
+  background: rgba(16, 24, 32, 0.92);
+  border: 1px solid rgba(120, 255, 143, 0.20);
+  border-bottom: 1px solid rgba(120, 255, 143, 0.20);
   border-radius: 18px;
   min-height: 0;
   padding: 22px 24px;
   box-shadow:
-    0 0 0 1px rgba(109, 255, 123, 0.06),
-    0 4px 20px rgba(0, 0, 0, 0.45),
-    0 0 22px rgba(59, 188, 105, 0.08);
+    0 0 0 1px rgba(120, 255, 143, 0.06),
+    0 4px 20px rgba(0, 0, 0, 0.50),
+    0 0 22px rgba(120, 255, 143, 0.08);
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .pizza-kort:last-child {
-  border-bottom: 1px solid rgba(109, 255, 123, 0.20);
+  border-bottom: 1px solid rgba(120, 255, 143, 0.20);
 }
 
 .pizza-kort::before {
@@ -3430,15 +3430,15 @@ body.index-kort-lage .pizza-kort {
 
 .pizza-kort:hover {
   transform: translateY(-2px);
-  border-color: rgba(109, 255, 123, 0.45);
+  border-color: rgba(120, 255, 143, 0.45);
   box-shadow:
-    0 0 0 1px rgba(109, 255, 123, 0.18),
-    0 8px 28px rgba(0, 0, 0, 0.5),
-    0 0 32px rgba(59, 188, 105, 0.20);
+    0 0 0 1px rgba(120, 255, 143, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(120, 255, 143, 0.25);
 }
 
 .pizza-kort:focus-visible {
-  outline: 2px solid rgba(126, 244, 163, 0.75);
+  outline: 2px solid rgba(120, 255, 143, 0.75);
   outline-offset: 4px;
 }
 
@@ -3482,7 +3482,7 @@ body.index-kort-lage .pizza-kort {
 
 .pizza-oppettider {
   font-size: clamp(0.82rem, 1.35vw, 1rem);
-  color: rgba(126, 244, 163, 0.85);
+  color: rgba(120, 255, 143, 0.9);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -3496,7 +3496,7 @@ body.index-kort-lage .pizza-kort {
   align-items: center;
   gap: 4px;
   font-size: clamp(0.82rem, 1.35vw, 1rem);
-  color: rgba(126, 244, 163, 0.85);
+  color: rgba(120, 255, 143, 0.9);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -3508,7 +3508,7 @@ body.index-kort-lage .pizza-kort {
 
 .pizza-kort h3 {
   margin: 0;
-  color: #f5f7f9;
+  color: #f5f7fa;
   font-size: clamp(1.7rem, 3.2vw, 2.3rem);
   line-height: 1.14;
   font-weight: 800;
@@ -3517,7 +3517,7 @@ body.index-kort-lage .pizza-kort {
 
 .pizza-beskrivning {
   margin: 8px 0 0;
-  color: rgba(220, 227, 234, 0.84);
+  color: rgba(184, 192, 204, 0.9);
   font-size: clamp(1rem, 1.7vw, 1.28rem);
   line-height: 1.35;
   display: -webkit-box;
@@ -3533,17 +3533,17 @@ body.index-kort-lage .pizza-kort {
 }
 
 .pizza-pizzeria-link {
-  color: rgba(126, 244, 163, 0.95);
+  color: rgba(120, 255, 143, 0.95);
   text-decoration: none;
   font-weight: 700;
 }
 
 .pizza-pizzeria-link:hover {
-  color: #9fffbf;
+  color: rgb(103, 245, 138);
 }
 
 .pizza-pizzeria-link:focus-visible {
-  outline: 2px solid rgba(126, 244, 163, 0.9);
+  outline: 2px solid rgba(120, 255, 143, 0.9);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -3568,7 +3568,7 @@ body.index-kort-lage .pizza-kort {
   width: 100%;
   height: 1px;
   margin: 12px 0 10px;
-  background: linear-gradient(90deg, rgba(109,255,123,0.18), rgba(109,255,123,0.04));
+  background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
 }
 
 .pizza-pizzeria-row {
@@ -3586,15 +3586,15 @@ body.index-kort-lage .pizza-kort {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  background: rgba(20, 41, 25, 0.78);
-  border: 1px solid rgba(109, 255, 123, 0.24);
-  color: #6dff7b;
+  background: rgba(16, 24, 32, 0.85);
+  border: 1px solid rgba(120, 255, 143, 0.24);
+  color: rgb(120, 255, 143);
   font-size: 1rem;
   line-height: 1;
 }
 
 .pizza-store-icon:focus-visible {
-  outline: 2px solid rgba(126, 244, 163, 0.9);
+  outline: 2px solid rgba(120, 255, 143, 0.9);
   outline-offset: 2px;
 }
 
@@ -3602,8 +3602,8 @@ body.index-kort-lage .pizza-kort {
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: #6dff7b;
-  box-shadow: 0 0 0 2px rgba(109, 255, 123, 0.14);
+  background: rgb(120, 255, 143);
+  box-shadow: 0 0 0 2px rgba(120, 255, 143, 0.14);
 }
 
 .pizza-pris-wrap {
@@ -3618,10 +3618,10 @@ body.index-kort-lage .pizza-kort {
 .pris-badge {
   margin: 0;
   padding: 10px 16px;
-  border: 1px solid rgba(109,255,123,0.35);
+  border: 1px solid rgba(120, 255, 143, 0.35);
   border-radius: 999px;
-  background: rgba(14, 30, 18, 0.9);
-  color: #6dff7b;
+  background: rgba(16, 24, 32, 0.92);
+  color: rgb(120, 255, 143);
   font-size: clamp(1.25rem, 1.85vw, 1.7rem);
   font-weight: 800;
   white-space: nowrap;
@@ -3630,10 +3630,10 @@ body.index-kort-lage .pizza-kort {
 }
 
 .pris-badge--billig {
-  color: #6dff7b;
-  background: rgba(14, 30, 18, 0.9);
-  border-color: rgba(109,255,123,0.5);
-  box-shadow: 0 0 10px rgba(109,255,123,0.2);
+  color: rgb(120, 255, 143);
+  background: rgba(16, 24, 32, 0.92);
+  border-color: rgba(120, 255, 143, 0.5);
+  box-shadow: 0 0 12px rgba(120, 255, 143, 0.25);
 }
 
 .pizza-telefon-link {
@@ -3644,20 +3644,22 @@ body.index-kort-lage .pizza-kort {
   height: 58px;
   margin-top: 10px;
   border-radius: 999px;
-  border: 1px solid rgba(126, 244, 163, 0.42);
-  background: radial-gradient(circle at 30% 30%, rgba(126, 244, 163, 0.23), rgba(44, 141, 86, 0.16) 62%, rgba(20, 58, 36, 0.3));
-  color: #63e48f;
+  border: 2px solid rgba(120, 255, 143, 0.55);
+  background: rgba(16, 24, 32, 0.85);
+  color: rgb(120, 255, 143);
   text-decoration: none;
-  box-shadow: 0 0 0 1px rgba(126, 244, 163, 0.08), 0 0 26px rgba(59, 188, 105, 0.22);
+  box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.08), 0 0 22px rgba(120, 255, 143, 0.20);
 }
 
 .pizza-telefon-link:hover {
-  color: #88f8af;
+  color: rgb(103, 245, 138);
+  border-color: rgba(120, 255, 143, 0.8);
+  box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.15), 0 0 30px rgba(120, 255, 143, 0.30);
   transform: translateY(-1px);
 }
 
 .pizza-telefon-link:focus-visible {
-  outline: 2px solid rgba(126, 244, 163, 0.9);
+  outline: 2px solid rgba(120, 255, 143, 0.9);
   outline-offset: 2px;
 }
 
@@ -3694,9 +3696,9 @@ body.index-kort-lage .pizza-kort {
 }
 
 .pizza-badge--billigast {
-  background: rgba(53, 189, 112, 0.17);
-  border: 1px solid rgba(53, 189, 112, 0.38);
-  color: #83f0ac;
+  background: rgba(120, 255, 143, 0.12);
+  border: 1px solid rgba(120, 255, 143, 0.35);
+  color: rgb(120, 255, 143);
 }
 
 .avstand-badge {
