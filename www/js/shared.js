@@ -2547,6 +2547,7 @@ function visaPizzor(pizzor) {
                 <div class="pizza-body">
                     <h3>${pizzaNamnSafe}</h3>
                     <p class="pizza-beskrivning">${ingrediensTextSafe}</p>
+                    <div class="pizza-divider" aria-hidden="true"></div>
                     <div class="pizza-pizzeria-row">
                         <span class="pizza-store-icon" aria-hidden="true">${pizzaKategoriEmoji}</span>
                         <div class="pizza-pizzeria-detaljer">
