@@ -379,6 +379,11 @@ function matcharKategori(item, kategori) {
             return primarKat === 'kebab';
         }
 
+        case 'Rullar': {
+            const primarKat = hamtaPrimarKategoriForPizza(item);
+            return primarKat === 'rulle';
+        }
+
         case 'Köttfärs':
             return harIngrediens('köttfärs');
 
@@ -474,7 +479,12 @@ const CATEGORY_MAP = {
     kebab: {
         label: 'Kebab',
         emoji: '🥙',
-        match: ['kebab', 'kebabrulle', 'rulle', 'tallrik', 'gyros', 'shawarma', 'falafel']
+        match: ['kebab', 'tallrik', 'gyros', 'shawarma', 'falafel']
+    },
+    rulle: {
+        label: 'Rullar',
+        emoji: '🌯',
+        match: ['rulle', 'kebabrulle', 'wraps', 'wrap']
     },
     burgare: {
         label: 'Burgare',
