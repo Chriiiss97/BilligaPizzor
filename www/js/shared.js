@@ -2545,13 +2545,13 @@ function visaPizzor(pizzor) {
             ${billigastBadge}
             <div class="pizza-rad">
                 <div class="pizza-body">
-                    <h3><span class="pizza-kat-emoji" aria-hidden="true">${pizzaKategoriEmoji}</span> ${pizzaNamnSafe}</h3>
+                    <h3>${pizzaNamnSafe}</h3>
                     <p class="pizza-beskrivning">${ingrediensTextSafe}</p>
                     <div class="pizza-pizzeria-row">
-                        <span class="pizza-store-icon" aria-hidden="true">🏪</span>
+                        <span class="pizza-store-icon" aria-hidden="true">${pizzaKategoriEmoji}</span>
                         <div class="pizza-pizzeria-detaljer">
                             <a class="pizza-pizzeria-link" href="${pizzeriaLankSafe}" aria-label="Visa meny hos ${pizzeriaNamnForAria}">${pizzeriaNamnSafe}</a>
-                            ${oppetHtml}
+                            ${oppetHtml ? `<span class="pizza-oppettider-rad">⏰ ${oppetHtml}</span>` : ''}
                         </div>
                     </div>
                     ${avstandsDisplay}
