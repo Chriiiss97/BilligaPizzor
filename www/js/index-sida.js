@@ -35,7 +35,7 @@ function initIndexSida() {
     ])
         .then(([data, coordsMap]) => {
             allaPizzor = data;
-            _oppettimerMap = null; // reset so hamtaOppettimerForPizzeria rebuilds from new data
+            _pizzeriaInfoMap = null; // reset so hamtaOppettimerForPizzeria/hamtaTelefonForPizzeria rebuild
             indexCoordsMap = coordsMap;
             injecteraJsonLd(byggItemListSchema(skapaPizzeriorSidaDataFranJson(data)), 'schema-itemlist');
 

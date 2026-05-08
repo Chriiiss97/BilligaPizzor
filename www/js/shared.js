@@ -96,18 +96,26 @@ function initHeroLasMerForApp() {
 let allaPizzor = [];
 let valdaPizzerior = [];
 let aktivaKategorier = new Set();
-let _oppettimerMap = null;
+let _pizzeriaInfoMap = null;
+function _byggPizzeriaInfoMap() {
+    if (_pizzeriaInfoMap) return;
+    _pizzeriaInfoMap = new Map();
+    allaPizzor.forEach(p => {
+        if (!p.pizzeria) return;
+        const nyckel = normaliseraText(p.pizzeria);
+        const post = _pizzeriaInfoMap.get(nyckel) || {};
+        if (!post.oppettider && p.oppettider) post.oppettider = p.oppettider;
+        if (!post.telefon && p.telefon) post.telefon = p.telefon;
+        _pizzeriaInfoMap.set(nyckel, post);
+    });
+}
 function hamtaOppettimerForPizzeria(pizzeriaNamn) {
-    if (!_oppettimerMap) {
-        _oppettimerMap = new Map();
-        allaPizzor.forEach(p => {
-            if (p.oppettider && p.pizzeria) {
-                const nyckel = normaliseraText(p.pizzeria);
-                if (!_oppettimerMap.has(nyckel)) _oppettimerMap.set(nyckel, p.oppettider);
-            }
-        });
-    }
-    return _oppettimerMap.get(normaliseraText(pizzeriaNamn)) || null;
+    _byggPizzeriaInfoMap();
+    return (_pizzeriaInfoMap.get(normaliseraText(pizzeriaNamn)) || {}).oppettider || null;
+}
+function hamtaTelefonForPizzeria(pizzeriaNamn) {
+    _byggPizzeriaInfoMap();
+    return (_pizzeriaInfoMap.get(normaliseraText(pizzeriaNamn)) || {}).telefon || '';
 }
 let valdaIngredienser = []; 
 let pizzorSomVisas = 100; 
@@ -2538,7 +2546,8 @@ function visaPizzor(pizzor) {
         kort.setAttribute('aria-label', `Visa meny hos ${pizza.pizzeria || 'pizzerian'}`);
         const pizzeriaLankSafe = escapaHtml(pizzeriaLank);
         const pizzeriaNamnForAria = escapaHtml(pizza.pizzeria || 'pizzerian');
-        const telefonSanerad = saneraTelefonnummer(pizza.telefon || '');
+        const telefonRa = pizza.telefon || hamtaTelefonForPizzeria(pizza.pizzeria);
+        const telefonSanerad = saneraTelefonnummer(telefonRa);
         const harTelefonnummer = /\d{5,}/.test(telefonSanerad);
         const kontaktHrefSafe = escapaHtml(harTelefonnummer ? `tel:${telefonSanerad}` : pizzeriaLank);
         const kontaktAria = harTelefonnummer
