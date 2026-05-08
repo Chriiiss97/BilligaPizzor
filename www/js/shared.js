@@ -544,7 +544,7 @@ function hamtaPrimarKategoriForPizza(pizza) {
     if (arInbakadPizzaText(pizzaText)) return 'inbakad';
 
     // Explicit ordered chain — score-based match for food-type categories only.
-    const orderedCategories = ['kebab', 'burgare', 'pasta', 'sallad', 'vegetar'];
+    const orderedCategories = ['rulle', 'kebab', 'burgare', 'pasta', 'sallad', 'vegetar'];
     let bastKategori = null;
     let hogstaScore = 0;
 
