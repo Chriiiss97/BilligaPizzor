@@ -96,6 +96,19 @@ function initHeroLasMerForApp() {
 let allaPizzor = [];
 let valdaPizzerior = [];
 let aktivaKategorier = new Set();
+let _oppettimerMap = null;
+function hamtaOppettimerForPizzeria(pizzeriaNamn) {
+    if (!_oppettimerMap) {
+        _oppettimerMap = new Map();
+        allaPizzor.forEach(p => {
+            if (p.oppettider && p.pizzeria) {
+                const nyckel = normaliseraText(p.pizzeria);
+                if (!_oppettimerMap.has(nyckel)) _oppettimerMap.set(nyckel, p.oppettider);
+            }
+        });
+    }
+    return _oppettimerMap.get(normaliseraText(pizzeriaNamn)) || null;
+}
 let valdaIngredienser = []; 
 let pizzorSomVisas = 100; 
 let nuvarandeFiltreradLista = []; 
@@ -2536,7 +2549,8 @@ function visaPizzor(pizzor) {
             return valdaKategorier.length === 1 ? valdaKategorier[0] : 'Pizzor (alla)';
         })();
         const pizzaKategoriEmoji = hamtaPizzaKortEmoji(pizza, aktivKategoriForEmoji, document.getElementById('sokruta')?.value || '');
-        const oppetText = hamtaOppetText(pizza.oppettider);
+        const oppettider = pizza.oppettider || hamtaOppettimerForPizzeria(pizza.pizzeria);
+        const oppetText = hamtaOppetText(oppettider);
         const oppetHtml = oppetText
             ? `<span class="pizza-oppettider${oppetText === 'Stängt' ? ' pizza-oppettider--stangt' : ''}">${escapaHtml(oppetText)}</span>`
             : '';
