@@ -3,7 +3,7 @@
   <head>
 
     <script>
-      if (location.hostname === 'billigapizzor.se' || location.hostname === 'www.billigapizzor.se') {
+      if (location.protocol !== 'file:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
         var cb = document.createElement('script');
         cb.id = 'Cookiebot';
         cb.src = 'https://consent.cookiebot.com/uc.js';
