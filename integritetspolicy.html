@@ -37,6 +37,28 @@
       cb.setAttribute('data-blockingmode', 'auto');
       cb.type = 'text/javascript';
       document.head.appendChild(cb);
+
+      (function forceCookiebotDialogWhenMissingConsent() {
+        var hasConsent = document.cookie.indexOf('CookieConsent=') !== -1 ||
+          document.cookie.indexOf('CookieConsentBulkTicket=') !== -1;
+        if (hasConsent) return;
+
+        var attempts = 0;
+        var maxAttempts = 20;
+        var intervalId = setInterval(function () {
+          attempts += 1;
+
+          if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+            clearInterval(intervalId);
+            window.Cookiebot.renew();
+            return;
+          }
+
+          if (attempts >= maxAttempts) {
+            clearInterval(intervalId);
+          }
+        }, 500);
+      })();
     }
   </script>
 
