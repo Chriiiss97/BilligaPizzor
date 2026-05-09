@@ -56,6 +56,17 @@ const PIZZERIA_KAT_EMOJI = {
 };
 
 const PIZZERIA_EXTRA_KOMPAKTA = new Set(['dryck', 'snacks', 'saser', 'tillbehor', 'dessert']);
+const PIZZERIA_ICKE_PIZZA_KAT = new Set([
+    'dryck',
+    'snacks',
+    'saser',
+    'tillbehor',
+    'dessert',
+    'sallader',
+    'pasta',
+    'lasagne',
+    'burgare',
+]);
 
 function normaliseraExtraKategoriId(kategori) {
     const k = normaliseraText(kategori || '');
@@ -105,10 +116,8 @@ function initPizzeriaSida() {
     const fallbackNamn = (sidaRoot.dataset.pizzeria || '').trim();
 
     Promise.all([
-        fetch('../data/pizzor.json').then((response) => response.json()),
-        fetch('../data/extras.json')
-            .then((response) => (response.ok ? response.json() : []))
-            .catch(() => []),
+        hamtaPizzorListaFranSupabase(),
+        hamtaExtrasListaFranSupabase(),
     ])
         .then(([data, extraData]) => {
             const register = skapaPizzeriorSidaDataFranJson(data);
@@ -265,8 +274,7 @@ function initPizzeriaSida() {
             }
 
             // Load coords and init interactive Leaflet map
-            fetch('../data/pizzerior_coords.json')
-                .then((r) => r.json())
+            hamtaPizzeriorCoordsLista()
                 .then((coords) => {
                     const koordMatch = coords.find((c) => normaliseraText(c.pizzeria) === normaliseraText(pizzeriaNamn));
                     if (!koordMatch) return;
@@ -454,10 +462,12 @@ function initPizzeriaSida() {
                         rader.push(`Här hittar du ${allaMat.join(', ')}.`);
                     }
 
-                    // Rad 3: Exempel på rätter (upp till 5, blandade kategorier)
+                    const pizzaRatter = allaRatter.filter((p) => !PIZZERIA_ICKE_PIZZA_KAT.has(kategoriseraPizzeriaItem(p)));
+
+                    // Rad 3: Exempel på pizzor (upp till 5)
                     const exempelRatter = [];
                     const sedda = new Set();
-                    for (const p of allaRatter) {
+                    for (const p of pizzaRatter) {
                         if (exempelRatter.length >= 5) break;
                         const namn = (p.pizza_namn || '').trim();
                         if (namn && !sedda.has(namn.toLowerCase())) {
@@ -469,8 +479,8 @@ function initPizzeriaSida() {
                         rader.push(`På menyn finns bland annat ${exempelRatter.join(', ')}.`);
                     }
 
-                    // Rad 4: Prisinfo
-                    const priser = allaRatter.map((p) => p.pris).filter((pr) => pr > 0);
+                    // Rad 4: Prisinfo (endast pizzor)
+                    const priser = pizzaRatter.map((p) => p.pris).filter((pr) => pr > 0);
                     if (priser.length > 0) {
                         const minPris = Math.min(...priser);
                         const maxPris = Math.max(...priser);
@@ -551,6 +561,9 @@ function initPizzeriaSida() {
                     const aktiv = t.dataset.tabId === 'alla' ? ingenAktiv : aktivaPizzeriaTabs.has(t.dataset.tabId);
                     t.classList.toggle('pizzeria-kategori-tab--active', aktiv);
                     t.setAttribute('aria-selected', String(aktiv));
+                })
+                .catch((error) => {
+                    console.error('[Pizzeriasida] Kunde inte ladda koordinater:', error);
                 });
             }
 

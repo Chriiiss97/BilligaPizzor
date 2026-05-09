@@ -1,7 +1,6 @@
 const fs = require('fs');
 const files = [
-  'C:/Users/Chriiss1997/Desktop/Billiga Pizzor - Live/karta.html',
-  'C:/Users/Chriiss1997/Desktop/Billiga Pizzor - Live/www/karta.html'
+  'C:/Users/Chriiss1997/Desktop/Billiga Pizzor - Live/karta.html'
 ];
 
 // Use a regex so line endings don't matter

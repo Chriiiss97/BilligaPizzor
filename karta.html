@@ -386,7 +386,46 @@
       <div id="karta-prishjul" aria-label="Byt prisvisning">
         <button id="karta-prishjul-prev" type="button" aria-label="Föregående pristyp">‹</button>
         <span id="karta-prishjul-label">💰 Fr X kr</span>
+        <button id="karta-prishjul-info" type="button" aria-label="Så räknas pris på kartan">?</button>
         <button id="karta-prishjul-next" type="button" aria-label="Nästa pristyp">›</button>
+      </div>
+
+      <div id="karta-prisinfo-overlay" class="karta-prisinfo-overlay" aria-hidden="true">
+        <div id="karta-prisinfo-modal" class="karta-prisinfo-modal" role="dialog" aria-modal="true" aria-labelledby="karta-prisinfo-rubrik" tabindex="-1">
+          <button id="karta-prisinfo-stang" type="button" aria-label="Stäng prisinfo">×</button>
+          <div class="karta-prisinfo-grid">
+            <section class="karta-prisinfo-block">
+              <p class="karta-prisinfo-eyebrow">Pris på kartan</p>
+              <h3 id="karta-prisinfo-rubrik">Fr X kr</h3>
+              <p id="karta-prisinfo-beskrivning" class="karta-prisinfo-beskrivning"></p>
+              <div class="karta-prisinfo-stats">
+                <div class="karta-prisinfo-stat">
+                  <span class="karta-prisinfo-stat-ikon">📄</span>
+                  <div>
+                    <p class="karta-prisinfo-stat-label">Beräknat från</p>
+                    <p class="karta-prisinfo-stat-value"><strong id="karta-prisinfo-ratter">0</strong> rätter</p>
+                  </div>
+                </div>
+                <div class="karta-prisinfo-stat">
+                  <span class="karta-prisinfo-stat-ikon">🏪</span>
+                  <div>
+                    <p class="karta-prisinfo-stat-label">Fördelat på</p>
+                    <p class="karta-prisinfo-stat-value"><strong id="karta-prisinfo-pizzerior">0</strong> pizzerior</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="karta-prisinfo-block karta-prisinfo-block--steps">
+              <p class="karta-prisinfo-eyebrow">Så här räknas det</p>
+              <ol class="karta-prisinfo-steps">
+                <li id="karta-prisinfo-steg1"></li>
+                <li id="karta-prisinfo-steg2"></li>
+                <li id="karta-prisinfo-steg3"></li>
+              </ol>
+              <p class="karta-prisinfo-footnote">Uppdateras löpande med nya priser</p>
+            </section>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -455,7 +494,7 @@
       var namnSynsFrånZoom = 15;
       var valtFardmedel = 'driving';
       var aktivRadieKm = 0;
-      var filterState = { snabbtStopp: false, oppetNu: false, maxPris: 0, visaBaraFavoriter: false, omrade: null, sokNamn: '' };
+      var filterState = { snabbtStopp: false, oppetNu: false, maxPris: 0, visaBaraFavoriter: false, omrade: null, omraden: [], sokNamn: '' };
       var favoriter = (function () {
         try { return JSON.parse(localStorage.getItem('billiga-favoriter') || '[]'); } catch(e) { return []; }
       })();
@@ -468,10 +507,24 @@
           }
           return;
         }
-        if (event.data.type === 'setFilter' && typeof event.data.oppetNu === 'boolean') {
-          filterState.oppetNu = event.data.oppetNu;
-          var oppetNuToggle = document.getElementById('karta-oppet-nu');
-          if (oppetNuToggle) oppetNuToggle.checked = event.data.oppetNu;
+        if (event.data.type === 'setFilter') {
+          if (typeof event.data.oppetNu === 'boolean') {
+            filterState.oppetNu = event.data.oppetNu;
+            var oppetNuToggle = document.getElementById('karta-oppet-nu');
+            if (oppetNuToggle) oppetNuToggle.checked = event.data.oppetNu;
+          }
+          if (Array.isArray(event.data.omraden)) {
+            filterState.omraden = event.data.omraden
+              .filter(function (x) { return typeof x === 'string'; })
+              .map(function (x) { return x.trim(); })
+              .filter(Boolean);
+          }
+          if (event.data.omrade === null) {
+            filterState.omrade = null;
+          } else if (typeof event.data.omrade === 'string') {
+            var omradeFilter = event.data.omrade.trim();
+            filterState.omrade = omradeFilter || null;
+          }
           uppdateraRadiusFilter('extern');
           return;
         }
@@ -496,6 +549,7 @@
       var pizzaRättIndex = {};
       var menyStatsIndex = {};
       var visaPrisTyp = 'lagsta'; // 'lagsta' | 'snitt' | 'snitt_relativ'
+      var prisInfoStat = { ratter: 0, pizzerior: 0 };
       var FILTER_HELP_HINT_KEY = 'billiga-karta-filter-help-seen';
       var DEBUG_POPUP_RACE = false;
       var SNABBT_STOPP_KM = 3;
@@ -613,6 +667,112 @@
           .replace(/-{2,}/g, '-');
       }
 
+      function arPrisradFranPizzorJson(row) {
+        if (!row || typeof row !== 'object') return false;
+        if (typeof row.pizzeria !== 'string' || !row.pizzeria.trim()) return false;
+        if (typeof row.pizza_namn !== 'string' || !row.pizza_namn.trim()) return false;
+        if (typeof row.pris !== 'number' || !isFinite(row.pris) || row.pris <= 0) return false;
+        if (Object.prototype.hasOwnProperty.call(row, 'kategori')) return false;
+        if (Object.prototype.hasOwnProperty.call(row, 'namn') && !Object.prototype.hasOwnProperty.call(row, 'pizza_namn')) return false;
+        return true;
+      }
+
+      function hamtaPrisraderFranPizzorJson(rows) {
+        return (Array.isArray(rows) ? rows : []).filter(arPrisradFranPizzorJson);
+      }
+
+      function formatAntalTal(value) {
+        var num = Number(value) || 0;
+        return num.toLocaleString('sv-SE');
+      }
+
+      function hamtaPrisInfoDataForAktivtLage() {
+        if (visaPrisTyp === 'snitt') {
+          return {
+            rubrik: 'Snitt',
+            beskrivning: 'Visar genomsnittspriset för hela menyn hos varje pizzeria.',
+            steg: [
+              'Alla priser räknas ihop separat för varje pizzeria.',
+              'Ett snittpris räknas fram för varje pizzeria.',
+              'Färgerna visar prisnivå relativt andra pizzerior.'
+            ]
+          };
+        }
+        if (visaPrisTyp === 'snitt_relativ') {
+          return {
+            rubrik: 'Jämfört',
+            beskrivning: 'Visar hur dyr eller billig en pizzeria är jämfört med andra.',
+            steg: [
+              'Ett snittpris räknas fram för varje pizzeria.',
+              'Varje pizzeria jämförs mot genomsnittet för alla pizzerior.',
+              'Färgerna visar hur dyr eller billig pizzerian är relativt andra.'
+            ]
+          };
+        }
+        return {
+          rubrik: 'Fr X kr',
+          beskrivning: 'Visar billigaste rätten hos varje pizzeria.',
+          steg: [
+            'Vi hittar den billigaste rätten hos varje pizzeria.',
+            'De lägsta priserna jämförs mellan pizzeriorna.',
+            'Färgerna visar prisnivå relativt andra pizzerior.'
+          ]
+        };
+      }
+
+      function uppdateraPrisInfoModalInnehall() {
+        var data = hamtaPrisInfoDataForAktivtLage();
+        var rubrik = document.getElementById('karta-prisinfo-rubrik');
+        var beskrivning = document.getElementById('karta-prisinfo-beskrivning');
+        var steg1 = document.getElementById('karta-prisinfo-steg1');
+        var steg2 = document.getElementById('karta-prisinfo-steg2');
+        var steg3 = document.getElementById('karta-prisinfo-steg3');
+        var ratter = document.getElementById('karta-prisinfo-ratter');
+        var pizzerior = document.getElementById('karta-prisinfo-pizzerior');
+
+        if (rubrik) rubrik.textContent = data.rubrik;
+        if (beskrivning) beskrivning.textContent = data.beskrivning;
+        if (steg1) steg1.textContent = data.steg[0] || '';
+        if (steg2) steg2.textContent = data.steg[1] || '';
+        if (steg3) steg3.textContent = data.steg[2] || '';
+        if (ratter) ratter.textContent = formatAntalTal(prisInfoStat.ratter);
+        if (pizzerior) pizzerior.textContent = formatAntalTal(prisInfoStat.pizzerior);
+      }
+
+      function setupPrisInfoModal() {
+        var infoBtn = document.getElementById('karta-prishjul-info');
+        var overlay = document.getElementById('karta-prisinfo-overlay');
+        var modal = document.getElementById('karta-prisinfo-modal');
+        var stangBtn = document.getElementById('karta-prisinfo-stang');
+        if (!infoBtn || !overlay || !modal) return;
+
+        function oppnaPrisInfo() {
+          uppdateraPrisInfoModalInnehall();
+          overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+          setTimeout(function () { modal.focus(); }, 0);
+        }
+
+        function stangPrisInfo() {
+          overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        infoBtn.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          oppnaPrisInfo();
+        });
+
+        if (stangBtn) stangBtn.addEventListener('click', stangPrisInfo);
+        overlay.addEventListener('click', function (event) {
+          if (event.target === overlay) stangPrisInfo();
+        });
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && overlay.classList.contains('is-open')) stangPrisInfo();
+        });
+      }
+
       function prisNivaLabel(niva) {
         if (visaPrisTyp === 'snitt_relativ') {
           if (niva === 'level1') return 'Billigast jämfört med andra';
@@ -631,21 +791,31 @@
       }
 
       var allaSnittSorterade = [];
+      var allaLagstaSorterade = [];
       var allaSnittMedel = 0;
 
-      function getRelativPrisNiva(pris) {
-        if (!pris || allaSnittSorterade.length < 5) {
-          var fb = snittPrisNiva(pris);
-          return fb > 0 ? ('level' + Math.min(fb, 5)) : 'level3';
-        }
+      function getDynamiskPrisNiva(pris, sorteradePriser) {
+        if (!pris || !sorteradePriser || sorteradePriser.length === 0) return 0;
+        if (sorteradePriser.length === 1) return 3;
+
+        var minPris = sorteradePriser[0];
+        var maxPris = sorteradePriser[sorteradePriser.length - 1];
+        if (!isFinite(minPris) || !isFinite(maxPris) || minPris === maxPris) return 3;
+
         var idx = 0;
-        while (idx < allaSnittSorterade.length && pris > allaSnittSorterade[idx]) idx++;
-        var percentile = idx / allaSnittSorterade.length;
-        if (percentile <= 0.2) return 'level1';
-        if (percentile <= 0.4) return 'level2';
-        if (percentile <= 0.6) return 'level3';
-        if (percentile <= 0.8) return 'level4';
-        return 'level5';
+        while (idx < sorteradePriser.length && pris > sorteradePriser[idx]) idx++;
+        var percentile = idx / sorteradePriser.length;
+
+        if (percentile <= 0.2) return 1;
+        if (percentile <= 0.4) return 2;
+        if (percentile <= 0.6) return 3;
+        if (percentile <= 0.8) return 4;
+        return 5;
+      }
+
+      function getRelativPrisNiva(pris) {
+        var relativNiva = getDynamiskPrisNiva(pris, allaSnittSorterade);
+        return relativNiva > 0 ? ('level' + relativNiva) : 'level3';
       }
 
       function byggPrisIndex(pizzor) {
@@ -663,14 +833,22 @@
         Object.keys(grupper).forEach(function (key) {
           var avg = grupper[key].summa / grupper[key].antal;
           grupper[key].snittPris = Math.round(avg);
-          var lagstaNiva = lagstaPrisNiva(grupper[key].lagstaPris);
-          grupper[key].prisNiva = lagstaNiva > 0 ? ('level' + lagstaNiva) : 'level3';
         });
+
+        allaLagstaSorterade = Object.keys(grupper)
+          .map(function (k) { return grupper[k].lagstaPris; })
+          .filter(function (v) { return v && v > 0; })
+          .sort(function (a, b) { return a - b; });
 
         allaSnittSorterade = Object.keys(grupper)
           .map(function (k) { return grupper[k].snittPris; })
           .filter(function (v) { return v && v > 0; })
           .sort(function (a, b) { return a - b; });
+
+        Object.keys(grupper).forEach(function (key) {
+          var lagstaNiva = lagstaPrisNiva(grupper[key].lagstaPris);
+          grupper[key].prisNiva = lagstaNiva > 0 ? ('level' + lagstaNiva) : 'level3';
+        });
 
         allaSnittMedel = allaSnittSorterade.length
           ? Math.round(allaSnittSorterade.reduce(function (s, v) { return s + v; }, 0) / allaSnittSorterade.length)
@@ -687,6 +865,8 @@
           if (!key) return;
           if (!meta[key]) {
             meta[key] = {
+              namn: rad.pizzeria || null,
+              adress: rad.adress || null,
               lagstaPris: null,
               telefon: rad.telefon || null,
               oppettider: rad.oppettider || null,
@@ -702,6 +882,8 @@
           }
           if (!meta[key].telefon && rad.telefon) meta[key].telefon = rad.telefon;
           if (!meta[key].oppettider && rad.oppettider) meta[key].oppettider = rad.oppettider;
+          if (!meta[key].adress && rad.adress) meta[key].adress = rad.adress;
+          if (!meta[key].namn && rad.pizzeria) meta[key].namn = rad.pizzeria;
           if (!meta[key].omrade && rad.omrade) meta[key].omrade = rad.omrade;
           if (!meta[key].stad && rad.stad) meta[key].stad = rad.stad;
         });
@@ -729,21 +911,11 @@
       }
 
       function snittPrisNiva(snitt) {
-        if (!snitt) return 0;
-        if (snitt <= 120) return 1;
-        if (snitt <= 130) return 2;
-        if (snitt <= 145) return 3;
-        if (snitt <= 160) return 4;
-        return 5;
+        return getDynamiskPrisNiva(snitt, allaSnittSorterade);
       }
 
       function lagstaPrisNiva(pris) {
-        if (!pris) return 0;
-        if (pris <= 80) return 1;
-        if (pris <= 90) return 2;
-        if (pris <= 100) return 3;
-        if (pris <= 110) return 4;
-        return 5;
+        return getDynamiskPrisNiva(pris, allaLagstaSorterade);
       }
 
       // Kontrollera om en pizzeria är öppen just nu baserat på oppettider-objekt
@@ -1002,7 +1174,18 @@
       function passarGrundFilter(obj) {
         if (filterState.maxPris > 0 && obj.lagstaPris != null && obj.lagstaPris > filterState.maxPris) return false;
         if (filterState.visaBaraFavoriter && favoriter.indexOf(obj.slug) === -1) return false;
-        if (filterState.omrade && obj.omrade && obj.omrade !== filterState.omrade) return false;
+        var valdaOmraden = (filterState.omraden && filterState.omraden.length > 0)
+          ? filterState.omraden
+          : (filterState.omrade ? [filterState.omrade] : []);
+        if (valdaOmraden.length > 0) {
+          var objOmrade = (obj.omrade || '').toLowerCase();
+          var objStad = (obj.stad || '').toLowerCase();
+          var matcharOmrade = valdaOmraden.some(function (namn) {
+            var valtOmrade = namn.toLowerCase();
+            return objOmrade === valtOmrade || objStad === valtOmrade;
+          });
+          if (!matcharOmrade) return false;
+        }
         if (filterState.sokNamn) {
           var q = filterState.sokNamn;
           var meta = pizzeriaMetaIndex[normaliseraPizzeriaNamn(obj.pizzeria)] || {};
@@ -1428,7 +1611,7 @@
           effektivRadieKm = Math.min(SNABBT_STOPP_KM, effektivRadieKm > 0 ? effektivRadieKm : SNABBT_STOPP_KM);
         }
 
-        var harGrundFilter = filterState.maxPris > 0 || filterState.visaBaraFavoriter || !!filterState.omrade || !!filterState.sokNamn;
+        var harGrundFilter = filterState.maxPris > 0 || filterState.visaBaraFavoriter || !!filterState.omrade || (filterState.omraden && filterState.omraden.length > 0) || !!filterState.sokNamn;
         if (!användarPosition && effektivRadieKm <= 0 && !filterState.oppetNu && !harGrundFilter) {
           uppdateraRadieCirkel();
           alleMarkörer.forEach(function (obj) {
@@ -1784,6 +1967,7 @@
               o.markör.setPopupContent(skapaPopupHtml(o, dist));
             }
           });
+          uppdateraPrisInfoModalInnehall();
         }
         if (prisBtnLagsta) prisBtnLagsta.addEventListener('click', function () { sättPrisTyp('lagsta'); });
         if (prisBtnSnitt) prisBtnSnitt.addEventListener('click', function () { sättPrisTyp('snitt'); });
@@ -1824,6 +2008,7 @@
           filterState.maxPris = 0;
           filterState.visaBaraFavoriter = false;
           filterState.omrade = null;
+          filterState.omraden = [];
           var mpReset = document.getElementById('karta-maxpris');
           var mpVisning = document.getElementById('karta-maxpris-visning');
           var vfReset = document.getElementById('karta-visa-favoriter');
@@ -2025,37 +2210,145 @@
         }
       };
 
+      function hamtaPizzeriorCoordsData() {
+        return fetch('https://yixjzzehejrfcpyccyxp.supabase.co/rest/v1/pizzerior?select=namn,adress,lat,lng&limit=1000', {
+          headers: {
+            apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg'
+          }
+        })
+          .then(function (r) {
+            if (!r.ok) throw new Error('Supabase coords failed: ' + r.status);
+            return r.json();
+          })
+          .then(function (rows) {
+            return (Array.isArray(rows) ? rows : [])
+              .filter(function (row) {
+                if (!row) return false;
+                if (row.lat === null || row.lat === undefined || row.lng === null || row.lng === undefined) return false;
+                if (row.lat === '' || row.lng === '') return false;
+                var lat = Number(row.lat);
+                var lng = Number(row.lng);
+                return Number.isFinite(lat) && Number.isFinite(lng);
+              })
+              .map(function (row) {
+                return {
+                  pizzeria: row.namn,
+                  adress: row.adress,
+                  lat: Number(row.lat),
+                  lng: Number(row.lng)
+                };
+              });
+          })
+          .catch(function (error) {
+            console.error('[karta] Kunde inte ladda coords fran Supabase:', error);
+            return [];
+          });
+      }
+
+      function hamtaPizzorData() {
+        function hamtaSupabaseRowsPaged(query) {
+          var batchSize = 1000;
+          var offset = 0;
+          var allaRows = [];
+
+          function hamtaBatch() {
+            var separator = query.indexOf('?') >= 0 ? '&' : '?';
+            var pagedQuery = query + separator + 'limit=' + batchSize + '&offset=' + offset;
+            return fetch('https://yixjzzehejrfcpyccyxp.supabase.co/rest/v1/' + pagedQuery, {
+              headers: {
+                apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg'
+              }
+            }).then(function (r) {
+              if (!r.ok) throw new Error('Supabase query failed: ' + r.status);
+              return r.json();
+            }).then(function (rows) {
+              var lista = Array.isArray(rows) ? rows : [];
+              allaRows = allaRows.concat(lista);
+              if (lista.length < batchSize) return allaRows;
+              offset += batchSize;
+              return hamtaBatch();
+            });
+          }
+
+          return hamtaBatch();
+        }
+
+        return Promise.all([
+          hamtaSupabaseRowsPaged('pizzerior?select=id,namn,adress,stad,omrade,telefon,hemsida,oppettider&order=id.asc'),
+          hamtaSupabaseRowsPaged('pizzor?select=pizzeria_id,pizza_namn,pris,ingredienser&order=id.asc')
+        ]).then(function (result) {
+          var pizzerior = Array.isArray(result[0]) ? result[0] : [];
+          var pizzor = Array.isArray(result[1]) ? result[1] : [];
+          var pizzeriaById = {};
+          pizzerior.forEach(function (p) {
+            if (p && p.id !== null && p.id !== undefined) {
+              pizzeriaById[String(p.id)] = p;
+            }
+          });
+
+          return pizzor.map(function (row) {
+            var info = pizzeriaById[String(row && row.pizzeria_id)] || {};
+            return {
+              pizzeria: info.namn || '',
+              adress: info.adress || '',
+              stad: info.stad || '',
+              omrade: info.omrade || '',
+              telefon: info.telefon || '',
+              hemsida: info.hemsida || '',
+              oppettider: info.oppettider || null,
+              pizza_namn: (row && row.pizza_namn) || '',
+              pris: Number(row && row.pris) || 0,
+              ingredienser: Array.isArray(row && row.ingredienser) ? row.ingredienser : []
+            };
+          }).filter(function (row) {
+            return row.pizzeria && row.pizza_namn;
+          });
+        }).catch(function (error) {
+          console.error('[karta] Kunde inte ladda pizzadata fran Supabase:', error);
+          return [];
+        });
+      }
+
       // --- Ladda pizzerior ---
       Promise.all([
-        fetch('/data/pizzerior_coords.json?v=20260427b').then(function (r) { return r.json(); }),
-        fetch('/data/pizzor.json').then(function (r) { return r.json(); }).catch(function () { return []; })
+        hamtaPizzeriorCoordsData(),
+        hamtaPizzorData()
       ])
         .then(function (result) {
           var data = result[0] || [];
-          var pizzor = result[1] || [];
+          var pizzor = hamtaPrisraderFranPizzorJson(result[1]);
           prisDataIndex = byggPrisIndex(pizzor);
           pizzeriaMetaIndex = byggPizzeriaMeta(pizzor);
           menyStatsIndex = byggMenyStats(pizzor);
+          prisInfoStat.ratter = pizzor.length;
+          prisInfoStat.pizzerior = Object.keys(prisDataIndex).length;
+          uppdateraPrisInfoModalInnehall();
 
           data.forEach(function (p) {
+            if (p.lat === null || p.lat === undefined || p.lng === null || p.lng === undefined) return;
+            if (p.lat === '' || p.lng === '') return;
             var lat = Number(p.lat);
             var lng = Number(p.lng);
             if (!isFinite(lat) || !isFinite(lng)) return;
             var prisInfo = prisDataIndex[normaliseraPizzeriaNamn(p.pizzeria)] || null;
             var meta = pizzeriaMetaIndex[normaliseraPizzeriaNamn(p.pizzeria)] || null;
+            var visningsNamn = (meta && meta.namn) ? meta.namn : (p.pizzeria || '');
 
             var obj = {
-              pizzeria: p.pizzeria || '',
-              adress: p.adress || '',
+              pizzeria: visningsNamn,
+              adress: (meta && meta.adress) ? meta.adress : (p.adress || ''),
               lat: lat,
               lng: lng,
-              slug: skapaSlug(p.pizzeria),
+              slug: skapaSlug(visningsNamn),
               distansKm: null,
               snittPris: prisInfo ? prisInfo.snittPris : null,
               prisNiva: prisInfo ? prisInfo.prisNiva : null,
               lagstaPris: meta ? meta.lagstaPris : null,
               telefon: meta ? meta.telefon : null,
               oppettider: meta ? meta.oppettider : null,
+              stad: meta ? meta.stad : null,
               omrade: meta ? meta.omrade : null,
               menyStats: menyStatsIndex[normaliseraPizzeriaNamn(p.pizzeria)] || null
             };
@@ -2127,6 +2420,7 @@
 
           setupSök();
           setupVänsterMeny();
+          setupPrisInfoModal();
 
           // Bygg pizzarättsindex för sökning
           pizzor.forEach(function (rad) {

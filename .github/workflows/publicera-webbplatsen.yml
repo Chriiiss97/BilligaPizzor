@@ -1,0 +1,67 @@
+name: Publicera webbplatsen
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publicera:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hamta koden
+        uses: actions/checkout@v4
+
+      - name: Samla filer som ska publiceras
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+
+          # Kopiera webbplatsens filer fran projektroten.
+          items=(
+            "_headers"
+            "_redirects"
+            "index.html"
+            "integritetspolicy.html"
+            "karta.html"
+            "manifest.json"
+            "om-oss.html"
+            "pizzerior.html"
+            "service-worker.js"
+            "sitemap.xml"
+            "statistik.html"
+            "css"
+            "images"
+            "js"
+            "pizzerior"
+          )
+
+          for item in "${items[@]}"; do
+            if [ -e "$item" ]; then
+              cp -R "$item" deploy/
+            fi
+          done
+
+      - name: Publicera till mal-repot
+        env:
+          TARGET_REPO: ${{ secrets.DIST_REPO }}
+          PAT: ${{ secrets.DIST_REPO_PAT }}
+        run: |
+          if [ -z "$TARGET_REPO" ] || [ -z "$PAT" ]; then
+            echo "Saknar hemligheter: DIST_REPO eller DIST_REPO_PAT"
+            exit 1
+          fi
+
+          cd deploy
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publicering fran ${GITHUB_REPOSITORY}@${GITHUB_SHA}" || echo "Inga andringar att publicera"
+          git branch -M main
+          git remote add origin "https://x-access-token:${PAT}@github.com/${TARGET_REPO}.git"
+          git push --force origin main

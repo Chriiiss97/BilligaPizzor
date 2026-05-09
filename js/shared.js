@@ -57,42 +57,6 @@ function hamtaNavigeringsLankForPizzeria(lank) {
     return arLokalUtveckling() ? hamtaLokalHref(lank) : lank;
 }
 
-function arAppWebViewMiljo() {
-    if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function') {
-        return window.Capacitor.isNativePlatform();
-    }
-
-    const ua = (navigator.userAgent || '').toLowerCase();
-    const arAndroidWebView = ua.includes('wv') && ua.includes('android');
-    const arIosWebView = ua.includes('iphone') && !ua.includes('safari');
-    return arAndroidWebView || arIosWebView;
-}
-
-function initHeroLasMerForApp() {
-    const heroIntro = document.querySelector('.hero-intro');
-    const lasMerKnapp = document.querySelector('.hero-las-mer-btn');
-    if (!heroIntro || !lasMerKnapp) return;
-
-    if (!arAppWebViewMiljo()) {
-        lasMerKnapp.hidden = true;
-        return;
-    }
-
-    document.body.classList.add('app-hero-lage');
-
-    heroIntro.classList.add('hero-intro--kollapsad');
-    lasMerKnapp.hidden = false;
-    lasMerKnapp.textContent = 'Läs mer';
-    lasMerKnapp.setAttribute('aria-expanded', 'false');
-
-    lasMerKnapp.addEventListener('click', () => {
-        const arKollapsad = heroIntro.classList.toggle('hero-intro--kollapsad');
-        const arExpanderad = !arKollapsad;
-        lasMerKnapp.textContent = arExpanderad ? 'Visa mindre' : 'Läs mer';
-        lasMerKnapp.setAttribute('aria-expanded', String(arExpanderad));
-    });
-}
-
 let allaPizzor = [];
 let valdaPizzerior = [];
 let aktivaKategorier = new Set();
@@ -1342,8 +1306,7 @@ function sortByDistance(pizzor, userLat, userLng) {
         .map((pizza) => {
             const dynamicKey = skapaPizzeriaCoordsNyckel(pizza.pizzeria, pizza.adress);
             const dynamicCoords = indexCoordsMap ? indexCoordsMap.get(dynamicKey) : null;
-            const staticCoords = ADRESS_COORDS[pizza.adress];
-            const coords = dynamicCoords || staticCoords;
+            const coords = dynamicCoords;
             const distansKm = coords
                 ? calculateDistance(userLat, userLng, coords.lat, coords.lng)
                 : Number.POSITIVE_INFINITY;
@@ -1360,6 +1323,118 @@ function sortByDistance(pizzor, userLat, userLng) {
 }
 
 let pizzeriorCoordsMapPromise = null;
+let pizzeriorCoordsRowsPromise = null;
+let pizzeriorInfoMapPromise = null;
+let pizzorRowsPromise = null;
+let extrasRowsPromise = null;
+
+const SUPABASE_URL = 'https://yixjzzehejrfcpyccyxp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg';
+
+async function hamtaSupabaseRows(query) {
+    const batchSize = 1000;
+    let offset = 0;
+    const allaRows = [];
+
+    while (true) {
+        const separator = query.includes('?') ? '&' : '?';
+        const pagedQuery = `${query}${separator}limit=${batchSize}&offset=${offset}`;
+        const url = `${SUPABASE_URL}/rest/v1/${pagedQuery}`;
+
+        const response = await fetch(url, {
+            headers: {
+                apikey: SUPABASE_ANON_KEY,
+                Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Supabase-förfrågan misslyckades (${response.status}) för ${query}`);
+        }
+
+        const rows = await response.json();
+        const lista = Array.isArray(rows) ? rows : [];
+        allaRows.push(...lista);
+
+        if (lista.length < batchSize) break;
+        offset += batchSize;
+    }
+
+    return allaRows;
+}
+
+function hamtaPizzeriorInfoMapFranSupabase() {
+    if (pizzeriorInfoMapPromise) return pizzeriorInfoMapPromise;
+
+    pizzeriorInfoMapPromise = hamtaSupabaseRows('pizzerior?select=id,namn,adress,stad,omrade,telefon,hemsida,oppettider&order=id.asc')
+        .then((rows) => {
+            const map = new Map();
+            (Array.isArray(rows) ? rows : []).forEach((row) => {
+                if (!row || row.id === null || row.id === undefined) return;
+                map.set(Number(row.id), {
+                    namn: row.namn || '',
+                    adress: row.adress || '',
+                    stad: row.stad || '',
+                    omrade: row.omrade || '',
+                    telefon: row.telefon || '',
+                    hemsida: row.hemsida || '',
+                    oppettider: row.oppettider || null
+                });
+            });
+            return map;
+        });
+
+    return pizzeriorInfoMapPromise;
+}
+
+function hamtaPizzorListaFranSupabase() {
+    if (pizzorRowsPromise) return pizzorRowsPromise;
+
+    pizzorRowsPromise = Promise.all([
+        hamtaPizzeriorInfoMapFranSupabase(),
+        hamtaSupabaseRows('pizzor?select=pizzeria_id,pizza_namn,pris,ingredienser&order=id.asc')
+    ]).then(([pizzeriorMap, pizzorRows]) => {
+        return (Array.isArray(pizzorRows) ? pizzorRows : []).map((row) => {
+            const info = pizzeriorMap.get(Number(row?.pizzeria_id)) || {};
+            return {
+                pizzeria: info.namn || '',
+                adress: info.adress || '',
+                stad: info.stad || '',
+                omrade: info.omrade || '',
+                telefon: info.telefon || '',
+                hemsida: info.hemsida || '',
+                oppettider: info.oppettider || null,
+                pizza_namn: row?.pizza_namn || '',
+                pris: Number(row?.pris) || 0,
+                ingredienser: Array.isArray(row?.ingredienser) ? row.ingredienser : []
+            };
+        }).filter((row) => row.pizzeria && row.pizza_namn);
+    });
+
+    return pizzorRowsPromise;
+}
+
+function hamtaExtrasListaFranSupabase() {
+    if (extrasRowsPromise) return extrasRowsPromise;
+
+    extrasRowsPromise = Promise.all([
+        hamtaPizzeriorInfoMapFranSupabase(),
+        hamtaSupabaseRows('extras?select=pizzeria_id,kategori,namn,pris,beskrivning&order=id.asc')
+    ]).then(([pizzeriorMap, extrasRows]) => {
+        return (Array.isArray(extrasRows) ? extrasRows : []).map((row) => {
+            const info = pizzeriorMap.get(Number(row?.pizzeria_id)) || {};
+            return {
+                pizzeria: info.namn || '',
+                kategori: row?.kategori || '',
+                namn: row?.namn || '',
+                pris: Number(row?.pris) || 0,
+                beskrivning: row?.beskrivning || ''
+            };
+        }).filter((row) => row.pizzeria && row.namn);
+    });
+
+    return extrasRowsPromise;
+}
 
 function skapaPizzeriaCoordsNyckel(pizzeriaNamn, adress) {
     const namn = normaliseraText(pizzeriaNamn || '');
@@ -1381,16 +1456,56 @@ function hamtaCoordsFranStatiskLista(adress) {
     return null;
 }
 
-function hamtaPizzeriorCoordsMap() {
-    if (pizzeriorCoordsMapPromise) return pizzeriorCoordsMapPromise;
+function hamtaPizzeriorCoordsLista() {
+    if (pizzeriorCoordsRowsPromise) return pizzeriorCoordsRowsPromise;
 
-    pizzeriorCoordsMapPromise = fetch('/data/pizzerior_coords.json')
+    const supabaseUrl = `${SUPABASE_URL}/rest/v1/pizzerior?select=namn,adress,lat,lng&limit=1000`;
+
+    pizzeriorCoordsRowsPromise = fetch(supabaseUrl, {
+        headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+        }
+    })
         .then((response) => {
             if (!response.ok) {
-                throw new Error(`Kunde inte hämta pizzerior_coords.json (${response.status})`);
+                throw new Error(`Kunde inte hämta koordinater från Supabase (${response.status})`);
             }
             return response.json();
         })
+        .then((rows) => {
+            if (!Array.isArray(rows) || rows.length === 0) {
+                throw new Error('Supabase returnerade inga koordinatrader');
+            }
+
+            const filtreradeRows = rows
+                .map((row) => ({
+                    pizzeria: row?.namn,
+                    adress: row?.adress,
+                    lat: Number(row?.lat),
+                    lng: Number(row?.lng)
+                }))
+                .filter((row) => Number.isFinite(row.lat) && Number.isFinite(row.lng));
+
+            console.log('[Coords] Källa: Supabase', {
+                rows: filtreradeRows.length,
+                sample: filtreradeRows[0] || null
+            });
+
+            return filtreradeRows;
+        })
+        .catch((error) => {
+            console.error('[Coords] Kunde inte ladda koordinater fran Supabase:', error);
+            return [];
+        });
+
+    return pizzeriorCoordsRowsPromise;
+}
+
+function hamtaPizzeriorCoordsMap() {
+    if (pizzeriorCoordsMapPromise) return pizzeriorCoordsMapPromise;
+
+    pizzeriorCoordsMapPromise = hamtaPizzeriorCoordsLista()
         .then((rows) => {
             const map = new Map();
             if (!Array.isArray(rows)) return map;
@@ -1409,7 +1524,7 @@ function hamtaPizzeriorCoordsMap() {
             return map;
         })
         .catch((error) => {
-            console.error('[Narmast mig] Kunde inte ladda /data/pizzerior_coords.json:', error);
+            console.error('[Narmast mig] Kunde inte ladda koordinatdata:', error);
             return new Map();
         });
 
@@ -1422,8 +1537,7 @@ function kopplaCoordsTillPizzerior(pizzerior, coordsMap) {
     const listaMedCoords = pizzerior.map((pizzeria) => {
         const nyckel = skapaPizzeriaCoordsNyckel(pizzeria.namn, pizzeria.adress);
         const franMap = coordsMap.get(nyckel) || null;
-        const franStatisk = hamtaCoordsFranStatiskLista(pizzeria.adress);
-        const coords = franMap || franStatisk;
+        const coords = franMap;
 
         if (!coords) {
             saknarCoords.push(`${pizzeria.namn} | ${pizzeria.adress}`);
@@ -1708,10 +1822,7 @@ function initSchemaGenerellSida() {
     if (document.getElementById('filter-sektion') || document.getElementById('pizzerior-lista') || document.getElementById('pizzeria-sida-root')) {
         return;
     }
-    const djup = window.location.pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean).length;
-    const dataSokvag = djup >= 2 ? '../../data/pizzor.json' : djup === 1 ? '../data/pizzor.json' : 'data/pizzor.json';
-    fetch(dataSokvag)
-        .then(r => r.json())
+    hamtaPizzorListaFranSupabase()
         .then(data => {
             injecteraJsonLd(byggItemListSchema(skapaPizzeriorSidaDataFranJson(data)), 'schema-itemlist');
         });
@@ -2608,6 +2719,15 @@ function visaPizzor(pizzor) {
 
 function registrerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
+
+    const arLokalMiljo = arLokalUtveckling();
+
+    if (arLokalMiljo) {
+        navigator.serviceWorker.getRegistrations()
+            .then((regs) => Promise.all(regs.map((reg) => reg.unregister())))
+            .catch(() => {});
+        return;
+    }
 
     navigator.serviceWorker
         .register('/service-worker.js', { scope: '/' })

@@ -63,6 +63,242 @@
   pointer-events: none;
 }
 
+#karta-prishjul-info {
+  width: 34px;
+  height: 34px;
+  margin: 0 4px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 179, 102, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f0e8;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+#karta-prishjul-info:hover,
+#karta-prishjul-info:focus {
+  background: rgba(255, 179, 102, 0.18);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(255, 179, 102, 0.18);
+  outline: none;
+}
+
+.karta-prisinfo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1310;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(6, 8, 10, 0.72);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  transition: opacity 0.2s ease;
+}
+
+.karta-prisinfo-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.karta-prisinfo-modal {
+  position: relative;
+  width: min(100%, 880px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: radial-gradient(circle at 15% 15%, rgba(255, 178, 108, 0.08), transparent 42%), linear-gradient(160deg, rgba(19, 23, 31, 0.97), rgba(10, 13, 18, 0.97));
+  box-shadow: 0 28px 78px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #ece7dd;
+  transform: translateY(8px) scale(0.98);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  overflow: hidden;
+}
+
+.karta-prisinfo-overlay.is-open .karta-prisinfo-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+#karta-prisinfo-stang {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ddd8ce;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+#karta-prisinfo-stang:hover,
+#karta-prisinfo-stang:focus {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  outline: none;
+}
+
+.karta-prisinfo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.karta-prisinfo-block {
+  padding: 26px 28px;
+}
+
+.karta-prisinfo-block--steps {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.karta-prisinfo-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+  font-weight: 800;
+}
+
+#karta-prisinfo-rubrik {
+  margin: 0;
+  color: #ffb87a;
+  font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+  line-height: 1.1;
+}
+
+.karta-prisinfo-beskrivning {
+  margin: 10px 0 0;
+  color: #ece7dd;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.karta-prisinfo-stats {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.karta-prisinfo-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.karta-prisinfo-stat-ikon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 184, 122, 0.12);
+  border: 1px solid rgba(255, 184, 122, 0.3);
+  font-size: 1.05rem;
+}
+
+.karta-prisinfo-stat-label {
+  margin: 0;
+  font-size: 0.77rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.karta-prisinfo-stat-value {
+  margin: 2px 0 0;
+  font-size: 1.02rem;
+  color: #f5f1e9;
+}
+
+.karta-prisinfo-steps {
+  margin: 8px 0 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  counter-reset: prisinfo;
+}
+
+.karta-prisinfo-steps li {
+  position: relative;
+  padding-left: 40px;
+  color: #ece7de;
+  line-height: 1.45;
+  font-size: 0.98rem;
+}
+
+.karta-prisinfo-steps li::before {
+  counter-increment: prisinfo;
+  content: counter(prisinfo);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #ffb24f, #f08a21);
+  color: #2a1a00;
+  font-weight: 800;
+  font-size: 0.84rem;
+  box-shadow: 0 6px 14px rgba(240, 136, 35, 0.35);
+}
+
+.karta-prisinfo-footnote {
+  margin: 18px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 760px) {
+  .karta-prisinfo-overlay {
+    padding: 14px;
+  }
+
+  .karta-prisinfo-modal {
+    width: 100%;
+    max-height: calc(100vh - 28px);
+    overflow: auto;
+    border-radius: 16px;
+  }
+
+  .karta-prisinfo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .karta-prisinfo-block {
+    padding: 18px 16px;
+  }
+
+  .karta-prisinfo-block--steps {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
 /* ============================================================
    NYA STILAR: Prisfilter, Favoriter, Områdesfilter, Popup-knappar
    ============================================================ */

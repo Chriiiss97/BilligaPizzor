@@ -9,7 +9,6 @@ function initIndexSida() {
     }
 
     document.body.classList.add('index-kort-lage');
-    initHeroLasMerForApp();
 
     // Visa skeleton-laddning medan data hämtas
     const resultatListaSkel = document.getElementById('resultat-lista');
@@ -30,7 +29,7 @@ function initIndexSida() {
     }
 
     Promise.all([
-        fetch('data/pizzor.json').then(r => r.json()),
+        hamtaPizzorListaFranSupabase(),
         hamtaPizzeriorCoordsMap()
     ])
         .then(([data, coordsMap]) => {

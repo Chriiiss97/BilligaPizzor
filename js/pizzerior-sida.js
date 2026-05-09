@@ -74,7 +74,7 @@ function initPizzeriorSida() {
     let coordsKoppladLista = [];
     let narmastAktiv = false;
     let narmastPagar = false;
-    let aktivtOmrade = null;
+    let aktivaOmraden = new Set();
     let visaBaraOppna = false;
     let omradestatistik = {};
     const kartaIframeEl = document.getElementById('pizzerior-karta-iframe');
@@ -135,7 +135,15 @@ function initPizzeriorSida() {
     }
 
     function syncFilterTillIframe(iframe) {
-        try { iframe.contentWindow.postMessage({ type: 'setFilter', oppetNu: visaBaraOppna }, '*'); } catch (_) {}
+        try {
+            const valdaOmraden = Array.from(aktivaOmraden);
+            iframe.contentWindow.postMessage({
+                type: 'setFilter',
+                oppetNu: visaBaraOppna,
+                omrade: valdaOmraden.length === 1 ? valdaOmraden[0] : null,
+                omraden: valdaOmraden
+            }, '*');
+        } catch (_) {}
     }
 
     function oppnaStorKarta() {
@@ -249,13 +257,25 @@ function initPizzeriorSida() {
 
     function updateraRubrik() {
         if (rubriken) rubriken.textContent = 'Hitta Sveriges bästa pizzerior';
-        if (omradeNamnet) omradeNamnet.textContent = aktivtOmrade || 'Alla pizzerior';
+        if (!omradeNamnet) return;
+
+        const valdaOmraden = Array.from(aktivaOmraden);
+        if (valdaOmraden.length === 0) {
+            omradeNamnet.textContent = 'Alla pizzerior';
+            return;
+        }
+        if (valdaOmraden.length === 1) {
+            omradeNamnet.textContent = valdaOmraden[0];
+            return;
+        }
+        omradeNamnet.textContent = `${valdaOmraden.length} områden valda`;
     }
 
-    function filtreraPizzerior() {
+    function filtreraPizzerior(ignoreraOmradesFilter = false) {
         const term = sokruta ? normaliseraText(sokruta.value) : '';
-        let bas = aktivtOmrade
-            ? allaPizzeriorLista.filter((p) => p.stad === aktivtOmrade)
+        const valdaOmraden = Array.from(aktivaOmraden);
+        let bas = !ignoreraOmradesFilter && valdaOmraden.length > 0
+            ? allaPizzeriorLista.filter((p) => valdaOmraden.includes(p.stad))
             : [...allaPizzeriorLista];
 
         if (visaBaraOppna) {
@@ -285,28 +305,46 @@ function initPizzeriorSida() {
         return kopierad.sort((a, b) => a.namn.localeCompare(b.namn, 'sv'));
     }
 
+    function raknaOmradestatistik(pizzerior) {
+        const statistik = {};
+        pizzerior.forEach((p) => {
+            const stad = p.stad || 'Göteborg';
+            statistik[stad] = (statistik[stad] || 0) + 1;
+        });
+        return statistik;
+    }
+
     function uppdateraVisningPizzerior() {
+        const statistikUtanOmradesfilter = raknaOmradestatistik(filtreraPizzerior(true));
+        byggaOmradeFilter(statistikUtanOmradesfilter);
+
         const filtrerad = filtreraPizzerior();
         const sorterad = sorteraPizzerior(filtrerad);
         const attVisa = narmastAktiv ? sorterad.slice(0, 10) : sorterad;
         visaPizzerior(attVisa);
+        [kartaIframeEl, kartaIframeStorEl].filter(Boolean).forEach((iframe) => {
+            syncFilterTillIframe(iframe);
+        });
     }
 
-    function byggaOmradeFilter() {
+    function byggaOmradeFilter(aktuellStatistik = null) {
         if (!omradeFilterDiv) return;
         omradeFilterDiv.innerHTML = '';
 
-        const omraden = Object.entries(omradestatistik)
-            .sort((a, b) => a[0].localeCompare(b[0], 'sv'));
+        const visadStatistik = aktuellStatistik || omradestatistik;
+
+        const omraden = Object.keys(omradestatistik)
+            .sort((a, b) => a.localeCompare(b, 'sv'));
 
         // Alla pizzerior knapp
         const allaBtn = document.createElement('button');
         allaBtn.type = 'button';
         allaBtn.className = 'pizzerior-omrade-btn';
-        if (!aktivtOmrade) allaBtn.classList.add('aktiv');
-        allaBtn.textContent = `Alla pizzerier ${Object.values(omradestatistik).reduce((a, b) => a + b, 0)}`;
+        allaBtn.dataset.omrade = '';
+        if (aktivaOmraden.size === 0) allaBtn.classList.add('aktiv');
+        allaBtn.textContent = `Alla pizzerier ${Object.values(visadStatistik).reduce((a, b) => a + b, 0)}`;
         allaBtn.addEventListener('click', () => {
-            aktivtOmrade = null;
+            aktivaOmraden.clear();
             updateraRubrik();
             opdateraOmradeKnappar();
             uppdateraVisningPizzerior();
@@ -314,14 +352,20 @@ function initPizzeriorSida() {
         omradeFilterDiv.appendChild(allaBtn);
 
         // Omrâdes-knappar
-        omraden.forEach(([omrade, antal]) => {
+        omraden.forEach((omrade) => {
+            const antal = visadStatistik[omrade] || 0;
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'pizzerior-omrade-btn';
-            if (aktivtOmrade === omrade) btn.classList.add('aktiv');
+            btn.dataset.omrade = omrade;
+            if (aktivaOmraden.has(omrade)) btn.classList.add('aktiv');
             btn.textContent = `${omrade} ${antal}`;
             btn.addEventListener('click', () => {
-                aktivtOmrade = omrade;
+                if (aktivaOmraden.has(omrade)) {
+                    aktivaOmraden.delete(omrade);
+                } else {
+                    aktivaOmraden.add(omrade);
+                }
                 updateraRubrik();
                 opdateraOmradeKnappar();
                 uppdateraVisningPizzerior();
@@ -334,15 +378,15 @@ function initPizzeriorSida() {
         const btns = document.querySelectorAll('.pizzerior-omrade-btn');
         btns.forEach((btn) => {
             btn.classList.remove('aktiv');
-            const text = btn.textContent.split(' ')[0];
-            if ((!aktivtOmrade && btn.textContent.startsWith('Alla')) || (aktivtOmrade === text)) {
+            const btnOmrade = btn.dataset.omrade || '';
+            if ((aktivaOmraden.size === 0 && btnOmrade === '') || aktivaOmraden.has(btnOmrade)) {
                 btn.classList.add('aktiv');
             }
         });
     }
 
     Promise.all([
-        fetch('/data/pizzor.json').then((response) => response.json()),
+        hamtaPizzorListaFranSupabase(),
         hamtaPizzeriorCoordsMap()
     ])
         .then(([data, coordsMap]) => {
@@ -385,9 +429,6 @@ function initPizzeriorSida() {
             visaBaraOppna = !visaBaraOppna;
             oppetNuToggle.classList.toggle('aktiv', visaBaraOppna);
             uppdateraVisningPizzerior();
-            [kartaIframeEl, kartaIframeStorEl].filter(Boolean).forEach((iframe) => {
-                try { iframe.contentWindow.postMessage({ type: 'setFilter', oppetNu: visaBaraOppna }, '*'); } catch (_) {}
-            });
         });
     }
 

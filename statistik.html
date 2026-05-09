@@ -82,7 +82,8 @@
       /* ------------------------------------------------
          1. DATA LOADING
       ------------------------------------------------ */
-      var DATA_URL = '/data/pizzor.json';
+      var SUPABASE_URL = 'https://yixjzzehejrfcpyccyxp.supabase.co';
+      var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg';
       var allaPizzerior = []; // grupperad struktur
       var currentScope = { type: 'country', value: null };
       var omradesInsikterScope = null;
@@ -91,14 +92,85 @@
       var jamforScopeA = null;
       var jamforScopeB = null;
 
-      fetch(DATA_URL)
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
+      // Prisstatistik ska bara byggas av rader som matchar pizzor.json-schema.
+      function arPrisradFranPizzorJson(row) {
+        if (!row || typeof row !== 'object') return false;
+        if (typeof row.pizzeria !== 'string' || !row.pizzeria.trim()) return false;
+        if (typeof row.pizza_namn !== 'string' || !row.pizza_namn.trim()) return false;
+        if (typeof row.pris !== 'number' || !isFinite(row.pris)) return false;
+
+        // extras.json-rader kännetecknas av fälten kategori + namn (utan pizza_namn).
+        if (Object.prototype.hasOwnProperty.call(row, 'kategori')) return false;
+        if (Object.prototype.hasOwnProperty.call(row, 'namn') && !Object.prototype.hasOwnProperty.call(row, 'pizza_namn')) return false;
+
+        return true;
+      }
+
+      function hamtaSupabaseRows(query) {
+        var batchSize = 1000;
+        var offset = 0;
+        var allaRows = [];
+
+        function hamtaBatch() {
+          var separator = query.indexOf('?') >= 0 ? '&' : '?';
+          var pagedQuery = query + separator + 'limit=' + batchSize + '&offset=' + offset;
+          return fetch(SUPABASE_URL + '/rest/v1/' + pagedQuery, {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: 'Bearer ' + SUPABASE_ANON_KEY
+            }
+          }).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + query);
+            return r.json();
+          }).then(function (rows) {
+            var lista = Array.isArray(rows) ? rows : [];
+            allaRows = allaRows.concat(lista);
+            if (lista.length < batchSize) return allaRows;
+            offset += batchSize;
+            return hamtaBatch();
+          });
+        }
+
+        return hamtaBatch();
+      }
+
+      function hamtaPizzorData() {
+        return Promise.all([
+          hamtaSupabaseRows('pizzerior?select=id,namn,adress,stad,omrade,telefon,hemsida&order=id.asc'),
+          hamtaSupabaseRows('pizzor?select=pizzeria_id,pizza_namn,pris,ingredienser&order=id.asc')
+        ]).then(function (result) {
+          var pizzerior = Array.isArray(result[0]) ? result[0] : [];
+          var pizzor = Array.isArray(result[1]) ? result[1] : [];
+          var pizzeriaById = {};
+
+          pizzerior.forEach(function (p) {
+            if (p && p.id !== null && p.id !== undefined) {
+              pizzeriaById[String(p.id)] = p;
+            }
+          });
+
+          return pizzor.map(function (row) {
+            var info = pizzeriaById[String(row && row.pizzeria_id)] || {};
+            return {
+              pizzeria: info.namn || '',
+              adress: info.adress || '',
+              omrade: info.omrade || '',
+              stad: info.stad || '',
+              telefon: info.telefon || '',
+              hemsida: info.hemsida || '',
+              pizza_namn: (row && row.pizza_namn) || '',
+              pris: Number(row && row.pris) || 0,
+              ingredienser: Array.isArray(row && row.ingredienser) ? row.ingredienser : []
+            };
+          });
+        });
+      }
+
+      hamtaPizzorData()
         .then(function (flatData) {
-          allaPizzerior = grupperaPizzerior(flatData);
-          byggScopeKnappar(flatData);
+          var pizzorData = (Array.isArray(flatData) ? flatData : []).filter(arPrisradFranPizzorJson);
+          allaPizzerior = grupperaPizzerior(pizzorData);
+          byggScopeKnappar(pizzorData);
           renderaStatistik();
         })
         .catch(function (err) {
@@ -107,7 +179,7 @@
             el.textContent = 'Kunde inte ladda data. Försök igen senare.';
             el.classList.add('stat-status--error');
           }
-          console.error('Statistik: kunde inte ladda pizzor.json', err);
+          console.error('Statistik: kunde inte ladda data fran Supabase', err);
         });
 
       /* ------------------------------------------------

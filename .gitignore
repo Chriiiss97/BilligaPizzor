@@ -1,25 +1,11 @@
 # Local Netlify folder
 .netlify
-netlify-dist/
 
 # Backup-filer från dubblettscriptet
 data/*.backup-*.json
 
 # Lokal rapport (ska inte upp på GitHub)
 scripts/dubletter-rapport.html
-
-# Android build-filer
-android/build/
-android/app/build/
-android/.gradle/
-android/.idea/deviceManager.xml
-
-# Android signing secrets (ska ALDRIG committas)
-android/keystore.properties
-android/local.properties
-android/keystore.properties
-android/*.jks
-android/*.keystore
 
 # Node
 node_modules/
