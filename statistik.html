@@ -100,7 +100,7 @@
         if (!row || typeof row !== 'object') return false;
         if (typeof row.pizzeria !== 'string' || !row.pizzeria.trim()) return false;
         if (typeof row.pizza_namn !== 'string' || !row.pizza_namn.trim()) return false;
-        if (typeof row.pris !== 'number' || !isFinite(row.pris)) return false;
+        if (typeof row.pris !== 'number' || !isFinite(row.pris) || row.pris <= 0) return false;
 
         // extras.json-rader kännetecknas av fälten kategori + namn (utan pizza_namn).
         if (Object.prototype.hasOwnProperty.call(row, 'kategori')) return false;
@@ -325,12 +325,12 @@
         }, []);
         var priser = allaPizzor
           .map(function (p) { return p.pris; })
-          .filter(function (v) { return typeof v === 'number'; });
+          .filter(function (v) { return typeof v === 'number' && v > 0; });
 
         /* snitt per pizzeria */
         var pizzeriorMedPris = dataset
           .map(function (p) {
-            var ps = p.pizzor.map(function (pi) { return pi.pris; }).filter(function (v) { return typeof v === 'number'; });
+            var ps = p.pizzor.map(function (pi) { return pi.pris; }).filter(function (v) { return typeof v === 'number' && v > 0; });
             var snittExakt = ps.length ? snitt(ps) : null;
             var varians = null;
             var stdAvvikelse = null;
@@ -546,7 +546,7 @@
                 var varScore = Math.min(100, (unikaIng / p.pizzor.length) * 20);
 
                 /* Prisbalans: låg stdAvvikelse relativt till snitt = jämna priser */
-                var ps = p.pizzor.map(function (pi) { return pi.pris; }).filter(function (v) { return typeof v === 'number'; });
+                var ps = p.pizzor.map(function (pi) { return pi.pris; }).filter(function (v) { return typeof v === 'number' && v > 0; });
                 var sn = ps.length ? snitt(ps) : 0;
                 var std = 0;
                 if (ps.length > 1 && sn) {
@@ -578,7 +578,7 @@
             var namnMap = {};
             dataset.forEach(function (p) {
               p.pizzor.forEach(function (pi) {
-                if (typeof pi.pris !== 'number') return;
+                if (typeof pi.pris !== 'number' || pi.pris <= 0) return;
                 var key = normaliseraNamn(pi.namn);
                 if (!namnMap[key]) namnMap[key] = [];
                 namnMap[key].push({ pizzeria: p.pizzeria, omrade: p.omrade, stad: p.stad, namn: pi.namn, pris: pi.pris });
