@@ -1,4 +1,25 @@
 function initIndexSida() {
+    // Handle "Läs mer" button for expanding hero section on mobile
+    const lasMerBtn = document.querySelector('.hero-las-mer-btn');
+    const heroSektion = document.querySelector('.hero-sektion');
+    if (lasMerBtn && heroSektion) {
+        lasMerBtn.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+                // Collapse
+                heroSektion.classList.remove('hero-expanded');
+                this.textContent = 'Läs mer';
+                this.setAttribute('aria-expanded', 'false');
+            } else {
+                // Expand
+                heroSektion.classList.add('hero-expanded');
+                this.textContent = 'Dölj';
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+    }
+
     const sokruta = document.getElementById('sokruta');
     const antalTraffar = document.getElementById('antal-traffar-container');
     const prisSortering = document.getElementById('pris-sortering');

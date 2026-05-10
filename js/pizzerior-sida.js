@@ -157,6 +157,9 @@ function initPizzeriorSida() {
         } else if (kartaIframeStorEl) {
             syncFilterTillIframe(kartaIframeStorEl);
         }
+        if (kartaIframeStorEl) {
+            setTimeout(() => syncFilterTillIframe(kartaIframeStorEl), 160);
+        }
     }
 
     function stangStorKarta() {
@@ -170,6 +173,9 @@ function initPizzeriorSida() {
         if (!kartaIframeEl) return;
 
         appliceraKartaIframeLayout(kartaIframeEl);
+        kartaIframeEl.addEventListener('load', () => {
+            syncFilterTillIframe(kartaIframeEl);
+        });
 
         if (kartaExpandBtn) {
             kartaExpandBtn.addEventListener('click', (event) => {

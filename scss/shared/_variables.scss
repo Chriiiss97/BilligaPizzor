@@ -1,0 +1,102 @@
+// ============================================================
+// shared/_variables.scss
+// SCSS-variabler och CSS custom properties för hela projektet
+// ============================================================
+
+// ---- SCSS-variabler (används i SCSS-filer med #{$var}) -----
+
+// Breakpoints
+$breakpoint-mobile:  1023px;
+$breakpoint-tablet:  768px;
+$breakpoint-desktop: 1024px;
+
+// Spacing scale
+$spacing-xs:  4px;
+$spacing-sm:  8px;
+$spacing-md:  16px;
+$spacing-lg:  24px;
+$spacing-xl:  40px;
+$spacing-xxl: 64px;
+
+// Border radius
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   20px;
+$radius-pill: 999px;
+
+// ---- CSS custom properties (används i HTML/CSS med var(--...)) ----
+:root {
+  // Bakgrunder
+  --color-bg:          #0f0f0f;
+  --color-bg-alt:      #0a0a0a;
+  --color-surface:     #111111;
+  --color-surface-alt: #1a1a1a;
+  --color-surface-raised: rgba(30, 27, 24, 0.92);
+
+  // Primärfärg (röd)
+  --color-primary:     #cd212a;
+  --color-primary-dim: rgba(205, 33, 42, 0.18);
+
+  // Accentfärg (grön)
+  --color-accent:      #22c55e;
+  --color-accent-dim:  rgba(34, 197, 94, 0.12);
+
+  // Accentfärg (orange/guld)
+  --color-gold:        #ffb87a;
+
+  // Text
+  --color-text:        #e0e0e0;
+  --color-text-bright: #f5f0e8;
+  --color-text-muted:  #aaaaaa;
+  --color-text-dim:    #555555;
+
+  // Borders
+  --color-border:      rgba(255, 255, 255, 0.10);
+  --color-border-dim:  rgba(255, 255, 255, 0.06);
+  --color-border-mid:  rgba(255, 255, 255, 0.14);
+
+  // Shadows
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 4px 18px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.34), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  // Spacing (tillgängliga i CSS)
+  --spacing-xs:  #{$spacing-xs};
+  --spacing-sm:  #{$spacing-sm};
+  --spacing-md:  #{$spacing-md};
+  --spacing-lg:  #{$spacing-lg};
+  --spacing-xl:  #{$spacing-xl};
+  --spacing-xxl: #{$spacing-xxl};
+
+  // Border radius (tillgängliga i CSS)
+  --radius-sm:   #{$radius-sm};
+  --radius-md:   #{$radius-md};
+  --radius-lg:   #{$radius-lg};
+  --radius-pill: #{$radius-pill};
+
+  // Typografi
+  --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-size-xs:   0.72rem;
+  --font-size-sm:   0.85rem;
+  --font-size-base: 1rem;
+  --font-size-md:   1.1rem;
+  --font-size-lg:   1.25rem;
+  --font-size-xl:   1.5rem;
+
+  // Transitions
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow:   0.3s ease;
+
+  // Z-index skala
+  --z-base:    1;
+  --z-overlay: 100;
+  --z-sticky:  1000;
+  --z-modal:   1300;
+
+  // Blur
+  --blur-sm: blur(8px);
+  --blur-md: blur(14px);
+  --blur-lg: blur(16px);
+}

@@ -1297,13 +1297,13 @@
 
 #karta-kontroller {
   position: fixed;
-  left: 50%;
+  left: 12px;
+  right: 12px;
   bottom: 84px;
   bottom: calc(84px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
   z-index: 1001;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
@@ -1336,19 +1336,23 @@
 #karta-sok-stang {
   display: none;
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 1.3rem;
+  background: rgba(24, 26, 30, 0.85);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #d8dde6;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 4px 8px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   line-height: 1;
-  z-index: 2;
+  border-radius: 999px;
+  text-align: center;
+  z-index: 4;
 }
-#karta-sok-stang:hover { color: #fff; }
+#karta-sok-stang:hover { color: #fff; background: rgba(38, 42, 50, 0.95); }
 
 /* Expanded state */
 #karta-sok-wrap:not(.is-collapsed) #karta-sok-toggle { display: none; }
@@ -1375,7 +1379,7 @@
   border: 1.5px solid rgba(255,255,255,0.1);
   border-radius: 50px;
   color: #f0f0f0;
-  padding: 12px 18px 12px 40px;
+  padding: 12px 52px 12px 40px;
   font-size: 0.9rem;
   width: 300px;
   outline: none;
@@ -1448,37 +1452,42 @@
 }
 
 #karta-narmast-knapp {
-  background: rgba(205, 33, 42, 0.9);
-  color: #fff;
-  border: 1.5px solid rgba(255,100,100,0.3);
-  border-radius: 50px;
-  padding: 12px 18px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 24px rgba(205,33,42,0.4), 0 2px 8px rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
-  gap: 7px;
-  white-space: nowrap;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  font-family: inherit;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: rgba(12, 12, 12, 0.88);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #ff4d4f;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+#karta-narmast-knapp svg {
+  width: 20px;
+  height: 20px;
 }
 
 #karta-narmast-knapp:hover {
-  background: #e82030;
-  box-shadow: 0 6px 28px rgba(205,33,42,0.55), 0 2px 8px rgba(0,0,0,0.4);
-  transform: translateY(-1px);
+  background: rgba(26, 28, 34, 0.95);
+  border-color: rgba(255,77,79,0.35);
+  box-shadow: 0 6px 24px rgba(255,77,79,0.2);
+  transform: scale(1.04);
 }
 
 #karta-narmast-knapp:active {
-  transform: translateY(0);
+  transform: scale(0.96);
 }
 
 #karta-narmast-knapp:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: wait;
   transform: none;
 }
@@ -1630,23 +1639,51 @@
   line-height: 1;
 }
 
-/* Info-räknare */
-#karta-info {
-  position: fixed;
-  top: 68px;
-  right: 16px;
-  z-index: 1000;
-  background: rgba(12, 12, 12, 0.82);
-  color: #aaa;
-  border-radius: 50px;
-  padding: 7px 14px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  pointer-events: none;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.07);
-  letter-spacing: 0.02em;
+/* Info badge */
+#karta-info-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(12, 12, 12, 0.8);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 9999px;
+  height: 38px;
+  padding: 0 11px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ccc;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+#karta-info-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.karta-info-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: karta-info-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes karta-info-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1783,40 +1820,117 @@
     bottom: calc(88px + env(safe-area-inset-bottom));
   }
 
-  #karta-vanster-meny.is-open ~ #karta-kontroller {
+  #karta-sok-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
 
-      #karta-sok-wrap {
-        flex: 1;
-        min-width: 0;
-      }
+  #karta-vanster-meny.is-open ~ #karta-kontroller {
     opacity: 0;
     pointer-events: none;
   }
 
   #karta-sok {
     width: 100%;
+    max-width: 220px;
+    min-width: 140px;
     box-sizing: border-box;
+    padding: 10px 48px 10px 38px;
+    font-size: 0.88rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #karta-sok-toggle {
+    width: 40px;
+    height: 40px;
   }
 
   #karta-sok:focus {
     width: 100%;
+    max-width: 220px;
+    min-width: 140px;
+  }
+
+  #karta-sok-stang {
+    right: 6px;
+    width: 30px;
+    height: 30px;
   }
 
   #karta-narmast-knapp {
-    width: 100%;
-    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
   }
 
-  #karta-info {
-    top: auto;
-    position: static;
-    bottom: auto;
-    right: auto;
-    left: auto;
-    white-space: nowrap;
-    flex-shrink: 0;
+  #karta-info-badge {
+    max-width: 40vw;
+    height: 38px;
     font-size: 0.72rem;
-    padding: 6px 12px;
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .karta-info-dot {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+/* Extra small mobil (< 480px) */
+@media (max-width: 479px) {
+  #karta-kontroller {
+    gap: 8px;
+  }
+
+  #karta-sok-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
+
+  #karta-sok {
+    width: 100%;
+    max-width: 180px;
+    min-width: 118px;
+    padding: 9px 40px 9px 36px;
+  }
+
+  #karta-sok:focus {
+    width: 100%;
+    max-width: 180px;
+    min-width: 118px;
+  }
+
+  #karta-sok-toggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  #karta-narmast-knapp {
+    width: 38px;
+    height: 38px;
+  }
+
+  #karta-narmast-knapp svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  #karta-info-badge {
+    max-width: 36vw;
+    height: 36px;
+    font-size: 0.68rem;
+    padding: 0 9px;
+    gap: 4px;
+  }
+
+  .karta-info-dot {
+    width: 4px;
+    height: 4px;
   }
 }
 
@@ -2381,6 +2495,54 @@
     #karta-bottom-nav {
       height: calc(72px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* ============================================================
+     MOBILE HARDENING
+     ============================================================ */
+  @media (max-width: 767px) {
+    #karta-app-topbar {
+      height: 72px;
+      padding: 4px 10px 0;
+    }
+
+    .karta-app-topbar-logo {
+      height: 58px;
+      max-width: calc(100vw - 150px);
+    }
+
+    /* Dölj Leaflet zoom-knappar på mobil */
+    .leaflet-control-zoom {
+      display: none !important;
+    }
+
+    #karta-filter-knapp {
+      top: 8px;
+      left: 10px;
+    }
+
+    #karta-sok-wrap {
+      max-width: calc(100vw - 24px);
+    }
+
+    #karta-sok,
+    #karta-sok:focus {
+      width: min(320px, calc(100vw - 24px));
+      max-width: calc(100vw - 24px);
+    }
+
+    #karta-sok-resultat {
+      max-width: calc(100vw - 24px);
+    }
+
+    .karta-popup {
+      max-width: min(330px, 88vw);
+    }
+
+    .karta-popup-btn {
+      white-space: normal;
+      text-align: center;
     }
   }
 

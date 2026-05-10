@@ -940,3 +940,28 @@ body.statistik-page {
     font-size: 0.88rem;
   }
 }
+
+/* Extra guardrails for very small screens */
+@media (max-width: 400px) {
+  .stat-main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .stat-card {
+    border-radius: 16px;
+    padding: 16px 12px;
+  }
+
+  .stat-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .stat-pris-label,
+  .stat-pris-varde,
+  .stat-bullet-item,
+  .stat-rank-name {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

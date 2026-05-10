@@ -1,0 +1,969 @@
+// ============================================================
+// mobile/_layout.scss
+// Alla responsive/mobila overrides extraherade från index.css
+// Ordning: 1199px → 992px → 900px → 768px → 640px → 600px → 480px
+// ============================================================
+
+// ---- max-width: 1199px (tablet) ----------------------------
+
+@media (max-width: 1199px) {
+  #resultat-lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(100%, 1120px);
+    max-width: 1120px;
+    column-gap: 18px;
+    row-gap: 22px;
+  }
+
+  #pris-slider-wrap {
+    width: min(100%, 1120px);
+    max-width: 1120px;
+  }
+}
+
+// ---- max-width: 992px (tablet-sm) --------------------------
+
+@media (max-width: 992px) {
+  #resultat-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 780px);
+    max-width: 780px;
+    column-gap: 14px;
+    row-gap: 16px;
+  }
+
+  #pris-slider-wrap {
+    width: min(100%, 780px);
+    max-width: 780px;
+  }
+}
+
+// ---- max-width: 900px (hero layout) ------------------------
+
+@media (max-width: 900px) {
+  .hero-inner.hero-layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .hero-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .hero-intro {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-media {
+    flex: 0 0 auto;
+    justify-content: center;
+  }
+
+  .hero-logo-shell {
+    width: clamp(190px, 58vw, 280px);
+  }
+}
+
+// ---- max-width: 768px (mobil) ------------------------------
+
+@media (max-width: 768px) {
+  // Grundlayout
+  html { overflow-x: hidden; }
+  body { overflow-x: hidden; padding: 0; }
+
+  // Hero
+  .hero-sektion {
+    padding: 30px 15px 20px 15px;
+
+    h1 {
+      font-size: 2.1rem;
+      letter-spacing: -0.2px;
+    }
+  }
+
+  .hero-features { grid-template-columns: 1fr; max-width: 100%; }
+  .hero-text-content { text-align: center; }
+  .hero-text { max-width: 100%; display: flex; flex-direction: column; }
+  .hero-sektion h1 { order: 1; }
+  .hero-intro { order: 2; }
+
+  .botten-info-sektion {
+    margin: 24px auto 10px auto;
+    padding: 0 8px;
+  }
+
+  .seo-sektion {
+    padding: 24px 18px;
+    margin-top: 32px;
+  }
+
+  // Navbar
+  .navbar {
+    position: sticky;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .nav-container {
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 15px;
+    gap: 0;
+  }
+
+  .nav-logo {
+    height: 55px;
+
+    img { height: 100%; width: auto; }
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1a1a1a;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 12px 12px;
+    z-index: 1001;
+
+    a {
+      font-size: 1rem;
+      padding: 15px 20px;
+      display: block;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background-color 0.2s ease;
+
+      &:last-child { border-bottom: none; }
+      &:hover { background-color: rgba(255, 255, 255, 0.1); }
+    }
+  }
+
+  .navbar.nav-open .nav-links { display: flex; }
+
+  .nav-social-label { display: none; }
+
+  .nav-social-btn {
+    padding: 5px 11px;
+    font-size: 0.7rem;
+  }
+
+  .hamburger-ikon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+    padding: 5px;
+
+    span {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+      border-radius: 1px;
+    }
+
+    &.mobil-meny-aktiv span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    &.mobil-meny-aktiv span:nth-child(2) { opacity: 0; }
+    &.mobil-meny-aktiv span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+  }
+
+  // Pizzeria-sidor mobil
+  body:has(#pizzeria-sida-root) .hero-sektion { padding: 38px 16px 74px; }
+  body:has(#pizzeria-sida-root) .hero-inner { grid-template-columns: 1fr; gap: 14px; }
+  body:has(#pizzeria-sida-root) .hero-text { text-align: center; }
+  body:has(#pizzeria-sida-root) .pizzeria-hero-media { order: 2; }
+  body:has(#pizzeria-sida-root) .pizzeria-hero-image { width: min(82vw, 330px); max-height: 280px; }
+  body:has(#pizzeria-sida-root) { padding-bottom: 76px; }
+
+  #pizzeria-sida-titel { font-size: 1.95rem; }
+  .hero-subline { font-size: 0.88rem; }
+
+  .pizzeria-info {
+    margin: -38px 12px 0;
+    padding: 22px 18px 20px;
+    border-radius: 18px;
+  }
+
+  .meta-item {
+    padding: 11px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .meta-label { font-size: 0.82rem; }
+  .meta-value { font-size: 0.89rem; }
+  .pizzeria-seo { margin-top: 14px; padding-top: 14px; line-height: 1.82; }
+  .pizzeria-cta-row { justify-content: center; }
+  .cta-btn { min-height: 50px; font-size: 0.92rem; }
+
+  // Sticky CTA
+  .sticky-mobile-cta {
+    position: fixed;
+    left: 5%;
+    right: 5%;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1200;
+    background: transparent;
+    border-radius: 999px;
+    padding: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: all 0.25s ease;
+    will-change: opacity, transform;
+
+    &.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    &.is-scrolling {
+      opacity: 0.6;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .cta-btn {
+      min-height: 44px;
+      width: 100%;
+      max-width: 82%;
+      font-size: 0.8rem;
+      padding: 8px 16px;
+      box-shadow: none;
+    }
+  }
+
+  body:has(#pizzeria-sida-root) .sticky-mobile-cta { right: calc(5% + 54px); }
+  body:has(#pizzeria-sida-root) .sticky-mobile-cta .cta-btn-call { min-width: 0; }
+
+  // Sökfält
+  #huvud-sok-sektion { padding: 16px 12px 8px 12px; }
+
+  .sok-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+  }
+
+  input#sokruta {
+    width: 280px;
+    max-width: 280px;
+    height: 40px;
+    padding: 8px 84px 8px 54px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  #antal-traffar-container { display: none; }
+
+  // Mobil toolbar
+  #mobil-kontroller {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 8px 0;
+  }
+
+  #mobil-filter-toggle {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 50px;
+    min-height: 42px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: #1e1e1e;
+    color: #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    position: relative;
+    z-index: 5;
+    box-sizing: border-box;
+
+    &:hover, &:focus-visible {
+      border-color: #1f7a4c;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+  }
+
+  .filter-bottom-row { display: contents; }
+  .filter-bottom-row #rensa-filter-btn { display: none; }
+
+  #narmast-btn {
+    display: block;
+    width: 100%;
+    margin: 0;
+    min-height: 42px;
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    border-radius: 50px;
+    white-space: nowrap;
+    position: relative;
+    z-index: 5;
+    box-sizing: border-box;
+  }
+
+  #sorterings-sektion {
+    width: 100%;
+    margin: 0;
+    gap: 0;
+    position: relative;
+    z-index: 5;
+
+    label { display: none; }
+  }
+
+  #pris-sortering {
+    width: 100%;
+    max-width: none;
+    min-height: 42px;
+    border-radius: 50px;
+    padding: 10px 28px 10px 10px;
+    font-size: 0.82rem;
+    position: relative;
+    z-index: 6;
+    box-sizing: border-box;
+  }
+
+  // Mobil statusrad
+  #mobil-status-rad {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-top: 2px;
+
+    &.visa-rensa { gap: 12px; }
+  }
+
+  #rensa-filter-btn-mobile {
+    display: none;
+    width: auto;
+    margin: 0;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1.5px solid #cd212a;
+    color: #ff4757;
+    background-color: rgba(205, 33, 42, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  #mobil-status-rad.visa-rensa #rensa-filter-btn-mobile { display: inline-flex; }
+
+  #rensa-filter-btn-mobile:hover,
+  #rensa-filter-btn-mobile:focus-visible {
+    border-color: #e60023;
+    background-color: rgba(230, 0, 35, 0.18);
+    color: #ff4757;
+  }
+
+  #antal-traffar-mobile {
+    display: inline-block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #cccccc;
+    min-height: 1.2em;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  // Filter-sektion
+  #filter-sektion {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 16px;
+    margin-top: 4px;
+    box-sizing: border-box;
+
+    &.filter-hidden-mobile { display: none; }
+    &:not(.filter-hidden-mobile) { display: block; }
+    &.filter-hidden-mobile.avf-synlig { display: block; }
+  }
+
+  .filter-grupp {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 20px 18px;
+
+    &:last-child { border-bottom: none; }
+    &--1 { border-radius: 16px 16px 0 0; border-top: 3px solid #1f7a4c; }
+    &--2 { border-radius: 0; border-top: none; }
+    &--3 { border-radius: 0 0 16px 16px; border-top: none; border-bottom-color: transparent; }
+  }
+
+  // Filter dropdown på mobil: inline chips istf dropdown
+  .dropdown-container { position: static; }
+  .dropdown-knapp, .dropdown-pil { display: none; }
+
+  .dropdown-innehall {
+    display: flex !important;
+    position: static;
+    min-width: 0;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-top: 0;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    label {
+      padding: 0;
+      border: none;
+      background: transparent;
+
+      &:hover { padding: 0; border-left: none; background: transparent; }
+    }
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    label span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      background: #2a2a2a;
+      color: #cccccc;
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.2;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+    }
+
+    label:active span { transform: scale(0.97); }
+  }
+
+  #omrade-lista .dropdown-item:has(input:checked) span,
+  #pizzeria-lista .dropdown-item:has(input:checked) span,
+  #dropdown-lista .dropdown-item:has(input:checked) span {
+    border-color: #1f7a4c;
+    background: #1f7a4c;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(31, 122, 76, 0.28);
+    transform: scale(1.02);
+  }
+
+  .dropdown-innehall input:checked + span::before { content: none; }
+
+  .dropdown-innehall.mob-limit .dropdown-item.mob-extra { display: none; }
+  .dropdown-innehall.mob-limit.show-all .dropdown-item.mob-extra { display: flex; }
+
+  .chip-visa-fler {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 200, 100, 0.35);
+    background: linear-gradient(180deg, #2a231a 0%, #1e1a12 100%);
+    color: #f0c060;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(169, 141, 87, 0.25);
+  }
+
+  // Knappar mobil
+  button.pizzeria-btn {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    min-height: 48px;
+    margin-bottom: 10px;
+  }
+
+  #rensa-filter-btn {
+    display: block;
+    width: 100%;
+    margin: 15px 0 0 0;
+    border: 2px solid #d32f2f;
+    color: #d32f2f;
+    background: transparent;
+    box-shadow: none;
+
+    &:hover, &:focus { background-color: rgba(211, 47, 47, 0.08); }
+  }
+
+  // Filter-grid vertikal
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .filter-steg-rubrik { margin-bottom: 14px; }
+
+  // Filter-grupp dropdown på 768px
+  .filter-grupp--3 #dropdown-lista {
+    position: static;
+    margin-top: 10px;
+    max-height: none;
+  }
+
+  .ingrediens-options { max-height: none; }
+
+  // Resultat-lista
+  #resultat-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 12px 0;
+    width: min(100%, 560px);
+    max-width: 560px;
+    padding: 14px 10px 24px;
+    row-gap: 14px;
+  }
+
+  #resultat-lista::before {
+    inset: 6px 2px 8px;
+    border-radius: 20px;
+  }
+
+  .pizza-kort {
+    width: 100%;
+    max-width: none;
+    padding: 16px 12px;
+    margin: 0;
+    min-height: 0;
+
+    h3 { font-size: 1rem; }
+  }
+
+  // Pris-slider
+  #pris-slider-wrap {
+    width: min(100%, 560px);
+    max-width: 560px;
+    padding: 10px 10px 18px;
+  }
+
+  // Footer
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  // Topp-knapp
+  #topp-knapp {
+    bottom: calc(15px + env(safe-area-inset-bottom));
+    right: 5%;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #cd212a;
+    border: 1px solid rgba(205, 33, 42, 0.24);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.20), 0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+    z-index: 1210;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.95);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, box-shadow 0.25s ease;
+
+    &.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    &.is-scrolling { opacity: 0.72; }
+    &:active { transform: translateY(1px) scale(0.97); }
+  }
+
+  // Mobil scroll hint
+  .mobil-scroll-hint {
+    display: block;
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #e0e0e0;
+    background: rgba(30, 30, 30, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    padding: 6px 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    opacity: 0.9;
+    z-index: 1100;
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+
+    &.dold { opacity: 0; transform: translate(-50%, 4px); pointer-events: none; }
+    &.scrollar { opacity: 0.28; transform: translate(-50%, 2px); }
+  }
+
+  // Ladda fler
+  #ladda-fler-sektion { padding: 20px 0; }
+  #ladda-fler-btn { width: 100%; max-width: 300px; }
+
+  // Policy modal
+  .policy-box { width: 95%; padding: 25px 20px; }
+
+  // Övriga
+  .las-mer-knapp {
+    display: block;
+    margin: 6px auto 10px;
+    padding: 12px 24px;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover { background-color: #b71c1c; }
+  }
+
+  .center-container { display: flex; justify-content: center; padding: 15px 0; }
+
+  // Pizzeria-sida kort på mobil
+  body:has(#pizzeria-sida-root) #resultat-lista,
+  body.index-kort-lage #resultat-lista {
+    gap: 8px;
+    padding: 8px 0 80px 0;
+    position: relative;
+  }
+
+  body:has(#pizzeria-sida-root) .pizza-kort,
+  body.index-kort-lage .pizza-kort {
+    padding: 18px 16px;
+    min-height: 190px;
+  }
+
+  body:has(#pizzeria-sida-root) .pizza-kort h3,
+  body.index-kort-lage .pizza-kort h3 {
+    font-size: 0.87rem;
+    margin-bottom: 6px;
+  }
+
+  body:has(#pizzeria-sida-root) .pizza-kort p[style*="0.9em"],
+  body.index-kort-lage .pizza-kort p[style*="0.9em"] {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    -webkit-box-orient: initial;
+    overflow: visible;
+    text-overflow: clip;
+    max-height: none;
+  }
+
+  // Sajtfot
+  .sajtfot { padding: 20px 10px; margin-top: 30px; }
+
+  // Resultat-lista ny design (pizza-rad)
+  #resultat-lista {
+    width: min(100%, 700px);
+    max-width: 700px;
+    padding: 2px 0 10px;
+    gap: 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  #resultat-lista .pizza-kort {
+    padding: 6px 7px;
+    border: 1px solid rgba(126, 244, 163, 0.14);
+    border-radius: 16px;
+    border-bottom: 1px solid rgba(126, 244, 163, 0.14);
+    background:
+      radial-gradient(circle at 0% 50%, rgba(45, 161, 100, 0.1), transparent 56%),
+      linear-gradient(180deg, rgba(18, 23, 21, 0.94) 0%, rgba(11, 14, 13, 0.97) 100%);
+    box-shadow:
+      0 0 0 1px rgba(126, 244, 163, 0.04),
+      0 10px 24px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03),
+      0 0 14px rgba(46, 170, 103, 0.05);
+    backdrop-filter: blur(12px);
+  }
+
+  #resultat-lista .pizza-rad { display: block; }
+
+  #resultat-lista .pizza-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    min-width: 0;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  #resultat-lista .pizza-kort h3 { font-size: 1rem; line-height: 1.08; text-align: left; width: 100%; }
+  #resultat-lista .pizza-top-row { gap: 6px; }
+  #resultat-lista .pizza-beskrivning { margin-top: 1px; font-size: 0.72rem; line-height: 1.2; -webkit-line-clamp: 1; line-clamp: 1; text-align: left; width: 100%; }
+  #resultat-lista .pizza-tags { margin-top: 2px; gap: 3px; width: 100%; }
+  #resultat-lista .ingrediens-chip { font-size: 0.58rem; padding: 1px 5px; border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: rgba(225,232,238,0.76); }
+  #resultat-lista .pizza-divider { display: none; }
+  #resultat-lista .pizza-bottom-row { margin-top: 4px; gap: 6px; }
+  #resultat-lista .pizza-pizzeria-row { gap: 6px; justify-content: flex-start; flex-wrap: nowrap; min-width: 0; flex: 1; }
+  #resultat-lista .pizza-store-icon { width: 20px; height: 20px; flex: 0 0 20px; border-radius: 999px; font-size: 0.6rem; background: rgba(10,18,14,0.9); border-color: rgba(109,255,123,0.18); box-shadow: inset 0 0 0 1px rgba(126,244,163,0.03), 0 0 14px rgba(56,184,108,0.08); }
+  #resultat-lista .pizza-pizzeria { font-size: 0.69rem; line-height: 1.1; flex: 0 1 auto; min-width: 0; }
+  #resultat-lista .pizza-pizzeria-link { color: rgba(126, 244, 163, 0.92); }
+  #resultat-lista .pizza-verified-dot { width: 5px; height: 5px; box-shadow: 0 0 0 2px rgba(109,255,123,0.12), 0 0 10px rgba(109,255,123,0.14); }
+  #resultat-lista .pris-badge { font-size: 0.78rem; padding: 4px 8px; border-radius: 999px; border-color: rgba(255,94,110,0.34); box-shadow: 0 0 14px rgba(255,72,92,0.1); line-height: 1.2; flex-shrink: 0; }
+  #resultat-lista .pizza-telefon-link { width: 34px; height: 34px; margin-top: 0; flex-shrink: 0; border-color: rgba(126,244,163,0.26); background: radial-gradient(circle at 30% 30%, rgba(126,244,163,0.18), rgba(38,116,73,0.16) 68%, rgba(16,40,26,0.38)); box-shadow: 0 0 0 1px rgba(126,244,163,0.04), 0 0 16px rgba(59,188,105,0.12); }
+  #resultat-lista .pizza-telefon-ikon { font-size: 0.9rem; }
+  #resultat-lista .avstand-badge { margin-top: 3px; font-size: 0.68rem; text-align: left; width: 100%; }
+
+  // Pizzerior-lista på 768px
+  #pizzerior-lista .pizza-kort { padding: 11px 4px; }
+  #pizzerior-lista .pizza-rad { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
+  #pizzerior-lista .pizza-kort h3 { font-size: 1.95rem; }
+  #pizzerior-lista .pizza-beskrivning { font-size: 1.12rem; margin-top: 5px; }
+  #pizzerior-lista .pizza-pizzeria { font-size: 1rem; }
+  #pizzerior-lista .ingrediens-chip { font-size: 0.92rem; padding: 6px 10px; }
+  #pizzerior-lista .pris-badge { font-size: 1.08rem; padding: 8px 12px; }
+  #pizzerior-lista .pizza-telefon-link { width: 48px; height: 48px; margin-top: 8px; }
+  #pizzerior-lista .pizza-telefon-ikon { font-size: 1.18rem; }
+  #pizzerior-lista .pizza-badge { margin-left: 0; }
+}
+
+// ---- max-width: 640px ---------------------------------------
+
+@media (max-width: 640px) {
+  .assistent-inline-svar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .assistent-inline-text { font-size: 0.84rem; }
+  .assistent-inline-actions { gap: 8px; }
+
+  .pizza-assistent-rad { grid-template-columns: 1fr; }
+
+  #pizza-assistent {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+
+// ---- max-width: 600px (hero mobil + social) -----------------
+
+@media (max-width: 600px) {
+  .social-follow {
+    padding: 22px 16px;
+    margin-top: 28px;
+  }
+
+  .social-btn {
+    padding: 10px 18px;
+    font-size: 0.86rem;
+  }
+
+  // Hero: göm intro/bild, visa "Läs mer"
+  .hero-intro { display: none; }
+  .hero-media { display: none; }
+  .hero-pizza-img { display: none; }
+
+  .hero-las-mer-btn {
+    display: inline-flex;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    margin-top: 12px;
+  }
+
+  .hero-las-mer-btn[hidden] { display: inline-flex !important; }
+
+  // Expanded: visa dolt innehåll
+  .hero-sektion.hero-expanded .hero-intro { display: block; }
+  .hero-sektion.hero-expanded .hero-media { display: flex; }
+  .hero-sektion.hero-expanded .hero-pizza-img { display: block; }
+}
+
+// ---- max-width: 767px (hamburger supplement) ---------------
+
+@media (max-width: 767px) {
+  .hamburger-ikon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+    padding: 5px;
+    flex-shrink: 0;
+
+    span {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+      border-radius: 1px;
+      display: block;
+    }
+
+    &.mobil-meny-aktiv span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    &.mobil-meny-aktiv span:nth-child(2) { opacity: 0; }
+    &.mobil-meny-aktiv span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+  }
+
+  .nav-container { position: relative; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1a1a1a;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 12px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 12px 12px;
+    z-index: 1001;
+
+    a {
+      font-size: 0.95rem;
+      padding: 12px 20px;
+      display: block;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+      &:last-child { border-bottom: none; }
+      &:hover { background-color: rgba(255, 255, 255, 0.07); }
+    }
+  }
+
+  .navbar.nav-open .nav-links { display: flex; }
+}
+
+// ---- max-width: 480px (riktigt liten skärm) -----------------
+
+@media (max-width: 480px) {
+  #resultat-lista .pizza-kort h3 { font-size: 0.96rem; }
+  #resultat-lista .pizza-beskrivning { font-size: 0.7rem; }
+  #resultat-lista .pizza-pizzeria { font-size: 0.68rem; }
+  #resultat-lista .ingrediens-chip { font-size: 0.58rem; padding: 2px 5px; }
+  #resultat-lista .pris-badge { font-size: 0.72rem; padding: 3px 7px; }
+  #resultat-lista .pizza-telefon-link { width: 31px; height: 31px; }
+  #resultat-lista .pizza-telefon-ikon { font-size: 0.82rem; }
+
+  #pizzerior-lista .pizza-kort h3 { font-size: 1.78rem; }
+  #pizzerior-lista .pizza-beskrivning { font-size: 1.08rem; }
+  #pizzerior-lista .pris-badge { font-size: 0.98rem; padding: 7px 10px; }
+  #pizzerior-lista .pizza-telefon-link { width: 42px; height: 42px; margin-top: 6px; }
+  #pizzerior-lista .pizza-telefon-ikon { font-size: 1rem; }
+
+  .policy-knappar {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .stang-btn, .sekundar-btn { flex: 1; }
+
+  // Stats-bar
+  .stats-sep        { display: none; }
+  .stats-bar-inner  { gap: 6px; }
+  .stats-item       { font-size: 0.75rem; }
+
+  // Mobil-kontroller: wrap till 2 rader på riktigt liten skärm
+  #mobil-kontroller {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  #sorterings-sektion { grid-column: 1 / -1; }
+  #mobil-status-rad   { grid-column: 1 / -1; }
+
+  // Hero
+  .hero-sektion h1   { font-size: 1.55rem; }
+  .hero-logo-shell   { width: clamp(140px, 55vw, 200px); }
+
+  // Kategori-chips ännu mindre
+  .kategori-chip-ikon  { width: 54px; height: 54px; font-size: 1.5rem; }
+  .kategori-chip-label { font-size: 0.68rem; }
+
+  // Filter chip
+  .aktiv-filter-chip {
+    font-size: 0.76rem;
+    padding: 4px 8px 4px 10px;
+  }
+
+  // Social follow: stapla
+  .social-follow-links { flex-direction: column; align-items: center; }
+  .social-btn { width: 100%; max-width: 240px; justify-content: center; }
+
+  // Dropdown chips
+  .dropdown-innehall label span {
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    min-height: 34px;
+  }
+
+  // Assistent
+  .pizza-assistent-snabbfragor { flex-wrap: wrap; }
+
+  // Topp-knapp
+  #topp-knapp { right: 12px; bottom: 16px; }
+}

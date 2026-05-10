@@ -68,6 +68,18 @@ const PIZZERIA_ICKE_PIZZA_KAT = new Set([
     'burgare',
 ]);
 
+// Pizzeriasidor laddar inte alltid filter-core.js där denna helper normalt finns.
+// Definiera en lokal fallback så sök fungerar konsekvent på mobil och desktop.
+if (typeof window.hittarOrdet !== 'function') {
+    window.hittarOrdet = function hittarOrdet(text, soktOrd) {
+        const s = normaliseraText(soktOrd);
+        if (!s) return false;
+        const escaped = s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp('(^|[\\s/\\-])' + escaped, 'i');
+        return regex.test(text || '');
+    };
+}
+
 function normaliseraExtraKategoriId(kategori) {
     const k = normaliseraText(kategori || '');
     if (!k) return 'tillbehor';
@@ -191,6 +203,7 @@ function initPizzeriaSida() {
                 if (pizzeriaInfo.oppettider && typeof pizzeriaInfo.oppettider === 'object') {
                     const oppBox = document.getElementById('oppettider-box');
                     const oppLista = document.getElementById('oppettider-lista');
+                    const oppRubrik = oppBox ? oppBox.querySelector('.oppettider-rubrik') : null;
                     if (oppBox && oppLista) {
                         const DAGORDNING = ['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'];
                         const DAGKORT = {
@@ -245,9 +258,197 @@ function initPizzeriaSida() {
                             .map((d) => dagMap.get(d))
                             .filter(Boolean);
 
+                        function hamtaDagensNyckel() {
+                            const jsDag = new Date().getDay(); // 0=söndag
+                            const karta = ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'];
+                            return karta[jsDag] || 'måndag';
+                        }
+
+                        function arStangtText(tidText) {
+                            const t = (tidText || '').toLowerCase().trim();
+                            return !t || t.includes('stängt') || t.includes('stangt') || t.includes('closed');
+                        }
+
+                        function parseMinuter(hhmm) {
+                            const m = (hhmm || '').match(/(\d{1,2})[:.](\d{2})/);
+                            if (!m) return null;
+                            const h = Number(m[1]);
+                            const min = Number(m[2]);
+                            if (!Number.isFinite(h) || !Number.isFinite(min)) return null;
+                            return h * 60 + min;
+                        }
+
+                        function arOppetNuForTid(tidText) {
+                            if (arStangtText(tidText)) return false;
+                            const now = new Date();
+                            const nuMin = now.getHours() * 60 + now.getMinutes();
+                            const delar = String(tidText || '').split(/[,;]|\s+och\s+/i).map((s) => s.trim()).filter(Boolean);
+                            for (let i = 0; i < delar.length; i++) {
+                                const range = delar[i];
+                                const bits = range.split(/[-–—]/).map((s) => s.trim());
+                                if (bits.length !== 2) continue;
+                                const start = parseMinuter(bits[0]);
+                                const slut = parseMinuter(bits[1]);
+                                if (start == null || slut == null) continue;
+
+                                if (slut >= start) {
+                                    if (nuMin >= start && nuMin <= slut) return true;
+                                } else {
+                                    // Over midnight, e.g. 16:00-02:00
+                                    if (nuMin >= start || nuMin <= slut) return true;
+                                }
+                            }
+                            return false;
+                        }
+
+                        function formatTid(minuterTotal) {
+                            const m = ((minuterTotal % 1440) + 1440) % 1440;
+                            const h = Math.floor(m / 60);
+                            const min = m % 60;
+                            const hh = String(h).padStart(2, '0');
+                            const mm = String(min).padStart(2, '0');
+                            return `${hh}:${mm}`;
+                        }
+
+                        function hamtaIntervall(tidText) {
+                            if (arStangtText(tidText)) return [];
+                            const segment = String(tidText || '')
+                                .split(/[,;]|\s+och\s+/i)
+                                .map((s) => s.trim())
+                                .filter(Boolean);
+                            const resultat = [];
+                            segment.forEach((range) => {
+                                const bits = range.split(/[-–—]/).map((s) => s.trim());
+                                if (bits.length !== 2) return;
+                                const start = parseMinuter(bits[0]);
+                                const slut = parseMinuter(bits[1]);
+                                if (start == null || slut == null) return;
+                                resultat.push({ start, slut });
+                            });
+                            return resultat;
+                        }
+
+                        function beraknaStatusInfo() {
+                            const now = new Date();
+                            const nuMin = now.getHours() * 60 + now.getMinutes();
+                            const jsDag = now.getDay(); // 0=söndag
+                            const dagNycklar = ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'];
+                            const idagNyckel = dagNycklar[jsDag] || 'måndag';
+                            const idagIndex = DAGORDNING.indexOf(idagNyckel);
+
+                            const intervall = [];
+                            for (let d = -1; d <= 7; d++) {
+                                const dagIndex = (idagIndex + d + 7) % 7;
+                                const dagNyckel = DAGORDNING[dagIndex];
+                                const dagVisning = DAGVISNING[dagNyckel];
+                                const dagData = dagMap.get(dagNyckel);
+                                const dagIntervall = hamtaIntervall(dagData ? dagData.tid : '');
+                                dagIntervall.forEach(({ start, slut }) => {
+                                    const startAbs = d * 1440 + start;
+                                    let slutAbs = d * 1440 + slut;
+                                    if (slut <= start) slutAbs += 1440;
+                                    intervall.push({ startAbs, slutAbs, start, dagNyckel, dagVisning });
+                                });
+                            }
+
+                            intervall.sort((a, b) => a.startAbs - b.startAbs);
+
+                            const aktivt = intervall.find((iv) => nuMin >= iv.startAbs && nuMin < iv.slutAbs);
+                            if (aktivt) {
+                                return {
+                                    arOppetNu: true,
+                                    text: `Stänger ${formatTid(aktivt.slutAbs)}`
+                                };
+                            }
+
+                            const nasta = intervall.find((iv) => iv.startAbs > nuMin);
+                            if (nasta) {
+                                const kvar = nasta.startAbs - nuMin;
+                                if (kvar < 1440) {
+                                    return {
+                                        arOppetNu: false,
+                                        text: `Öppnar ${formatTid(nasta.startAbs)}`
+                                    };
+                                }
+                                return {
+                                    arOppetNu: false,
+                                    text: `Öppnar ${nasta.dagVisning} ${formatTid(nasta.startAbs)}`
+                                };
+                            }
+
+                            return {
+                                arOppetNu: false,
+                                text: 'Inga öppettider tillgängliga'
+                            };
+                        }
+
+                        const dagensNyckel = hamtaDagensNyckel();
+                        const statusInfo = beraknaStatusInfo();
+                        const arOppetNu = !!statusInfo.arOppetNu;
+
                         oppLista.innerHTML = sorterade
-                            .map(({ dag, tid }) => `<div class="oppettider-rad"><span class="opp-dag">${escapaHtml(dag)}</span><span class="opp-tid">${escapaHtml(tid)}</span></div>`)
+                            .map(({ dag, tid }) => {
+                                const nyckel = dag.toLowerCase();
+                                const arIdag = nyckel === dagensNyckel;
+                                let radKlass = 'oppettider-rad';
+                                if (arIdag) {
+                                    radKlass += ' oppettider-rad--idag';
+                                    radKlass += arOppetNu ? ' oppettider-rad--idag-oppet' : ' oppettider-rad--idag-stangt';
+                                }
+                                return `<div class="${radKlass}"><span class="opp-dag">${escapaHtml(dag)}</span><span class="opp-tid">${escapaHtml(tid)}</span></div>`;
+                            })
                             .join('');
+
+                        if (oppRubrik) {
+                            const statusText = arOppetNu ? 'Öppet' : 'Stängt';
+                            const statusClass = arOppetNu ? 'oppettider-status--oppet' : 'oppettider-status--stangt';
+                            oppRubrik.innerHTML = `🕐 Öppettider <span class="oppettider-status ${statusClass}">${statusText} <span class="oppettider-status-dot" aria-hidden="true">●</span></span>`;
+                        }
+
+                        const gammalMeta = oppBox.querySelector('.oppettider-meta');
+                        if (gammalMeta) gammalMeta.remove();
+                        const meta = document.createElement('p');
+                        meta.className = `oppettider-meta ${arOppetNu ? 'oppettider-meta--oppet' : 'oppettider-meta--stangt'}`;
+                        meta.textContent = statusInfo.text;
+                        if (oppRubrik && oppRubrik.parentNode) {
+                            oppRubrik.parentNode.insertBefore(meta, oppLista);
+                        }
+
+                        let toggleBtn = oppBox.querySelector('.oppettider-toggle');
+                        if (!toggleBtn) {
+                            toggleBtn = document.createElement('button');
+                            toggleBtn.type = 'button';
+                            toggleBtn.className = 'oppettider-toggle';
+                            toggleBtn.setAttribute('aria-controls', 'oppettider-lista');
+                            oppBox.insertBefore(toggleBtn, oppLista);
+                        }
+
+                        const arMobil = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+                        if (arMobil) {
+                            oppBox.classList.add('oppettider-box--collapsed');
+                            toggleBtn.hidden = false;
+                        } else {
+                            oppBox.classList.remove('oppettider-box--collapsed');
+                            toggleBtn.hidden = true;
+                        }
+
+                        function uppdateraOppettiderToggleUi() {
+                            const arExpanderad = !oppBox.classList.contains('oppettider-box--collapsed');
+                            toggleBtn.innerText = arExpanderad ? '▴' : '▾';
+                            toggleBtn.setAttribute('aria-expanded', String(arExpanderad));
+                            toggleBtn.setAttribute('aria-label', arExpanderad ? 'Visa endast idag' : 'Visa alla öppettider');
+                            toggleBtn.title = arExpanderad ? 'Visa endast idag' : 'Visa alla öppettider';
+                        }
+
+                        if (!toggleBtn.dataset.bound) {
+                            toggleBtn.dataset.bound = '1';
+                            toggleBtn.addEventListener('click', function () {
+                                oppBox.classList.toggle('oppettider-box--collapsed');
+                                uppdateraOppettiderToggleUi();
+                            });
+                        }
+                        uppdateraOppettiderToggleUi();
+
                         oppBox.style.display = '';
                     }
                 }
@@ -561,9 +762,6 @@ function initPizzeriaSida() {
                     const aktiv = t.dataset.tabId === 'alla' ? ingenAktiv : aktivaPizzeriaTabs.has(t.dataset.tabId);
                     t.classList.toggle('pizzeria-kategori-tab--active', aktiv);
                     t.setAttribute('aria-selected', String(aktiv));
-                })
-                .catch((error) => {
-                    console.error('[Pizzeriasida] Kunde inte ladda koordinater:', error);
                 });
             }
 
@@ -654,7 +852,9 @@ function initPizzeriaSida() {
                 const arKompakt = PIZZERIA_EXTRA_KOMPAKTA.has(kat);
                 rad.className = `pizzeria-item-rad${arKompakt ? ' pizzeria-item-rad--compact' : ''}`;
                 const pizzaNamn = escapaHtml(formatteraPizzaNamnForVisning(pizza.pizza_namn));
-                const pris = pizza.pris != null ? `${pizza.pris} kr` : '–';
+                const prisTal = Number(pizza?.pris);
+                const harGiltigtPris = Number.isFinite(prisTal) && prisTal > 0;
+                const pris = harGiltigtPris ? `${prisTal} kr` : 'Pris okänt';
                 const ingredienser = Array.isArray(pizza.ingredienser) && pizza.ingredienser.length
                     ? pizza.ingredienser.map((ing) => escapaHtml(ing)).join(', ')
                     : '';

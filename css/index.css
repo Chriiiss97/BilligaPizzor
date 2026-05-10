@@ -2179,11 +2179,11 @@ hr {
   }
 
   input#sokruta {
-    width: 100%;
-    max-width: 100%;
-    height: 50px;
-    padding: 11px 84px 11px 54px;
-    font-size: 16px; /* Förhindrar zoom på iOS */
+    width: 280px;
+    max-width: 280px;
+    height: 40px;
+    padding: 8px 84px 8px 54px;
+    font-size: 14px;
     box-sizing: border-box;
   }
 
@@ -4877,6 +4877,43 @@ body.index-kort-lage .pizza-kort {
     padding: 10px 18px;
     font-size: 0.86rem;
   }
+
+  /* Hero section: hide intro text, image and show "Läs mer" button on mobile */
+  .hero-intro {
+    display: none;
+  }
+
+  .hero-media {
+    display: none;
+  }
+
+  .hero-pizza-img {
+    display: none;
+  }
+
+  .hero-las-mer-btn {
+    display: inline-flex;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    margin-top: 12px;
+  }
+
+  .hero-las-mer-btn[hidden] {
+    display: inline-flex !important;
+  }
+
+  /* Expanded state: show hidden content */
+  .hero-sektion.hero-expanded .hero-intro {
+    display: block;
+  }
+
+  .hero-sektion.hero-expanded .hero-media {
+    display: flex;
+  }
+
+  .hero-sektion.hero-expanded .hero-pizza-img {
+    display: block;
+  }
 }
 
 /* --- AVANCERADE FILTER TOGGLE --- */
@@ -5331,10 +5368,6 @@ img {
   .hero-media {
     flex: 0 0 auto;
     justify-content: center;
-  }
-
-  .hero-logo-shell {
-    width: clamp(180px, 40vw, 260px);
   }
 
   /* Search: comfortably wide on tablet */
@@ -5882,6 +5915,64 @@ img {
   font-weight: 700;
   color: #fff;
   margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.oppettider-status {
+  font-size: 0.95em;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oppettider-status--oppet {
+  color: #42d86f;
+}
+
+.oppettider-status--stangt {
+  color: #ff5a5f;
+}
+
+.oppettider-status-dot {
+  font-size: 0.92em;
+  line-height: 1;
+}
+
+.oppettider-meta {
+  margin: -6px 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.oppettider-meta--oppet {
+  color: #73e39a;
+}
+
+.oppettider-meta--stangt {
+  color: #ff7b80;
+}
+
+.oppettider-toggle {
+  display: none;
+  width: 28px;
+  height: 28px;
+  margin: -4px 0 8px auto;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #d8d8d8;
+  font-size: 0.92rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.oppettider-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .oppettider-lista {
@@ -5895,6 +5986,9 @@ img {
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
 }
 
 .opp-dag {
@@ -5906,6 +6000,42 @@ img {
 .opp-tid {
   color: #fff;
   font-weight: 500;
+}
+
+.oppettider-rad--idag-oppet {
+  border-color: rgba(66, 216, 111, 0.75);
+  box-shadow: inset 0 0 0 1px rgba(66, 216, 111, 0.12);
+}
+
+.oppettider-rad--idag-oppet .opp-dag,
+.oppettider-rad--idag-oppet .opp-tid {
+  color: #42d86f;
+}
+
+.oppettider-rad--idag-stangt {
+  border-color: rgba(255, 90, 95, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(255, 90, 95, 0.14);
+}
+
+.oppettider-rad--idag-stangt .opp-dag,
+.oppettider-rad--idag-stangt .opp-tid {
+  color: #ff5a5f;
+}
+
+@media (max-width: 767px) {
+  .oppettider-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .oppettider-box--collapsed .oppettider-rad {
+    display: none;
+  }
+
+  .oppettider-box--collapsed .oppettider-rad--idag {
+    display: flex;
+  }
 }
 
 /* --- Map widget --- */
@@ -6778,4 +6908,82 @@ img {
   vertical-align: middle;
   margin-right: 8px;
   margin-bottom: 2px;
+}
+
+/* ============================================================
+   MOBILE HARDENING (global site views)
+============================================================ */
+@media (max-width: 767px) {
+  .navbar {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .nav-container {
+    padding: 0 12px;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .nav-logo {
+    height: 64px;
+    min-width: 0;
+  }
+
+  .nav-logo img {
+    max-height: 64px;
+    max-width: min(46vw, 190px);
+    width: auto;
+    height: auto;
+  }
+
+  .nav-social {
+    gap: 8px;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .nav-social-label {
+    display: none;
+  }
+
+  .nav-social .social-btn {
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .nav-social .social-btn .social-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .hero-inner,
+  .hero-inner.hero-layout,
+  .pizzeria-info,
+  .pizzeria-info-tvakolumn,
+  .pizzeria-sektion-grid,
+  .pizzeria-extra-grid,
+  .pizzeria-item-info,
+  .pizza-body,
+  .pizza-pizzeria-detaljer {
+    min-width: 0;
+  }
+
+  .pizzeria-item-namn,
+  .pizzeria-item-ingredienser,
+  .pizza-beskrivning,
+  .pizza-pizzeria-link {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .pizzeria-item-pris {
+    max-width: 92px;
+    white-space: normal;
+    text-align: right;
+  }
 }

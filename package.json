@@ -6,12 +6,15 @@
   "scripts": {
     "test": "echo \"No tests configured\"",
     "uppdatera-pizzeriasidor": "node ./scripts/sync-pizzeria-pages.js",
-    "pizzerior:sync": "npm run uppdatera-pizzeriasidor"
+    "pizzerior:sync": "npm run uppdatera-pizzeriasidor",
+    "sass": "sass scss/style.scss css/style.css --watch --style=compressed",
+    "sass:build": "sass scss/style.scss css/style.css --style=compressed"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "sass": "^1.99.0"
+  }
 }

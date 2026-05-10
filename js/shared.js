@@ -1328,8 +1328,9 @@ let pizzeriorInfoMapPromise = null;
 let pizzorRowsPromise = null;
 let extrasRowsPromise = null;
 
-const SUPABASE_URL = 'https://yixjzzehejrfcpyccyxp.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg';
+const __bpSupabaseCfg = window.BP_SUPABASE_CONFIG || {};
+const SUPABASE_URL = __bpSupabaseCfg.url || 'https://yixjzzehejrfcpyccyxp.supabase.co';
+const SUPABASE_ANON_KEY = __bpSupabaseCfg.anonKey || 'sb_publishable_LSQb_Gxsh0BkPGqT6HA2ig_oVQI-lDv';
 
 async function hamtaSupabaseRows(query) {
     const batchSize = 1000;
@@ -1343,8 +1344,7 @@ async function hamtaSupabaseRows(query) {
 
         const response = await fetch(url, {
             headers: {
-                apikey: SUPABASE_ANON_KEY,
-                Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                apikey: SUPABASE_ANON_KEY
             }
         });
 
@@ -1405,7 +1405,9 @@ function hamtaPizzorListaFranSupabase() {
                 hemsida: info.hemsida || '',
                 oppettider: info.oppettider || null,
                 pizza_namn: row?.pizza_namn || '',
-                pris: Number(row?.pris) || 0,
+                pris: row?.pris === null || row?.pris === undefined || row?.pris === ''
+                    ? null
+                    : (Number.isFinite(Number(row?.pris)) ? Number(row?.pris) : null),
                 ingredienser: Array.isArray(row?.ingredienser) ? row.ingredienser : []
             };
         }).filter((row) => row.pizzeria && row.pizza_namn);
@@ -1427,7 +1429,9 @@ function hamtaExtrasListaFranSupabase() {
                 pizzeria: info.namn || '',
                 kategori: row?.kategori || '',
                 namn: row?.namn || '',
-                pris: Number(row?.pris) || 0,
+                pris: row?.pris === null || row?.pris === undefined || row?.pris === ''
+                    ? null
+                    : (Number.isFinite(Number(row?.pris)) ? Number(row?.pris) : null),
                 beskrivning: row?.beskrivning || ''
             };
         }).filter((row) => row.pizzeria && row.namn);
@@ -1463,8 +1467,7 @@ function hamtaPizzeriorCoordsLista() {
 
     pizzeriorCoordsRowsPromise = fetch(supabaseUrl, {
         headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            apikey: SUPABASE_ANON_KEY
         }
     })
         .then((response) => {
@@ -2132,22 +2135,6 @@ function uppdateraAvfCount() {
     badge.textContent = total > 0 ? String(total) : '';
 }
 
-function togglaMobilFilter() {
-    gtmPushKlick({ event: 'klick', typ: 'mobil_filter_toggle' }); // GTM tracking
-    const filterSektion = document.getElementById('filter-sektion');
-    const knapp = document.getElementById('mobil-filter-toggle');
-
-    if (!filterSektion || !knapp) return;
-
-    filterSektion.classList.toggle('filter-hidden-mobile');
-    const arDold = filterSektion.classList.contains('filter-hidden-mobile');
-    // Update button text while preserving the count-badge span inside the button
-    const textNode = Array.from(knapp.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
-    if (textNode) textNode.textContent = arDold ? '🔍 Visa filter' : '🔍 Dölj filter';
-    uppdateraFilterStegCount();
-    uppdateraMobilScrollHint();
-}
-
 function togglaLasMer() {
     const textContent = document.getElementById('hero-text-content');
     const btn = document.getElementById('las-mer-btn');
@@ -2450,272 +2437,7 @@ function valjOmrade(omrade, checkboxElement) {
     pizzorSomVisas = 100;
     uppdateraVisning();
 }
-
-// --- SÖK & VISNING ---
-function arStriktOmradesokterm(soktOrd) {
-    const s = normaliseraText(soktOrd);
-    return s === 'anneberg';
-}
-
-function hittarOrdet(text, soktOrd) {
-    const s = normaliseraText(soktOrd);
-    if (!s) return false;
-    const escaped = s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    // Kräver ordstart (mellanslag/bindestreck/radstart) men INTE ordslut,
-    // så prefix-sökningar som "keb" matchar "kebab".
-    const regex = new RegExp('(^|[\\s/\\-])' + escaped, 'i');
-    return regex.test(text);
-}
-
-function matcharSoktermForPizza(pizza, soktOrd, pizzaText) {
-    const s = normaliseraText(soktOrd);
-    if (!s) return false;
-
-    if (arStriktOmradesokterm(s)) {
-        return normaliseraText(pizza.omrade || '') === s;
-    }
-
-    return hittarOrdet(pizzaText, s);
-}
-
-function uppdateraMobilRensaKnappSynlighet() {
-    const statusRad = document.getElementById('mobil-status-rad');
-    if (!statusRad) return;
-
-    const arKompaktViewport = window.matchMedia('(max-width: 1024px)').matches;
-    if (!arKompaktViewport) {
-        statusRad.classList.remove('visa-rensa');
-        return;
-    }
-
-    const sokruta = document.getElementById('sokruta');
-    const prisSortering = document.getElementById('pris-sortering');
-
-    const harSoktext = (sokruta?.value || '').trim() !== '';
-    const harValtOmrade = document.querySelectorAll('#omrade-lista input:checked').length > 0;
-    const harValdPizzeria = valdaPizzerior.length > 0;
-    const harValdIngrediens = valdaIngredienser.length > 0;
-    const harKategoriFilter = aktivaKategorier.size > 0;
-    const harPrisFilter = aktivtPrisFiltreMin !== null || aktivtPrisFiltreMax !== null;
-    const harSortering = (prisSortering?.value || 'standard') !== 'standard';
-    const harNarmast = isNearbyActive;
-
-    const skaVisaRensaKnapp = harSoktext || harValtOmrade || harValdPizzeria || harValdIngrediens || harKategoriFilter || harPrisFilter || harSortering || harNarmast;
-    statusRad.classList.toggle('visa-rensa', skaVisaRensaKnapp);
-}
-
-function uppdateraMobilScrollHint(arScrollar = false) {
-    const hint = document.getElementById('mobil-scroll-hint');
-    if (!hint) return;
-
-    const arMobil = window.matchMedia('(max-width: 768px)').matches;
-    if (!arMobil || !mobilScrollHintEfterVisaFler) {
-        hint.classList.add('dold');
-        hint.classList.remove('scrollar');
-        return;
-    }
-
-    const forstaPizzaKort = document.querySelector('#resultat-lista .pizza-kort');
-    const pizzorSyns = !!forstaPizzaKort && (() => {
-        const rect = forstaPizzaKort.getBoundingClientRect();
-        return rect.top < window.innerHeight && rect.bottom > 0;
-    })();
-
-    if (pizzorSyns) {
-        hint.classList.add('dold');
-        hint.classList.remove('scrollar');
-        return;
-    }
-
-    hint.classList.remove('dold');
-    hint.classList.toggle('scrollar', arScrollar);
-}
-
-function uppdateraVisning() {
-    const sökSträng = document.getElementById('sokruta').value.toLowerCase();
-    const söktaOrd = sökSträng.split(',').map(ord => ord.trim()).filter(ord => ord !== "");
-    const söktaOrdText = söktaOrd.filter((ord) => !arVegetariskSokterm(ord));
-    const valdaOmraden = [...document.querySelectorAll('#omrade-lista input:checked')].map(cb => cb.value);
-
-    let resultat = allaPizzor;
-    const vegetarLageAktivt = söktaOrd.some((ord) => arVegetariskSokterm(ord));
-
-    if (valdaPizzerior.length > 0) resultat = resultat.filter(p => valdaPizzerior.includes(p.pizzeria));
-    if (valdaOmraden.length > 0) resultat = resultat.filter(p => valdaOmraden.includes(p.omrade));
-
-    // Kategori-strip filter (state-driven, multi-select)
-    resultat = filtreraEfterKategori(resultat, aktivaKategorier);
-
-    if (vegetarLageAktivt) {
-        resultat = resultat.filter((pizza) => arVegetariskText(byggPizzaSokText(pizza)));
-    }
-
-    resultat = resultat.filter(pizza => {
-        const pizzaText = byggPizzaSokText(pizza);
-        const matcharDropdown = valdaIngredienser.every(vald => hittarOrdet(pizzaText, vald));
-        const matcharSokruta = söktaOrdText.every((sokt) => matcharSoktermForPizza(pizza, sokt, pizzaText));
-        return matcharDropdown && matcharSokruta;
-    });
-
-    if (isNearbyActive && anvandarPosition) {
-        resultat = sortByDistance(resultat, anvandarPosition.lat, anvandarPosition.lng);
-        uppdateraNarmastStatus('Visar närmaste pizzor');
-    } else {
-        const sorteringsVal = document.getElementById('pris-sortering').value;
-        if (sorteringsVal === "billigast") resultat.sort((a, b) => a.pris - b.pris);
-        else if (sorteringsVal === "dyrast") resultat.sort((a, b) => b.pris - a.pris);
-        else if (sorteringsVal === "pizzeria-az") resultat.sort((a, b) => (a.pizzeria || '').localeCompare(b.pizzeria || '', 'sv'));
-        else resultat.sort((a, b) => a.pizza_namn.localeCompare(b.pizza_namn, 'sv'));
-    }
-
-    if (aktivtPrisFiltreMin !== null || aktivtPrisFiltreMax !== null) {
-        resultat = resultat.filter((p) => {
-            const pr = Number(p.pris);
-            return (aktivtPrisFiltreMin === null || pr >= aktivtPrisFiltreMin) &&
-                   (aktivtPrisFiltreMax === null || pr <= aktivtPrisFiltreMax);
-        });
-    }
-
-    nuvarandeFiltreradLista = resultat;
-    const trafftext = resultat.length > 0 ? `Hittade ${resultat.length} pizzor` : 'Inga pizzor matchar din sökning';
-    const antalTraffar = document.getElementById('antal-traffar-container');
-    const antalTraffarMobil = document.getElementById('antal-traffar-mobile');
-    if (antalTraffar) antalTraffar.innerText = trafftext;
-    if (antalTraffarMobil) antalTraffarMobil.innerText = trafftext;
-    renderAktivaChips();
-    uppdateraUrl();
-    uppdateraMobilRensaKnappSynlighet();
-    uppdateraMobilScrollHint(false);
-    visaPizzor(nuvarandeFiltreradLista);
-}
-
-function hamtaOppetText(oppettider) {
-    if (!oppettider || typeof oppettider !== 'object') return '';
-    const nu = new Date();
-    const dag = nu.getDay();
-    const nuMin = nu.getHours() * 60 + nu.getMinutes();
-    const dagIndex = { man:1,mandag:1,tis:2,tisdag:2,ons:3,onsdag:3,tor:4,tors:4,torsdag:4,fre:5,fredag:5,lor:6,lordag:6,son:0,sondag:0 };
-    function norm(s) { return String(s||'').toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[–—−-]/g,'-').replace(/\s+/g,' ').trim(); }
-    function hamtaDag(t) { return dagIndex[norm(t).replace(/\./g,'').replace(/\s+/g,'')]; }
-    function tidMin(s) { const m=String(s||'').match(/^(\d{1,2})[:.](\d{1,2})$/); if(!m)return null; return parseInt(m[1],10)*60+parseInt(m[2],10); }
-    for (const nyckel of Object.keys(oppettider)) {
-        const delar = norm(nyckel).split('-').map(s=>s.trim()).filter(Boolean);
-        let matchar = false;
-        if (delar.length === 2) {
-            const f=hamtaDag(delar[0]), t=hamtaDag(delar[1]);
-            if (f!==undefined && t!==undefined) matchar = f<=t ? (dag>=f&&dag<=t) : (dag>=f||dag<=t);
-        } else if (delar.length === 1) {
-            matchar = hamtaDag(delar[0]) === dag;
-        }
-        if (matchar) {
-            const tidText = String(oppettider[nyckel]||'');
-            const m = tidText.match(/(\d{1,2}[:.]\d{1,2})\s*[-–—]\s*(\d{1,2}[:.]\d{1,2})/);
-            if (m) {
-                const oppMin=tidMin(m[1]), stangMin=tidMin(m[2]);
-                if (oppMin!==null && stangMin!==null) {
-                    const oppet = oppMin<stangMin ? (nuMin>=oppMin&&nuMin<stangMin) : (nuMin>=oppMin||nuMin<stangMin);
-                    const stangTid = m[2].replace('.', ':');
-                    return oppet ? `Öppet till ${stangTid}` : 'Stängt';
-                }
-            }
-        }
-    }
-    return '';
-}
-
-function visaPizzor(pizzor) {
-    const lista = document.getElementById('resultat-lista');
-    const laddaFlerSektion = document.getElementById('ladda-fler-sektion');
-    if (!lista || !laddaFlerSektion) return;
-    gtmPushKlick({ event: 'pizza_visas', antal: pizzor.length }); // GTM tracking
-    lista.innerHTML = '';
-    
-    if (pizzor.length === 0) {
-        lista.innerHTML = `<div class="ingen-traff"><div class="ingen-traff-ikon">😕</div><h3>Inga pizzor matchar dina val</h3><p>Prova att ändra filter, söka på något annat, eller rensa allt och börja om.</p><button type="button" class="pizzeria-btn" onclick="document.getElementById('rensa-filter-btn').click()">✨ Rensa filter</button></div>`;
-        laddaFlerSektion.style.display = 'none';
-        return;
-    }
-
-    const urval = pizzor.slice(0, pizzorSomVisas);
-    const minPris = urval.length > 0 ? Math.min(...urval.map(p => Number(p.pris))) : null;
-    const fragment = document.createDocumentFragment();
-    urval.forEach(pizza => {
-        const kort = document.createElement('div');
-        kort.className = 'pizza-kort expanded';
-        kort.dataset.pizza = pizza.pizza_namn || ''; // GTM tracking
-        kort.dataset.pizzeria = pizza.pizzeria || ''; // GTM tracking
-        kort.dataset.omrade = pizza.omrade || ''; // GTM tracking
-        kort.dataset.pris = String(pizza.pris ?? ''); // GTM tracking
-        const pizzaNamnSafe = escapaHtml(formatteraPizzaNamnForVisning(pizza.pizza_namn));
-        const ingrediensText = Array.isArray(pizza.ingredienser) && pizza.ingredienser.length > 0
-            ? pizza.ingredienser.join(', ')
-            : 'Ingredienser saknas';
-        const ingrediensTextSafe = escapaHtml(ingrediensText);
-        const pizzeriaNamnSafe = escapaHtml(pizza.pizzeria || 'Okänd pizzeria');
-        const avstandsDisplay = isNearbyActive && Number.isFinite(pizza.distansKm)
-            ? `<p class="avstand-badge">${pizza.distansKm < 1 ? Math.round(pizza.distansKm * 1000) + ' m' : pizza.distansKm.toFixed(1).replace('.', ',') + ' km'} från dig</p>`
-            : '';
-        const arBilligast = minPris !== null && Number(pizza.pris) === minPris;
-        const billigastBadge = arBilligast
-            ? '<span class="pizza-badge pizza-badge--billigast">🟢 Billigast</span>'
-            : '';
-        const prisBadgeKlass = arBilligast ? 'pris-badge pris-badge--billig' : 'pris-badge';
-        const pizzeriaLank = hamtaNavigeringsLankForPizzeria(
-            pizza.pizzeria ? skapaDynamiskPizzeriaLank(pizza.pizzeria) : DYNAMISK_PIZZERIA_BASSIDA
-        );
-        kort.dataset.href = pizzeriaLank;
-        kort.setAttribute('tabindex', '0');
-        kort.setAttribute('role', 'link');
-        kort.setAttribute('aria-label', `Visa meny hos ${pizza.pizzeria || 'pizzerian'}`);
-        const pizzeriaLankSafe = escapaHtml(pizzeriaLank);
-        const pizzeriaNamnForAria = escapaHtml(pizza.pizzeria || 'pizzerian');
-        const telefonRa = pizza.telefon || hamtaTelefonForPizzeria(pizza.pizzeria);
-        const telefonSanerad = saneraTelefonnummer(telefonRa);
-        const harTelefonnummer = /\d{5,}/.test(telefonSanerad);
-        const kontaktHrefSafe = escapaHtml(harTelefonnummer ? `tel:${telefonSanerad}` : pizzeriaLank);
-        const kontaktAria = harTelefonnummer
-            ? `Ring ${pizzeriaNamnForAria}`
-            : `Visa menyn hos ${pizzeriaNamnForAria}`;
-        const aktivKategoriForEmoji = (() => {
-            const valdaKategorier = hamtaAktivaKategoriNamn();
-            return valdaKategorier.length === 1 ? valdaKategorier[0] : 'Pizzor (alla)';
-        })();
-        const pizzaKategoriEmoji = hamtaPizzaKortEmoji(pizza, aktivKategoriForEmoji, document.getElementById('sokruta')?.value || '');
-        const oppettider = pizza.oppettider || hamtaOppettimerForPizzeria(pizza.pizzeria);
-        const oppetText = hamtaOppetText(oppettider);
-        const oppetHtml = oppetText
-            ? `<span class="pizza-oppettider${oppetText === 'Stängt' ? ' pizza-oppettider--stangt' : ''}">${escapaHtml(oppetText)}</span>`
-            : '';
-
-        kort.innerHTML = `
-            ${billigastBadge}
-            <div class="pizza-rad">
-                <div class="pizza-body">
-                    <h3>${pizzaNamnSafe}</h3>
-                    <p class="pizza-beskrivning">${ingrediensTextSafe}</p>
-                    <div class="pizza-divider" aria-hidden="true"></div>
-                    <div class="pizza-pizzeria-row">
-                        <span class="pizza-store-icon" aria-hidden="true">${pizzaKategoriEmoji}</span>
-                        <div class="pizza-pizzeria-detaljer">
-                            <a class="pizza-pizzeria-link" href="${pizzeriaLankSafe}" aria-label="Visa meny hos ${pizzeriaNamnForAria}">${pizzeriaNamnSafe}</a>
-                            ${oppetHtml ? `<span class="pizza-oppettider-rad">⏰ ${oppetHtml}</span>` : ''}
-                        </div>
-                    </div>
-                    ${avstandsDisplay}
-                </div>
-                <div class="pizza-hoger">
-                    <span class="${prisBadgeKlass}">${pizza.pris} kr</span>
-                    <a class="pizza-telefon-link" href="${kontaktHrefSafe}" aria-label="${kontaktAria}" onclick="event.stopPropagation()">
-                        <span class="pizza-telefon-ikon" aria-hidden="true">☎</span>
-                    </a>
-                </div>
-            </div>
-        `;
-        fragment.appendChild(kort);
-    });
-    lista.appendChild(fragment);
-    laddaFlerSektion.style.display = pizzor.length > pizzorSomVisas ? 'block' : 'none';
-}
+// Filter/sök rendering är flyttad till js/filter-core.js och mobil-UI till js/filter-mobile.js.
 
 function registrerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;

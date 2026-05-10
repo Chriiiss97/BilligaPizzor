@@ -1,0 +1,10 @@
+// ============================================================
+// style.scss — Billiga Pizzor huvudfil
+// Importordning är viktig: shared → mobile → desktop
+// ============================================================
+
+@use 'shared/variables';
+@use 'shared/base';
+@use 'shared/components';
+@use 'mobile/layout' as mobile;
+@use 'desktop/layout' as desktop;

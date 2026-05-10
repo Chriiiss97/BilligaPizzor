@@ -1,0 +1,287 @@
+// ============================================================
+// desktop/_layout.scss
+// Desktop/tablet layout extraherat från index.css
+// Täcker: min-width: 1024px, 1200px, tablet (768–1199px)
+// ============================================================
+
+// ---- min-width: 1200px (fullbredd index-kort-lage) ----------
+
+@media (min-width: 1200px) {
+  body.index-kort-lage {
+    width: 100%;
+    max-width: none;
+  }
+
+  // Resultat-lista och filter: max-width 1200px centrerat
+  #resultat-lista {
+    max-width: none;
+  }
+
+  #filter-sektion {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #huvud-sok-sektion {
+    padding-top: 10px !important;
+  }
+
+  .filter-bottom-row {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  p.disclaimer {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+  }
+
+  hr {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+// ---- min-width: 1024px (kategori-strip pilar) ---------------
+
+@media (min-width: 1024px) {
+  .ks-pil {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 5;
+
+    svg { flex-shrink: 0; }
+  }
+
+  .ks-pil--vanster { left: 8px; }
+  .ks-pil--hoger   { right: 8px; }
+
+  .ks-pil--synlig {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ks-pil:hover {
+    background: rgba(40, 40, 40, 0.9);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 0 10px rgba(0, 255, 150, 0.2);
+  }
+
+  .ks-pil:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  // Edge fade overlays
+  .kategori-strip--overflow::before,
+  .kategori-strip--overflow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .kategori-strip--overflow::before {
+    left: 0;
+    background: linear-gradient(to right, #0b0f0c, transparent);
+    opacity: 0;
+  }
+
+  .kategori-strip--overflow::after {
+    right: 0;
+    background: linear-gradient(to left, #0b0f0c, transparent);
+    opacity: 1;
+  }
+
+  .kategori-strip--can-scroll-left::before { opacity: 1; }
+  .kategori-strip--at-end::after           { opacity: 0; }
+}
+
+// ---- Tablet (768px – 1199px) --------------------------------
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  // Navbar: hamburger på tablet
+  .hamburger-ikon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+    padding: 5px;
+    flex-shrink: 0;
+
+    span {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+      border-radius: 1px;
+      display: block;
+    }
+  }
+
+  .nav-container { position: relative; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1a1a1a;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 12px 12px;
+    z-index: 1001;
+
+    a {
+      font-size: 1rem;
+      padding: 12px 20px;
+      display: block;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+      &:last-child { border-bottom: none; }
+    }
+  }
+
+  .navbar.nav-open .nav-links { display: flex; }
+
+  // Hero: stapla på tablet
+  .hero-inner.hero-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .hero-content { align-items: center; text-align: center; }
+  .hero-text    { max-width: 100%; }
+  .hero-intro   { margin-left: auto; margin-right: auto; }
+  .hero-media   { flex: 0 0 auto; justify-content: center; }
+
+  // Sök: bekväm bredd på tablet
+  .sok-wrapper {
+    width: 85%;
+    max-width: 560px;
+  }
+
+  // Filter
+  .filter-grupp { padding: 22px 18px; }
+
+  // Mobil-kontroller visas även på tablet
+  #mobil-kontroller {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 8px 0;
+    padding: 0 12px;
+  }
+
+  #mobil-filter-toggle {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 50px;
+    min-height: 42px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: #1e1e1e;
+    color: #e0e0e0;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  #narmast-btn {
+    display: block;
+    width: 100%;
+    margin: 0;
+    min-height: 42px;
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    border-radius: 50px;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  #sorterings-sektion {
+    width: 100%;
+    gap: 0;
+
+    label { display: none; }
+  }
+
+  #pris-sortering {
+    width: 100%;
+    max-width: none;
+    min-height: 42px;
+    border-radius: 50px;
+    padding: 10px 28px 10px 10px;
+    font-size: 0.82rem;
+    box-sizing: border-box;
+  }
+
+  .filter-bottom-row { display: contents; }
+  .filter-bottom-row #rensa-filter-btn { display: none; }
+
+  #filter-sektion {
+    padding: 0 12px;
+
+    &.filter-hidden-mobile { display: none; }
+    &:not(.filter-hidden-mobile) { display: block; }
+  }
+
+  #antal-traffar-container { display: none; }
+
+  #mobil-status-rad {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #antal-traffar-mobile {
+    display: inline-block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #cccccc;
+  }
+
+  // Padding-justeringar
+  #aktiva-filter-chips  { padding: 0 12px 14px; }
+  hr                    { margin-left: 12px; margin-right: 12px; }
+  #pris-snabbfilter     { padding: 10px 12px 6px; }
+  #pizza-assistent      { margin: 12px 12px 10px; }
+  .seo-sektion          { margin: 32px 12px 0; }
+  .botten-info-sektion  { padding: 0 12px; }
+  #huvud-sok-sektion    { padding: 16px 12px 10px; }
+}

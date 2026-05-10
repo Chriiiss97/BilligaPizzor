@@ -452,3 +452,38 @@ p {
     font-size: 1rem;
   }
 }
+
+/* Legacy section mobile fallback */
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .side-img {
+    width: 56px;
+  }
+
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .info-row {
+    padding: 0 8px;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+}

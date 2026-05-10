@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="" />
 
   <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/karta.css" />
 
   <script type="application/ld+json">
@@ -104,80 +105,6 @@
       .navbar { display: none !important; }
       #karta-meny-toggle { display: none !important; }
 
-    /* Min position knapp - MODERN & WOW */
-    #karta-narmast-knapp {
-      position: relative;
-      padding: 14px 32px;
-      background: rgba(21, 170, 58, 0.15);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(31, 122, 76, 0.4);
-      border-radius: 16px;
-      color: #15aa3a;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      box-shadow:
-        0 0 20px rgba(21, 170, 58, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    #karta-narmast-knapp::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s;
-      pointer-events: none;
-    }
-
-    #karta-narmast-knapp:hover {
-      background: rgba(21, 170, 58, 0.25);
-      border-color: rgba(31, 122, 76, 0.7);
-      box-shadow:
-        0 0 40px rgba(21, 170, 58, 0.4),
-        0 8px 32px rgba(21, 170, 58, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      transform: translateY(-4px);
-      color: #0ed145;
-    }
-
-    #karta-narmast-knapp:hover::before {
-      left: 100%;
-    }
-
-    #karta-narmast-knapp:active {
-      transform: translateY(-2px);
-      box-shadow:
-        0 0 25px rgba(21, 170, 58, 0.3),
-        inset 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    #karta-narmast-knapp:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      box-shadow: 0 0 0;
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(21, 170, 58, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
-      50% { box-shadow: 0 0 30px rgba(21, 170, 58, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
-    }
-
-    #karta-narmast-knapp:focus {
-      outline: none;
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
     </style>
 </head>
 <body>
@@ -365,21 +292,24 @@
         </div>
       </div>
 
-      <!-- Kontroller: sök + närmast mig -->
+      <!-- Kontroller: sök + närmast mig + info badge -->
       <div id="karta-kontroller">
         <div id="karta-sok-wrap" class="is-collapsed">
           <button id="karta-sok-toggle" type="button" aria-label="Öppna sök">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
           </button>
           <svg id="karta-sok-ikon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-          <input type="text" id="karta-sok" placeholder="Sök pizzeria, område eller stad…" autocomplete="off" />
+          <input type="text" id="karta-sok" placeholder="Sök pizzeria eller område" autocomplete="off" />
           <button id="karta-sok-stang" type="button" aria-label="Stäng sök">×</button>
           <ul id="karta-sok-resultat"></ul>
         </div>
         <button id="karta-narmast-knapp" onclick="kartaNarmastMig()" type="button" aria-label="Hämta min position">
-          📍 Min position
-          <div id="karta-info">Laddar pizzerior…</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </button>
+        <div id="karta-info-badge">
+          <span class="karta-info-dot"></span>
+          <span id="karta-info-text">0 av 0</span>
+        </div>
       </div>
       <div id="karta-container"></div>
       <!-- Flytande prisväxlarhjul -->
@@ -456,6 +386,7 @@
   <!-- Leaflet MarkerCluster -->
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
 
+  <script src="/js/supabase-config.js"></script>
   <script src="/js/shared.js" defer></script>
 
   <script>
@@ -495,6 +426,9 @@
       var valtFardmedel = 'driving';
       var aktivRadieKm = 0;
       var filterState = { snabbtStopp: false, oppetNu: false, maxPris: 0, visaBaraFavoriter: false, omrade: null, omraden: [], sokNamn: '' };
+      var supabaseCfg = window.BP_SUPABASE_CONFIG || {};
+      var SUPABASE_URL = supabaseCfg.url || '';
+      var SUPABASE_ANON_KEY = supabaseCfg.anonKey || '';
       var favoriter = (function () {
         try { return JSON.parse(localStorage.getItem('billiga-favoriter') || '[]'); } catch(e) { return []; }
       })();
@@ -667,14 +601,23 @@
           .replace(/-{2,}/g, '-');
       }
 
-      function arPrisradFranPizzorJson(row) {
+      function arMenyradFranPizzorJson(row) {
         if (!row || typeof row !== 'object') return false;
         if (typeof row.pizzeria !== 'string' || !row.pizzeria.trim()) return false;
         if (typeof row.pizza_namn !== 'string' || !row.pizza_namn.trim()) return false;
-        if (typeof row.pris !== 'number' || !isFinite(row.pris) || row.pris <= 0) return false;
         if (Object.prototype.hasOwnProperty.call(row, 'kategori')) return false;
         if (Object.prototype.hasOwnProperty.call(row, 'namn') && !Object.prototype.hasOwnProperty.call(row, 'pizza_namn')) return false;
         return true;
+      }
+
+      function arPrisradFranPizzorJson(row) {
+        if (!arMenyradFranPizzorJson(row)) return false;
+        if (typeof row.pris !== 'number' || !isFinite(row.pris) || row.pris <= 0) return false;
+        return true;
+      }
+
+      function hamtaMenyRaderFranPizzorJson(rows) {
+        return (Array.isArray(rows) ? rows : []).filter(arMenyradFranPizzorJson);
       }
 
       function hamtaPrisraderFranPizzorJson(rows) {
@@ -1577,6 +1520,26 @@
         if (radieCirkel.bringToBack) radieCirkel.bringToBack();
       }
 
+      function uppdateraInfoBadge() {
+        var infoEl = document.getElementById('karta-info-text');
+        if (!infoEl) return;
+        var total = alleMarkörer.length;
+        if (!total || !karta || !karta.getBounds) {
+          infoEl.textContent = '0 av 0';
+          return;
+        }
+
+        var bounds = karta.getBounds();
+        var synligaIvy = 0;
+        alleMarkörer.forEach(function (obj) {
+          if (!obj || !obj.markör) return;
+          if (!klusterGrupp.hasLayer(obj.markör)) return;
+          if (bounds.contains([obj.lat, obj.lng])) synligaIvy++;
+        });
+
+        infoEl.textContent = synligaIvy + ' av ' + total;
+      }
+
       function uppdateraRadiusFilter(källa) {
         var updateKälla = källa || 'auto';
         if (skaSkjutaUppMarkörUppdatering()) {
@@ -1592,7 +1555,6 @@
           return;
         }
 
-        var infoEl = document.getElementById('karta-info');
         var effektivRadieKm = aktivRadieKm;
         var markerAdds = 0;
         var markerRemoves = 0;
@@ -1620,7 +1582,7 @@
               markerAdds++;
             }
           });
-          if (infoEl) infoEl.textContent = alleMarkörer.length + ' pizzerior på kartan';
+          uppdateraInfoBadge();
           if (aktivRadieKm > 0) {
             sättRadieHjalpText('Avståndsfiltret väntar på position. Tryck på position-knappen i menyn.', 'error');
           }
@@ -1642,7 +1604,7 @@
             var visas = passarGrundFilter(obj);
             if (visas && filterState.oppetNu) {
               var oppet = ärÖppetNu(obj.oppettider);
-              if (oppet === false) visas = false;
+              if (oppet !== true) visas = false;
             }
             if (visas) {
               antalOppet++;
@@ -1655,7 +1617,7 @@
               markerRemoves++;
             }
           });
-          if (infoEl) infoEl.textContent = antalOppet + ' pizzerior matchar filter';
+          uppdateraInfoBadge();
           uppdateraNamnEtiketter();
           loggaPopupDebug('marker-update-end', {
             fn: 'uppdateraRadiusFilter',
@@ -1675,7 +1637,7 @@
               markerAdds++;
             }
           });
-          if (infoEl) infoEl.textContent = alleMarkörer.length + ' pizzerior på kartan';
+          uppdateraInfoBadge();
           sättRadieHjalpText('Avståndsfiltret väntar på position. Tryck på position-knappen i menyn.', 'error');
           uppdateraNamnEtiketter();
           loggaPopupDebug('marker-update-end', {
@@ -1698,7 +1660,7 @@
           var oppetOk = true;
           if (filterState.oppetNu) {
             var oppet = ärÖppetNu(obj.oppettider);
-            if (oppet === false) oppetOk = false;
+            if (oppet !== true) oppetOk = false;
           }
 
           if (inomRadie && oppetOk && passarGrundFilter(obj)) {
@@ -1721,11 +1683,7 @@
           synligaObj.sort(function (a, b) { return a.distansKm - b.distansKm; });
         }
 
-        if (infoEl) {
-          var radieLabel = effektivRadieKm > 0 ? formatRadieLabel(effektivRadieKm) : 'alla avstånd';
-          infoEl.textContent = antalSynliga + ' av ' + alleMarkörer.length + ' inom ' + radieLabel;
-          if (antalSynliga === 0) infoEl.textContent += ' - öka avståndet';
-        }
+        uppdateraInfoBadge();
         if (antalSynliga === 0) {
           sättRadieHjalpText('Inga träffar. Dra reglaget åt höger eller stäng av filter.', 'error');
         } else {
@@ -1940,14 +1898,7 @@
             if (!billigast) return;
             klusterGrupp.zoomToShowLayer(billigast.markör, function () {
               billigast.markör.openPopup();
-              var infoEl = document.getElementById('karta-info');
-              if (infoEl) {
-                if (använderSnitt) {
-                  infoEl.textContent = 'Billigast (snitt): ' + billigast.pizzeria + ' (snitt ' + billigast.snittPris + ' kr)';
-                } else {
-                  infoEl.textContent = 'Billigast: ' + billigast.pizzeria + ' (från ' + billigast.lagstaPris + ' kr)';
-                }
-              }
+              uppdateraInfoBadge();
             });
           });
         }
@@ -2130,24 +2081,31 @@
         var sokWrap = document.getElementById('karta-sok-wrap');
         var sokToggle = document.getElementById('karta-sok-toggle');
         var sokStang = document.getElementById('karta-sok-stang');
-        if (sokToggle) sokToggle.addEventListener('click', function () {
-          sokWrap.classList.remove('is-collapsed');
-          input.focus();
-        });
-        if (sokStang) sokStang.addEventListener('click', function () {
+        function stangSok() {
+          if (!sokWrap) return;
           sokWrap.classList.add('is-collapsed');
           input.value = '';
           resultat.style.display = 'none';
           filterState.sokNamn = '';
           uppdateraRadiusFilter('search');
+        }
+        if (sokToggle) sokToggle.addEventListener('click', function () {
+          sokWrap.classList.remove('is-collapsed');
+          input.focus();
+        });
+        if (sokStang) sokStang.addEventListener('pointerdown', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          stangSok();
+        });
+        if (sokStang) sokStang.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          stangSok();
         });
         document.addEventListener('click', function (e) {
           if (sokWrap && !sokWrap.contains(e.target) && !sokWrap.classList.contains('is-collapsed')) {
-            sokWrap.classList.add('is-collapsed');
-            input.value = '';
-            resultat.style.display = 'none';
-            filterState.sokNamn = '';
-            uppdateraRadiusFilter('search');
+            stangSok();
           }
         });
 
@@ -2211,10 +2169,9 @@
       };
 
       function hamtaPizzeriorCoordsData() {
-        return fetch('https://yixjzzehejrfcpyccyxp.supabase.co/rest/v1/pizzerior?select=namn,adress,lat,lng&limit=1000', {
+        return fetch(SUPABASE_URL + '/rest/v1/pizzerior?select=namn,adress,lat,lng&limit=1000', {
           headers: {
-            apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg'
+            apikey: SUPABASE_ANON_KEY
           }
         })
           .then(function (r) {
@@ -2255,10 +2212,9 @@
           function hamtaBatch() {
             var separator = query.indexOf('?') >= 0 ? '&' : '?';
             var pagedQuery = query + separator + 'limit=' + batchSize + '&offset=' + offset;
-            return fetch('https://yixjzzehejrfcpyccyxp.supabase.co/rest/v1/' + pagedQuery, {
+            return fetch(SUPABASE_URL + '/rest/v1/' + pagedQuery, {
               headers: {
-                apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGp6emVoZWpyZmNweWNjeXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDM4NjcsImV4cCI6MjA5MzkxOTg2N30.XL8Ww073h-sVD5qxyRUU9kkujnL0YkKUkrxe1mm8aHg'
+                apikey: SUPABASE_ANON_KEY
               }
             }).then(function (r) {
               if (!r.ok) throw new Error('Supabase query failed: ' + r.status);
@@ -2290,6 +2246,11 @@
 
           return pizzor.map(function (row) {
             var info = pizzeriaById[String(row && row.pizzeria_id)] || {};
+            var prisRaw = row ? row.pris : null;
+            var prisNum = Number(prisRaw);
+            var pris = (prisRaw === null || prisRaw === undefined || prisRaw === '')
+              ? null
+              : (isFinite(prisNum) ? prisNum : null);
             return {
               pizzeria: info.namn || '',
               adress: info.adress || '',
@@ -2299,7 +2260,7 @@
               hemsida: info.hemsida || '',
               oppettider: info.oppettider || null,
               pizza_namn: (row && row.pizza_namn) || '',
-              pris: Number(row && row.pris) || 0,
+              pris: pris,
               ingredienser: Array.isArray(row && row.ingredienser) ? row.ingredienser : []
             };
           }).filter(function (row) {
@@ -2318,11 +2279,12 @@
       ])
         .then(function (result) {
           var data = result[0] || [];
-          var pizzor = hamtaPrisraderFranPizzorJson(result[1]);
-          prisDataIndex = byggPrisIndex(pizzor);
-          pizzeriaMetaIndex = byggPizzeriaMeta(pizzor);
-          menyStatsIndex = byggMenyStats(pizzor);
-          prisInfoStat.ratter = pizzor.length;
+          var menyRader = hamtaMenyRaderFranPizzorJson(result[1]);
+          var prisRader = hamtaPrisraderFranPizzorJson(menyRader);
+          prisDataIndex = byggPrisIndex(prisRader);
+          pizzeriaMetaIndex = byggPizzeriaMeta(menyRader);
+          menyStatsIndex = byggMenyStats(menyRader);
+          prisInfoStat.ratter = prisRader.length;
           prisInfoStat.pizzerior = Object.keys(prisDataIndex).length;
           uppdateraPrisInfoModalInnehall();
 
@@ -2409,8 +2371,7 @@
           });
           loggaPopupDebug('marker-render-complete', { antal: alleMarkörer.length });
 
-          var infoEl = document.getElementById('karta-info');
-          if (infoEl) infoEl.textContent = alleMarkörer.length + ' pizzerior på kartan';
+          uppdateraInfoBadge();
 
           if (alleMarkörer.length > 0) {
             var group = L.featureGroup(alleMarkörer.map(function (o) { return o.markör; }));
@@ -2418,12 +2379,16 @@
             uppdateraNamnEtiketter();
           }
 
+          // Viktigt: applicera aktuellt filterläge efter att markörer är klara.
+          // Annars kan första iframe/fullscreen-öppningen visa alla markörer innan setFilter hunnit ge effekt.
+          uppdateraRadiusFilter('init');
+
           setupSök();
           setupVänsterMeny();
           setupPrisInfoModal();
 
           // Bygg pizzarättsindex för sökning
-          pizzor.forEach(function (rad) {
+          menyRader.forEach(function (rad) {
             var pizzaNamn = (rad.pizza_namn || '').toLowerCase().trim();
             var slug = skapaSlug(rad.pizzeria);
             if (!pizzaNamn || !slug) return;
@@ -2443,14 +2408,16 @@
           }
         })
         .catch(function (err) {
-          var infoEl = document.getElementById('karta-info');
-          if (infoEl) infoEl.textContent = 'Kunde inte ladda pizzerior';
+          var infoEl = document.getElementById('karta-info-text');
+          if (infoEl) infoEl.textContent = '0 av 0';
           console.error('Karta fel:', err);
         });
 
-      karta.on('zoomend', uppdateraNamnEtiketter);
+      karta.on('zoomend', function () { uppdateraNamnEtiketter(); uppdateraInfoBadge(); });
+      karta.on('moveend', uppdateraInfoBadge);
       klusterGrupp.on('animationend', uppdateraNamnEtiketter);
-      klusterGrupp.on('spiderfied unspiderfied', uppdateraNamnEtiketter);
+      klusterGrupp.on('animationend', uppdateraInfoBadge);
+      klusterGrupp.on('spiderfied unspiderfied', function () { uppdateraNamnEtiketter(); uppdateraInfoBadge(); });
       window.addEventListener('resize', uppdateraMenyPosition);
       uppdateraMenyPosition();
       setTimeout(uppdateraMenyPosition, 120);
