@@ -24,8 +24,9 @@ function initIndexSida() {
     const mobilLasMerBtn = document.getElementById('mobil-las-mer-btn');
     const mobilFilterSektion = document.getElementById('mobil-filter-sektion');
     const mobilKontroller = document.getElementById('mobil-kontroller');
+    const filterSektion = document.getElementById('filter-sektion');
     
-    if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller) {
+    if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller && filterSektion) {
         // Show button on mobile
         if (window.innerWidth < 768) {
             mobilLasMerBtn.style.display = 'flex';
@@ -43,6 +44,7 @@ function initIndexSida() {
                 mobilFilterSektion.classList.add('mobil-filter-compact');
                 mobilKontroller.classList.remove('mobil-kontroller-expanded');
                 mobilKontroller.classList.add('mobil-kontroller-compact');
+                filterSektion.style.display = 'none';
                 this.setAttribute('aria-expanded', 'false');
             } else {
                 // Expand
@@ -50,6 +52,7 @@ function initIndexSida() {
                 mobilFilterSektion.classList.add('mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact');
                 mobilKontroller.classList.add('mobil-kontroller-expanded');
+                filterSektion.style.display = 'flex';
                 this.setAttribute('aria-expanded', 'true');
             }
         });
@@ -60,9 +63,11 @@ function initIndexSida() {
                 mobilLasMerBtn.style.display = 'none';
                 mobilFilterSektion.classList.remove('mobil-filter-compact', 'mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact', 'mobil-kontroller-expanded');
+                filterSektion.style.display = 'flex';
                 mobilLasMerBtn.setAttribute('aria-expanded', 'false');
             } else {
                 mobilLasMerBtn.style.display = 'flex';
+                filterSektion.style.display = 'none';
                 if (mobilLasMerBtn.getAttribute('aria-expanded') !== 'true') {
                     mobilFilterSektion.classList.add('mobil-filter-compact');
                     mobilKontroller.classList.add('mobil-kontroller-compact');

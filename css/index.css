@@ -1868,22 +1868,26 @@ hr {
   .kategori-strip,
   .stats-bar,
   #mobil-kontroller,
-  #mobil-filter-sektion {
+  #mobil-filter-sektion,
+  #filter-sektion {
     display: none;
   }
 
-  /* Visa när expanderad */
+  /* Visa stats-bar när expanderad */
   #mobil-kontroller.mobil-kontroller-expanded {
     display: grid !important;
   }
 
-  #mobil-kontroller.mobil-kontroller-expanded ~ .stats-bar,
-  #mobil-filter-sektion.mobil-filter-expanded ~ .stats-bar {
+  #mobil-filter-sektion.mobil-filter-expanded {
     display: block !important;
   }
 
-  #mobil-filter-sektion.mobil-filter-expanded {
+  #mobil-filter-sektion.mobil-filter-expanded + .stats-bar {
     display: block !important;
+  }
+
+  #filter-sektion {
+    display: none !important;
   }
 
   /* Läs mer knapp är synlig på mobil */
