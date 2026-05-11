@@ -20,6 +20,27 @@ function initIndexSida() {
         });
     }
 
+    // Handle "Läs mer och visa alla alternativ" button for mobile filters
+    const mobilLasMerBtn = document.getElementById('mobil-las-mer-btn');
+    const mobilKontroller = document.getElementById('mobil-kontroller');
+    if (mobilLasMerBtn && mobilKontroller) {
+        mobilLasMerBtn.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+                // Collapse
+                mobilKontroller.classList.remove('mobil-kontroller-expanded');
+                mobilKontroller.classList.add('mobil-kontroller-compact');
+                this.setAttribute('aria-expanded', 'false');
+            } else {
+                // Expand
+                mobilKontroller.classList.remove('mobil-kontroller-compact');
+                mobilKontroller.classList.add('mobil-kontroller-expanded');
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+    }
+
     const sokruta = document.getElementById('sokruta');
     const antalTraffar = document.getElementById('antal-traffar-container');
     const prisSortering = document.getElementById('pris-sortering');
