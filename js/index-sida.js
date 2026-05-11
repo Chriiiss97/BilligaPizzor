@@ -25,8 +25,13 @@ function initIndexSida() {
     const mobilFilterSektion = document.getElementById('mobil-filter-sektion');
     const mobilKontroller = document.getElementById('mobil-kontroller');
     const filterSektion = document.getElementById('filter-sektion');
-    
-    if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller && filterSektion) {
+    const prisSlider = document.getElementById('pris-slider-wrap');
+    const aktivaChips = document.getElementById('aktiva-filter-chips');
+    const filterHr = aktivaChips ? aktivaChips.nextElementSibling : null; // <hr> after chips
+
+    const extraDolj = [filterSektion, prisSlider, aktivaChips, filterHr].filter(Boolean);
+
+    if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller) {
         const isMobile = () => window.innerWidth < 768;
 
         function kollapsa() {
@@ -34,9 +39,8 @@ function initIndexSida() {
             mobilFilterSektion.classList.add('mobil-filter-compact');
             mobilKontroller.classList.remove('mobil-kontroller-expanded');
             mobilKontroller.classList.add('mobil-kontroller-compact');
-            // Dölj filter-sektion och återställ till stängt läge
-            filterSektion.classList.add('mobil-las-mer-dold');
-            filterSektion.classList.add('filter-hidden-mobile');
+            extraDolj.forEach(el => el.classList.add('mobil-las-mer-dold'));
+            if (filterSektion) filterSektion.classList.add('filter-hidden-mobile');
             mobilLasMerBtn.setAttribute('aria-expanded', 'false');
         }
 
@@ -45,8 +49,8 @@ function initIndexSida() {
             mobilFilterSektion.classList.add('mobil-filter-expanded');
             mobilKontroller.classList.remove('mobil-kontroller-compact');
             mobilKontroller.classList.add('mobil-kontroller-expanded');
-            // Tillåt togglaMobilFilter() att styra filter-sektion
-            filterSektion.classList.remove('mobil-las-mer-dold');
+            extraDolj.forEach(el => el.classList.remove('mobil-las-mer-dold'));
+            if (filterSektion) filterSektion.classList.remove('mobil-las-mer-dold');
             mobilLasMerBtn.setAttribute('aria-expanded', 'true');
         }
 
@@ -68,7 +72,8 @@ function initIndexSida() {
                 mobilLasMerBtn.style.display = 'none';
                 mobilFilterSektion.classList.remove('mobil-filter-compact', 'mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact', 'mobil-kontroller-expanded');
-                filterSektion.classList.remove('mobil-las-mer-dold');
+                extraDolj.forEach(el => el.classList.remove('mobil-las-mer-dold'));
+                if (filterSektion) filterSektion.classList.remove('mobil-las-mer-dold');
                 mobilLasMerBtn.setAttribute('aria-expanded', 'false');
             } else {
                 mobilLasMerBtn.style.display = 'flex';

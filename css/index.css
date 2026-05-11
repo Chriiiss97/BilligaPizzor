@@ -1881,7 +1881,10 @@ hr {
   }
 
   /* filter-sektion döljs via klass tills "Läs mer" öppnas, sedan styr togglaMobilFilter() */
-  #filter-sektion.mobil-las-mer-dold {
+  #filter-sektion.mobil-las-mer-dold,
+  #pris-slider-wrap.mobil-las-mer-dold,
+  #aktiva-filter-chips.mobil-las-mer-dold,
+  hr.mobil-las-mer-dold {
     display: none !important;
   }
 
