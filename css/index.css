@@ -2193,7 +2193,11 @@ hr {
 
   /* Sökfält - Full width */
   #huvud-sok-sektion {
-    padding: 16px 12px 8px 12px;
+    padding: 18px 12px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
   }
 
   .sok-wrapper {
@@ -2219,33 +2223,38 @@ hr {
 
   /* Läs mer knapp för mobil */
   .mobil-las-mer-btn {
-    display: block;
-    width: 100%;
-    margin: 12px 0;
-    padding: 12px 14px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
-    background: rgba(30, 30, 30, 0.8);
-    color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
     display: flex;
+    width: calc(100% - 24px);
+    margin: 16px 12px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border: 1.5px solid rgba(31, 122, 76, 0.6);
+    background: linear-gradient(135deg, rgba(31, 122, 76, 0.15) 0%, rgba(31, 122, 76, 0.08) 100%);
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
+    gap: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(31, 122, 76, 0.15);
+    letter-spacing: 0.3px;
   }
 
   .mobil-las-mer-btn:active {
-    background: rgba(31, 122, 76, 0.8);
+    background: linear-gradient(135deg, rgba(31, 122, 76, 0.25) 0%, rgba(31, 122, 76, 0.15) 100%);
     border-color: #1f7a4c;
+    box-shadow: 0 2px 6px rgba(31, 122, 76, 0.2);
+    transform: scale(0.98);
   }
 
   .mobil-las-mer-pil {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.3s ease;
-    font-size: 1em;
+    font-size: 1.1em;
     line-height: 1;
   }
 
@@ -2269,7 +2278,8 @@ hr {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
     align-items: center;
-    margin: 0 0 8px 0;
+    margin: 12px 0 8px 0;
+    padding: 0 12px;
   }
 
   #mobil-filter-toggle {
