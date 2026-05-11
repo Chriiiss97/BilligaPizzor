@@ -2195,33 +2195,31 @@ hr {
   .mobil-las-mer-btn {
     display: block;
     width: 100%;
-    margin: 0 0 8px 0;
+    margin: 12px 0;
     padding: 12px 14px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    border: 1.5px solid #1f7a4c;
-    background: linear-gradient(135deg, #1f7a4c, #2a9d5d);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    background: rgba(30, 30, 30, 0.8);
     color: #fff;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     transition: all 0.3s ease;
   }
 
-  .mobil-las-mer-btn:hover,
-  .mobil-las-mer-btn:focus-visible {
-    background: linear-gradient(135deg, #2a9d5d, #35af68);
-    box-shadow: 0 4px 14px rgba(31, 122, 76, 0.3);
-    transform: translateY(-2px);
+  .mobil-las-mer-btn:active {
+    background: rgba(31, 122, 76, 0.8);
+    border-color: #1f7a4c;
   }
 
   .mobil-las-mer-pil {
     display: inline-block;
     transition: transform 0.3s ease;
-    font-size: 1.2em;
+    font-size: 1em;
     line-height: 1;
   }
 
@@ -2229,18 +2227,14 @@ hr {
     transform: rotate(180deg);
   }
 
-  .mobil-las-mer-btn[aria-expanded="true"] .mobil-las-mer-text {
-    color: #e0e0e0;
-  }
-
   /* Kompakt läge: göm innehål per default */
   #mobil-kontroller.mobil-kontroller-compact {
-    display: none !important;
+    display: none;
   }
 
   /* Expanderat läge: visa innehål */
   #mobil-kontroller.mobil-kontroller-expanded {
-    display: grid !important;
+    display: grid;
   }
 
   /* Mobil toolbar: Filter + Närmast + Sortera */

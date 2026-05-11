@@ -24,7 +24,14 @@ function initIndexSida() {
     const mobilLasMerBtn = document.getElementById('mobil-las-mer-btn');
     const mobilKontroller = document.getElementById('mobil-kontroller');
     if (mobilLasMerBtn && mobilKontroller) {
-        mobilLasMerBtn.addEventListener('click', function() {
+        // Show button on mobile
+        if (window.innerWidth < 768) {
+            mobilLasMerBtn.style.display = 'block';
+            mobilKontroller.classList.add('mobil-kontroller-compact');
+        }
+
+        mobilLasMerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             
             if (isExpanded) {
@@ -37,6 +44,20 @@ function initIndexSida() {
                 mobilKontroller.classList.remove('mobil-kontroller-compact');
                 mobilKontroller.classList.add('mobil-kontroller-expanded');
                 this.setAttribute('aria-expanded', 'true');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                mobilLasMerBtn.style.display = 'none';
+                mobilKontroller.classList.remove('mobil-kontroller-compact', 'mobil-kontroller-expanded');
+                mobilLasMerBtn.setAttribute('aria-expanded', 'false');
+            } else {
+                mobilLasMerBtn.style.display = 'block';
+                if (mobilLasMerBtn.getAttribute('aria-expanded') !== 'true') {
+                    mobilKontroller.classList.add('mobil-kontroller-compact');
+                }
             }
         });
     }
