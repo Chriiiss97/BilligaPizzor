@@ -3807,38 +3807,19 @@ body.index-kort-lage .pizza-kort {
   }
 
   #resultat-lista .pizza-rad {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
   }
 
   #resultat-lista .pizza-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0;
+    flex: 1 1 0;
     min-width: 0;
-    text-align: left;
-    align-items: flex-start;
-  }
-
-  #resultat-lista .pizza-kort h3 {
-    font-size: 1rem;
-    line-height: 1.08;
-    text-align: left;
-    width: 100%;
   }
 
   #resultat-lista .pizza-top-row {
     gap: 6px;
-  }
-
-  #resultat-lista .pizza-beskrivning {
-    margin-top: 1px;
-    font-size: 0.72rem;
-    line-height: 1.2;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-    text-align: left;
-    width: 100%;
   }
 
   #resultat-lista .pizza-tags {
