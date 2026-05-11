@@ -27,50 +27,53 @@ function initIndexSida() {
     const filterSektion = document.getElementById('filter-sektion');
     
     if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller && filterSektion) {
-        // Show button on mobile
-        if (window.innerWidth < 768) {
-            mobilLasMerBtn.style.display = 'flex';
+        const isMobile = () => window.innerWidth < 768;
+
+        function kollapsa() {
+            mobilFilterSektion.classList.remove('mobil-filter-expanded');
             mobilFilterSektion.classList.add('mobil-filter-compact');
+            mobilKontroller.classList.remove('mobil-kontroller-expanded');
             mobilKontroller.classList.add('mobil-kontroller-compact');
+            // Dölj filter-sektion och återställ till stängt läge
+            filterSektion.classList.add('mobil-las-mer-dold');
+            filterSektion.classList.add('filter-hidden-mobile');
+            mobilLasMerBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function expandera() {
+            mobilFilterSektion.classList.remove('mobil-filter-compact');
+            mobilFilterSektion.classList.add('mobil-filter-expanded');
+            mobilKontroller.classList.remove('mobil-kontroller-compact');
+            mobilKontroller.classList.add('mobil-kontroller-expanded');
+            // Tillåt togglaMobilFilter() att styra filter-sektion
+            filterSektion.classList.remove('mobil-las-mer-dold');
+            mobilLasMerBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        if (isMobile()) {
+            kollapsa();
         }
 
         mobilLasMerBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            
-            if (isExpanded) {
-                // Collapse
-                mobilFilterSektion.classList.remove('mobil-filter-expanded');
-                mobilFilterSektion.classList.add('mobil-filter-compact');
-                mobilKontroller.classList.remove('mobil-kontroller-expanded');
-                mobilKontroller.classList.add('mobil-kontroller-compact');
-                filterSektion.style.display = 'none';
-                this.setAttribute('aria-expanded', 'false');
+            if (this.getAttribute('aria-expanded') === 'true') {
+                kollapsa();
             } else {
-                // Expand
-                mobilFilterSektion.classList.remove('mobil-filter-compact');
-                mobilFilterSektion.classList.add('mobil-filter-expanded');
-                mobilKontroller.classList.remove('mobil-kontroller-compact');
-                mobilKontroller.classList.add('mobil-kontroller-expanded');
-                filterSektion.style.display = 'flex';
-                this.setAttribute('aria-expanded', 'true');
+                expandera();
             }
         });
 
-        // Handle window resize
         window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) {
+            if (!isMobile()) {
                 mobilLasMerBtn.style.display = 'none';
                 mobilFilterSektion.classList.remove('mobil-filter-compact', 'mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact', 'mobil-kontroller-expanded');
-                filterSektion.style.display = 'flex';
+                filterSektion.classList.remove('mobil-las-mer-dold');
                 mobilLasMerBtn.setAttribute('aria-expanded', 'false');
             } else {
                 mobilLasMerBtn.style.display = 'flex';
-                filterSektion.style.display = 'none';
                 if (mobilLasMerBtn.getAttribute('aria-expanded') !== 'true') {
-                    mobilFilterSektion.classList.add('mobil-filter-compact');
-                    mobilKontroller.classList.add('mobil-kontroller-compact');
+                    kollapsa();
                 }
             }
         });

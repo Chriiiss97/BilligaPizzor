@@ -1868,12 +1868,10 @@ hr {
   .kategori-strip,
   .stats-bar,
   #mobil-kontroller,
-  #mobil-filter-sektion,
-  #filter-sektion {
+  #mobil-filter-sektion {
     display: none;
   }
 
-  /* Visa stats-bar när expanderad */
   #mobil-kontroller.mobil-kontroller-expanded {
     display: grid !important;
   }
@@ -1882,11 +1880,8 @@ hr {
     display: block !important;
   }
 
-  #mobil-filter-sektion.mobil-filter-expanded + .stats-bar {
-    display: block !important;
-  }
-
-  #filter-sektion {
+  /* filter-sektion döljs via klass tills "Läs mer" öppnas, sedan styr togglaMobilFilter() */
+  #filter-sektion.mobil-las-mer-dold {
     display: none !important;
   }
 
