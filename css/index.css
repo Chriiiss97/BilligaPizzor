@@ -1864,9 +1864,31 @@ hr {
     padding: 0;
   }
 
-  .hero-sektion h1 {
-    font-size: 1.4rem;
-    letter-spacing: -0.2px;
+  /* KOMPAKT MOBILVY: Dölj allt tills "Läs mer" klickas */
+  .kategori-strip,
+  .stats-bar,
+  #mobil-kontroller,
+  #mobil-filter-sektion {
+    display: none;
+  }
+
+  /* Visa när expanderad */
+  #mobil-kontroller.mobil-kontroller-expanded {
+    display: grid !important;
+  }
+
+  #mobil-kontroller.mobil-kontroller-expanded ~ .stats-bar,
+  #mobil-filter-sektion.mobil-filter-expanded ~ .stats-bar {
+    display: block !important;
+  }
+
+  #mobil-filter-sektion.mobil-filter-expanded {
+    display: block !important;
+  }
+
+  /* Läs mer knapp är synlig på mobil */
+  .mobil-las-mer-btn {
+    display: flex;
   }
 
   .hero-features {

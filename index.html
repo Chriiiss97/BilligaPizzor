@@ -242,6 +242,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div id="huvud-sok-sektion">
+      <!-- Sökrutan syns ALLTID på mobil -->
+      <div class="sok-wrapper">
+        <input
+          type="text"
+          id="sokruta"
+          placeholder="Sök bland pizzor…"
+          aria-label="Sökfält för pizzor"
+        />
+      </div>
+      <div id="antal-traffar-container"></div>
+    </div>
+
+    <!-- "Läs mer" knapp för mobil - expanderar filter + kategor -->
+    <button
+      id="mobil-las-mer-btn"
+      class="mobil-las-mer-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobil-filter-sektion"
+    >
+      <span class="mobil-las-mer-pil">▼</span>
+      <span class="mobil-las-mer-text">Läs mer och visa alla alternativ</span>
+    </button>
+
+    <!-- Allt detta döljs på mobil tills knappen klickas -->
+    <div id="mobil-filter-sektion">
       <!-- Kategori-strip -->
       <div class="kategori-strip" id="kategori-strip" aria-label="Filtrera efter kategori">
         <button class="ks-pil ks-pil--vanster" id="ks-pil-vanster" type="button" aria-label="Scrolla kategorier åt vänster" aria-hidden="true" tabindex="-1">
@@ -305,27 +331,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
       </div>
-      <div class="sok-wrapper">
-        <input
-          type="text"
-          id="sokruta"
-          placeholder="Sök bland pizzor…"
-          aria-label="Sökfält för pizzor"
-        />
-      </div>
-      <div id="antal-traffar-container"></div>
     </div>
 
-    <button
-      id="mobil-las-mer-btn"
-      class="mobil-las-mer-btn"
-      type="button"
-      aria-expanded="false"
-      aria-controls="mobil-kontroller"
-    >
-      <span class="mobil-las-mer-pil">▼</span>
-      <span class="mobil-las-mer-text">Läs mer och visa alla alternativ</span>
-    </button>
+    <!-- Stats bar döljs också på mobil -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stats-bar-inner">
+        <span class="stats-item">🍕 Över <strong id="stats-pizzor-antal">1 900+</strong> pizzor</span>
+        <span class="stats-sep">·</span>
+        <span class="stats-item">🏪 <strong id="stats-pizzerior-antal">27</strong> lokala pizzerior</span>
+        <span class="stats-sep">·</span>
+        <span class="stats-item">📍 Hela Mölndal</span>
+        <span class="stats-sep">·</span>
+        <span class="stats-item stats-item--highlight">🔥 Jämför priser gratis</span>
+      </div>
+    </div>
 
     <div id="mobil-kontroller" class="mobil-kontroller-compact">
       <button

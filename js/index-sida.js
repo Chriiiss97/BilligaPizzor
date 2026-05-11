@@ -22,11 +22,14 @@ function initIndexSida() {
 
     // Handle "Läs mer och visa alla alternativ" button for mobile filters
     const mobilLasMerBtn = document.getElementById('mobil-las-mer-btn');
+    const mobilFilterSektion = document.getElementById('mobil-filter-sektion');
     const mobilKontroller = document.getElementById('mobil-kontroller');
-    if (mobilLasMerBtn && mobilKontroller) {
+    
+    if (mobilLasMerBtn && mobilFilterSektion && mobilKontroller) {
         // Show button on mobile
         if (window.innerWidth < 768) {
-            mobilLasMerBtn.style.display = 'block';
+            mobilLasMerBtn.style.display = 'flex';
+            mobilFilterSektion.classList.add('mobil-filter-compact');
             mobilKontroller.classList.add('mobil-kontroller-compact');
         }
 
@@ -36,11 +39,15 @@ function initIndexSida() {
             
             if (isExpanded) {
                 // Collapse
+                mobilFilterSektion.classList.remove('mobil-filter-expanded');
+                mobilFilterSektion.classList.add('mobil-filter-compact');
                 mobilKontroller.classList.remove('mobil-kontroller-expanded');
                 mobilKontroller.classList.add('mobil-kontroller-compact');
                 this.setAttribute('aria-expanded', 'false');
             } else {
                 // Expand
+                mobilFilterSektion.classList.remove('mobil-filter-compact');
+                mobilFilterSektion.classList.add('mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact');
                 mobilKontroller.classList.add('mobil-kontroller-expanded');
                 this.setAttribute('aria-expanded', 'true');
@@ -51,11 +58,13 @@ function initIndexSida() {
         window.addEventListener('resize', function() {
             if (window.innerWidth >= 768) {
                 mobilLasMerBtn.style.display = 'none';
+                mobilFilterSektion.classList.remove('mobil-filter-compact', 'mobil-filter-expanded');
                 mobilKontroller.classList.remove('mobil-kontroller-compact', 'mobil-kontroller-expanded');
                 mobilLasMerBtn.setAttribute('aria-expanded', 'false');
             } else {
-                mobilLasMerBtn.style.display = 'block';
+                mobilLasMerBtn.style.display = 'flex';
                 if (mobilLasMerBtn.getAttribute('aria-expanded') !== 'true') {
+                    mobilFilterSektion.classList.add('mobil-filter-compact');
                     mobilKontroller.classList.add('mobil-kontroller-compact');
                 }
             }
