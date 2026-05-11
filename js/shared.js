@@ -29,8 +29,10 @@ function hamtaLokalHref(href) {
 
     const matchDynamiskPizzeria = href.match(/^\/pizzerior\/([^/?#]+)\/?$/i);
     if (matchDynamiskPizzeria && matchDynamiskPizzeria[1]) {
-        const slug = matchDynamiskPizzeria[1];
-        return `/pizzerior/pizzeria.html?slug=${encodeURIComponent(slug)}`;
+        // Local static servers often lack rewrite rules for /pizzerior/:slug.
+        // Store slug in hash to keep routing robust without server support.
+        const slug = decodeURIComponent(matchDynamiskPizzeria[1]);
+        return `/pizzerior/pizzeria.html#slug=${encodeURIComponent(slug)}`;
     }
 
     if (!href.startsWith('/')) {
@@ -1697,6 +1699,15 @@ function skapaDynamiskPizzeriaLank(namn) {
 }
 
 function hamtaPizzeriaSlugFranUrl() {
+    const hash = (window.location.hash || '').replace(/^#/, '').trim();
+    if (hash) {
+        const hashParams = new URLSearchParams(hash.startsWith('?') ? hash.slice(1) : hash);
+        const slugFranHash = (hashParams.get('slug') || '').trim().toLowerCase();
+        if (slugFranHash) {
+            return slugFranHash.replace(/\.html?$/i, '');
+        }
+    }
+
     const params = new URLSearchParams(window.location.search || '');
     const slugFranQuery = (params.get('slug') || '').trim().toLowerCase();
     if (slugFranQuery) {
@@ -1708,8 +1719,32 @@ function hamtaPizzeriaSlugFranUrl() {
         return '';
     }
 
-    const slug = decodeURIComponent(match[1]).toLowerCase();
-    if (slug === 'pizzeria' || slug === 'pizzeria.html') {
+    const slug = decodeURIComponent(match[1])
+        .toLowerCase()
+        .replace(/\.html?$/i, '');
+
+    if (slug === 'pizzeria') {
+        // Some local/static servers can collapse "/pizzerior/pizzeria.html?slug=xyz" to
+        // "/pizzerior/pizzeria" and drop query params. Recover from referrer when possible.
+        try {
+            const ref = new URL(document.referrer || '', window.location.origin);
+            const refParams = new URLSearchParams(ref.search || '');
+            const refSlugQuery = (refParams.get('slug') || '').trim().toLowerCase();
+            if (refSlugQuery && refSlugQuery !== 'pizzeria') {
+                return refSlugQuery.replace(/\.html?$/i, '');
+            }
+
+            const refMatch = (ref.pathname || '').match(/\/pizzerior\/([^/?#]+)\/?$/i);
+            if (refMatch && refMatch[1]) {
+                const refSlug = decodeURIComponent(refMatch[1]).toLowerCase().replace(/\.html?$/i, '');
+                if (refSlug && refSlug !== 'pizzeria') {
+                    return refSlug;
+                }
+            }
+        } catch (_) {
+            // Ignore malformed referrer and fall through to empty slug.
+        }
+
         return '';
     }
 

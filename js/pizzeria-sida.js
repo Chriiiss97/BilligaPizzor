@@ -90,6 +90,15 @@ function normaliseraExtraKategoriId(kategori) {
     return 'tillbehor';
 }
 
+function normaliseraLegacyPizzeriaSlug(slug) {
+    return (slug || '')
+        .toLowerCase()
+        .replace(/\.html?$/i, '')
+        .replace(/(?:^|-)(pizzeria|restaurang|resturang)(?=-|$)/g, '')
+        .replace(/-{2,}/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 function normaliseraExtraPoster(extraLista, soktNamnNormaliserat) {
     if (!Array.isArray(extraLista)) return [];
     return extraLista
@@ -133,9 +142,18 @@ function initPizzeriaSida() {
     ])
         .then(([data, extraData]) => {
             const register = skapaPizzeriorSidaDataFranJson(data);
-            const matchadPizzeriaFranSlug = pizzeriaSlugFranUrl
-                ? register.find((pizzeria) => pizzeria.slug === pizzeriaSlugFranUrl)
-                : null;
+            const matchadPizzeriaFranSlug = (() => {
+                if (!pizzeriaSlugFranUrl) return null;
+
+                const exakt = register.find((pizzeria) => pizzeria.slug === pizzeriaSlugFranUrl);
+                if (exakt) return exakt;
+
+                // Support legacy static slugs such as "restaurang-perla.html".
+                const sokSlug = normaliseraLegacyPizzeriaSlug(pizzeriaSlugFranUrl);
+                if (!sokSlug) return null;
+
+                return register.find((pizzeria) => normaliseraLegacyPizzeriaSlug(pizzeria.slug) === sokSlug) || null;
+            })();
             const pizzeriaNamn = matchadPizzeriaFranSlug?.namn || pizzeriaNamnFranQuery || fallbackNamn;
 
             if (!pizzeriaNamn) {

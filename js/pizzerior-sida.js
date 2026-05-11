@@ -290,13 +290,17 @@ function initPizzeriorSida() {
 
         if (!term) return bas;
 
-        if (arStriktOmradesokterm(term)) {
-            return bas.filter((p) => normaliseraText(p.omrade || '') === term);
+        const arStriktSokterm = typeof arStriktOmradesokterm === 'function' && arStriktOmradesokterm(term);
+        if (arStriktSokterm) {
+            return bas.filter((p) => {
+                const omradeNamn = p.omrade || p.stad || '';
+                return normaliseraText(omradeNamn) === term;
+            });
         }
 
         return bas.filter((p) =>
             normaliseraText(p.namn).includes(term) ||
-            normaliseraText(p.omrade || '').includes(term) ||
+            normaliseraText(p.omrade || p.stad || '').includes(term) ||
             normaliseraText(p.adress || '').includes(term)
         );
     }
