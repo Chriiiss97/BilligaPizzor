@@ -1,3 +1,48 @@
+// --- Supabase klickloggning ---
+function hamtaPizzeriaSlug(pizzeria) {
+    if (pizzeria && pizzeria.slug) {
+        return String(pizzeria.slug);
+    }
+
+    const lank = pizzeria
+        ? String(pizzeria.lank || pizzeria.link || pizzeria['l\u00e4nk'] || '')
+        : '';
+    const slugFranLank = lank.match(/\/pizzerior\/([^/?#]+)\/?$/i);
+    if (slugFranLank && slugFranLank[1]) {
+        return decodeURIComponent(slugFranLank[1]).toLowerCase();
+    }
+
+    const namn = pizzeria && pizzeria.namn ? String(pizzeria.namn) : '';
+    return namn
+        .toLowerCase()
+        .trim()
+        .replace(/[\u00e5\u00e4]/g, 'a')
+        .replace(/[\u00f6]/g, 'o')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'okand';
+}
+
+function logMenuClickToSupabase(pizzeriaSlug) {
+    if (!window.BP_SUPABASE_CONFIG || !pizzeriaSlug) {
+        return Promise.resolve(false);
+    }
+
+    const url = `${window.BP_SUPABASE_CONFIG.url}/rest/v1/menu_clicks`;
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            apikey: window.BP_SUPABASE_CONFIG.anonKey,
+            Authorization: `Bearer ${window.BP_SUPABASE_CONFIG.anonKey}`,
+            Prefer: 'return=minimal'
+        },
+        body: JSON.stringify([{ pizzeria_slug: pizzeriaSlug }]),
+        keepalive: true
+    })
+        .then((res) => res.ok)
+        .catch(() => false);
+}
+
 function skapaPizzeriaKort(pizzeria) {
     const kort = document.createElement('div');
     kort.className = 'pizza-kort';
@@ -30,18 +75,24 @@ function skapaPizzeriaKort(pizzeria) {
         }
     }
 
+    const slug = hamtaPizzeriaSlug(pizzeria);
+
     kort.innerHTML = `
         <h3>${pizzeriaNamnSafe}</h3>
         ${telefonRad}
         ${adressRad}
         ${distansRad}
         ${oppetRad}
-        <button type="button" class="pizzeria-btn pizzeria-btn-visa-meny"><span class="btn-emoji">📖</span> Visa meny</button>
+        <button type="button" class="pizzeria-btn pizzeria-btn-visa-meny" data-slug="${slug}"><span class="btn-emoji">📖</span> Visa meny</button>
     `;
 
     const visaMenyKnapp = kort.querySelector('.pizzeria-btn-visa-meny');
     if (visaMenyKnapp) {
-        visaMenyKnapp.addEventListener('click', () => {
+        visaMenyKnapp.addEventListener('click', async () => {
+            await Promise.race([
+                logMenuClickToSupabase(slug),
+                new Promise((resolve) => setTimeout(resolve, 180))
+            ]);
             gtmSpåraPizzeriaKlickOchNavigera(pizzeria.namn, pizzeria.länk);
         });
     }

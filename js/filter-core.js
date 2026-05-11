@@ -149,7 +149,16 @@ function hamtaOppetText(oppettider) {
     const dagIndex = { man:1,mandag:1,tis:2,tisdag:2,ons:3,onsdag:3,tor:4,tors:4,torsdag:4,fre:5,fredag:5,lor:6,lordag:6,son:0,sondag:0 };
     function norm(s) { return String(s || '').toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[–—−-]/g,'-').replace(/\s+/g,' ').trim(); }
     function hamtaDag(t) { return dagIndex[norm(t).replace(/\./g,'').replace(/\s+/g,'')]; }
-    function tidMin(s) { const m = String(s || '').match(/^(\d{1,2})[:.](\d{1,2})$/); if (!m) return null; return parseInt(m[1], 10) * 60 + parseInt(m[2], 10); }
+    function tidMin(s) {
+        const m = String(s || '').match(/^(\d{1,2})[:.](\d{1,2})$/);
+        if (!m) return null;
+        const h = parseInt(m[1], 10);
+        const min = parseInt(m[2], 10);
+        if (!Number.isFinite(h) || !Number.isFinite(min)) return null;
+        if (h === 24 && min === 0) return 1440;
+        if (h < 0 || h > 23 || min < 0 || min > 59) return null;
+        return h * 60 + min;
+    }
     for (const nyckel of Object.keys(oppettider)) {
         const delar = norm(nyckel).split('-').map(s => s.trim()).filter(Boolean);
         let matchar = false;

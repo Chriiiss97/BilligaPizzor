@@ -310,6 +310,7 @@
           <span class="karta-info-dot"></span>
           <span id="karta-info-text">0 av 0</span>
         </div>
+        <button id="karta-satellit-knapp" type="button" aria-label="Växla satellitläge" aria-pressed="false" title="Växla satellitläge">Sat</button>
       </div>
       <div id="karta-container"></div>
       <!-- Flytande prisväxlarhjul -->
@@ -409,10 +410,42 @@
         closePopupOnClick: false
       });
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      var standardLager = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19
-      }).addTo(karta);
+      });
+
+      var satellitLager = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri',
+        maxZoom: 19
+      });
+
+      standardLager.addTo(karta);
+
+      var arSatellitAktiv = false;
+      var satellitKnapp = document.getElementById('karta-satellit-knapp');
+      function uppdateraSatellitKnapp() {
+        if (!satellitKnapp) return;
+        satellitKnapp.textContent = arSatellitAktiv ? 'Karta' : 'Sat';
+        satellitKnapp.setAttribute('aria-pressed', arSatellitAktiv ? 'true' : 'false');
+        satellitKnapp.classList.toggle('is-aktiv', arSatellitAktiv);
+      }
+
+      if (satellitKnapp) {
+        satellitKnapp.addEventListener('click', function () {
+          if (arSatellitAktiv) {
+            if (karta.hasLayer(satellitLager)) karta.removeLayer(satellitLager);
+            if (!karta.hasLayer(standardLager)) standardLager.addTo(karta);
+          } else {
+            if (karta.hasLayer(standardLager)) karta.removeLayer(standardLager);
+            if (!karta.hasLayer(satellitLager)) satellitLager.addTo(karta);
+          }
+          arSatellitAktiv = !arSatellitAktiv;
+          uppdateraSatellitKnapp();
+        });
+      }
+
+      uppdateraSatellitKnapp();
 
       setTimeout(function () { karta.invalidateSize(); }, 100);
 
@@ -901,7 +934,9 @@
           if (!m) return null;
           var h = parseInt(m[1], 10);
           var min = parseInt(m[2], 10);
-          if (!isFinite(h) || !isFinite(min) || h < 0 || h > 23 || min < 0 || min > 59) return null;
+          if (!isFinite(h) || !isFinite(min)) return null;
+          if (h === 24 && min === 0) return 1440;
+          if (h < 0 || h > 23 || min < 0 || min > 59) return null;
           return h * 60 + min;
         }
 
@@ -1028,7 +1063,12 @@
         function tidMin(s) {
           var m=String(s||'').trim().match(/^(\d{1,2})[:.](\d{1,2})$/);
           if(!m) return null;
-          return parseInt(m[1],10)*60+parseInt(m[2],10);
+          var h = parseInt(m[1],10);
+          var min = parseInt(m[2],10);
+          if(!isFinite(h) || !isFinite(min)) return null;
+          if(h === 24 && min === 0) return 1440;
+          if(h < 0 || h > 23 || min < 0 || min > 59) return null;
+          return h*60+min;
         }
         function extractDagText(t) {
           return norm(t).replace(/\d{1,2}[:.]\d{1,2}/g,' ').replace(/[0-9]/g,' ').replace(/\s+/g,' ').trim();

@@ -5,11 +5,21 @@ function togglaMobilFilter() {
     gtmPushKlick({ event: 'klick', typ: 'mobil_filter_toggle' });
     const filterSektion = document.getElementById('filter-sektion');
     const knapp = document.getElementById('mobil-filter-toggle');
+    const filterGrid = document.getElementById('filter-grid');
+    const avanceradeFilterKnapp = document.getElementById('avancerade-filter-toggle');
 
     if (!filterSektion || !knapp) return;
 
     filterSektion.classList.toggle('filter-hidden-mobile');
     const arDold = filterSektion.classList.contains('filter-hidden-mobile');
+
+    // On mobile, opening "Visa filter" should also reveal the advanced filter content.
+    if (!arDold && window.matchMedia('(max-width: 768px)').matches && filterGrid) {
+        filterGrid.classList.add('avf-synlig');
+        filterGrid.classList.remove('avf-dold');
+        if (avanceradeFilterKnapp) avanceradeFilterKnapp.setAttribute('aria-expanded', 'true');
+    }
+
     const textNode = Array.from(knapp.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
     if (textNode) textNode.textContent = arDold ? '🔍 Visa filter' : '🔍 Dölj filter';
     uppdateraFilterStegCount();

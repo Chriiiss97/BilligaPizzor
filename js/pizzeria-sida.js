@@ -9,10 +9,12 @@ function kategoriseraPizzeriaItem(pizza) {
     const LASAGNE_ORD = ['lasagne', 'lasagna'];
     const PASTA_ORD   = ['pasta', 'spaghetti', 'tagliatelle', 'penne', 'linguine', 'fettuccine', 'rigatoni', 'carbonara', 'bolognese'];
     const SALLAD_ORD  = ['sallad', 'salad'];
+    const KEBAB_RULLE_TALLRIK_ORD = ['kebabrulle', 'rulle', 'tallrik', 'gyrosrulle', 'falafelrulle'];
 
     if (SALLAD_ORD.some((o) => namn.includes(o)))  return 'sallader';
     if (LASAGNE_ORD.some((o) => namn.includes(o))) return 'lasagne';
     if (PASTA_ORD.some((o) => namn.includes(o)))   return 'pasta';
+    if (KEBAB_RULLE_TALLRIK_ORD.some((o) => namn.includes(o))) return 'kebab';
 
     // Ingredient/name-based category checks
     if (matcharKategori(pizza, 'Amerikanska pannpizzor')) return 'amerikanska';
@@ -49,15 +51,26 @@ const PIZZERIA_KAT_EMOJI = {
     pasta:       '🍝',
     sallader:    '🥗',
     dryck:       '🥤',
+    lask:        '🥤',
+    ol:          '🍺',
+    vin:         '🍷',
+    drinkar:     '🥃',
+    varmadrycker:'☕',
     snacks:      '🍟',
     saser:       '🧄',
     tillbehor:   '🍽️',
     dessert:     '🍰',
 };
 
-const PIZZERIA_EXTRA_KOMPAKTA = new Set(['dryck', 'snacks', 'saser', 'tillbehor', 'dessert']);
+const PIZZERIA_DRYCK_KAT = new Set(['dryck', 'lask', 'ol', 'vin', 'drinkar', 'varmadrycker']);
+const PIZZERIA_EXTRA_KOMPAKTA = new Set(['dryck', 'lask', 'ol', 'vin', 'drinkar', 'varmadrycker', 'snacks', 'saser', 'tillbehor', 'dessert']);
 const PIZZERIA_ICKE_PIZZA_KAT = new Set([
     'dryck',
+    'lask',
+    'ol',
+    'vin',
+    'drinkar',
+    'varmadrycker',
     'snacks',
     'saser',
     'tillbehor',
@@ -83,11 +96,69 @@ if (typeof window.hittarOrdet !== 'function') {
 function normaliseraExtraKategoriId(kategori) {
     const k = normaliseraText(kategori || '');
     if (!k) return 'tillbehor';
-    if (k === 'dryck' || k.includes('dryck')) return 'dryck';
+
+    const arLaskKategori = ['lask', 'lasker', 'soda', 'soft drink', 'stillavatten', 'stilla vatten']
+        .some((term) => k === term || k.includes(term));
+    if (arLaskKategori) return 'lask';
+
+    const arOlKategori = ['ol', 'olsorter', 'cider', 'beer', 'alkoholfri ol']
+        .some((term) => k === term || k.includes(term));
+    if (arOlKategori) return 'ol';
+
+    const arVinKategori = ['vin', 'rodvin', 'vitt vin', 'rosevin', 'prosecco']
+        .some((term) => k === term || k.includes(term));
+    if (arVinKategori) return 'vin';
+
+    const arDrinkKategori = ['drinkar', 'drink', 'shots', 'shot', 'cocktail']
+        .some((term) => k === term || k.includes(term));
+    if (arDrinkKategori) return 'drinkar';
+
+    const arVarmaKategori = ['varma drycker', 'varm dryck', 'kaffe', 'te', 'espresso', 'latte', 'cappuccino']
+        .some((term) => k === term || k.includes(term));
+    if (arVarmaKategori) return 'varmadrycker';
+
+    if (k === 'dryck' || k.includes('dryck')) return 'lask';
     if (k === 'snacks' || k.includes('snack')) return 'snacks';
     if (k === 'saser' || k === 'sos' || k.includes('sas')) return 'saser';
     if (k === 'dessert' || k.includes('efterratt')) return 'dessert';
     return 'tillbehor';
+}
+
+function normaliseraExtraKategoriIdFranNamn(namn, fallbackKategoriId) {
+    const n = normaliseraText(namn || '');
+    if (!n) return fallbackKategoriId;
+
+    const tokens = n.split(/[^a-z0-9]+/).filter(Boolean);
+    const harToken = (term) => tokens.includes(term);
+    const harNagonToken = (termer) => termer.some(harToken);
+    const harNagonFras = (fraser) => fraser.some((fras) => n.includes(fras));
+
+    if (harNagonToken(['gin', 'tonic', 'vodka', 'redbull', 'rum', 'limoncello', 'sambuca', 'grappa', 'jagermeister', 'whisky', 'whiskey', 'shot', 'shots'])) {
+        return 'drinkar';
+    }
+
+    if (harNagonToken(['peroni', 'birra', 'moretti', 'cider', 'somersby', 'ol']) || harNagonFras(['alkoholfri ol'])) {
+        return 'ol';
+    }
+
+    if (harNagonToken(['vin', 'rose', 'prosecco']) || harNagonFras(['rod vin', 'rott vin', 'vitt vin'])) {
+        return 'vin';
+    }
+
+    if (harNagonToken(['kaffe', 'te', 'espresso', 'latte', 'cappuccino']) || harNagonFras(['varm choklad'])) {
+        return 'varmadrycker';
+    }
+
+    if (harNagonToken(['fanta', 'exotic', 'bonaqua', 'vatten', 'lask', 'sprite', 'pepsi', 'zingo', 'trocadero', 'dricka']) || harNagonFras(['coca cola', 'cola zero', 'mer apelsin', 'stilla vatten'])) {
+        return 'lask';
+    }
+
+    return fallbackKategoriId;
+}
+
+function normaliseraExtraKategoriIdMedNamn(kategori, namn) {
+    const grund = normaliseraExtraKategoriId(kategori);
+    return normaliseraExtraKategoriIdFranNamn(namn, grund);
 }
 
 function normaliseraLegacyPizzeriaSlug(slug) {
@@ -111,7 +182,7 @@ function normaliseraExtraPoster(extraLista, soktNamnNormaliserat) {
                 pris: Number(row?.pris) || 0,
                 ingredienser: beskrivning ? [beskrivning] : [],
                 beskrivning,
-                _bpKategoriId: normaliseraExtraKategoriId(row?.kategori),
+                _bpKategoriId: normaliseraExtraKategoriIdMedNamn(row?.kategori, row?.namn),
             };
         })
         .filter((row) => row.pizza_namn);
@@ -271,10 +342,12 @@ function initPizzeriaSida() {
                             });
                         });
 
-                        // Sort by DAGORDNING
-                        const sorterade = DAGORDNING
-                            .map((d) => dagMap.get(d))
-                            .filter(Boolean);
+                        // Sort by DAGORDNING and include missing days as closed.
+                        const sorterade = DAGORDNING.map((d) => {
+                            const befintlig = dagMap.get(d);
+                            if (befintlig) return befintlig;
+                            return { dag: DAGVISNING[d], tid: 'Stängt' };
+                        });
 
                         function hamtaDagensNyckel() {
                             const jsDag = new Date().getDay(); // 0=söndag
@@ -293,6 +366,8 @@ function initPizzeriaSida() {
                             const h = Number(m[1]);
                             const min = Number(m[2]);
                             if (!Number.isFinite(h) || !Number.isFinite(min)) return null;
+                            if (h === 24 && min === 0) return 1440;
+                            if (h < 0 || h > 23 || min < 0 || min > 59) return null;
                             return h * 60 + min;
                         }
 
@@ -665,6 +740,11 @@ function initPizzeriaSida() {
                         pasta:       'pasta',
                         sallader:    'sallader',
                         dryck:       'dryck',
+                        lask:        'läsk',
+                        ol:          'öl',
+                        vin:         'vin',
+                        drinkar:     'drinkar/shots',
+                        varmadrycker:'varma drycker',
                         snacks:      'snacks',
                         saser:       'såser',
                         tillbehor:   'tillbehör',
@@ -766,7 +846,11 @@ function initPizzeriaSida() {
             ];
 
             const EXTRA_SEKTION_DEF = [
-                { id: 'dryck',     titel: 'Dryck',     emoji: '🥤' },
+                { id: 'lask',      titel: 'Läsk',           emoji: '🥤' },
+                { id: 'ol',        titel: 'Öl',             emoji: '🍺' },
+                { id: 'vin',       titel: 'Vin',            emoji: '🍷' },
+                { id: 'drinkar',   titel: 'Drinkar/Shots',  emoji: '🥃' },
+                { id: 'varmadrycker', titel: 'Varma drycker', emoji: '☕' },
                 { id: 'snacks',    titel: 'Snacks',    emoji: '🍟' },
                 { id: 'saser',     titel: 'Såser',     emoji: '🧄' },
                 { id: 'tillbehor', titel: 'Tillbehör', emoji: '🍽️' },
@@ -879,7 +963,7 @@ function initPizzeriaSida() {
                 const kortBeskrivning = escapaHtml(String(pizza.beskrivning || '').trim());
                 const emoji = PIZZERIA_KAT_EMOJI[kat] || '🍕';
                 const sekundarText = arKompakt
-                    ? ((kat === 'dryck' || kat === 'dessert') ? '' : (kortBeskrivning || ingredienser))
+                    ? ((PIZZERIA_DRYCK_KAT.has(kat) || kat === 'dessert') ? '' : (kortBeskrivning || ingredienser))
                     : ingredienser;
                 rad.innerHTML = `
                     <div class="pizzeria-item-bild pizzeria-item-bild--${kat}" aria-hidden="true">${emoji}</div>

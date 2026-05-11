@@ -84,6 +84,39 @@ function initIndexSida() {
         });
     }
 
+    const kategoriStripInner = document.querySelector('#kategori-strip .kategori-strip-inner');
+    if (kategoriStripInner) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchMoved = false;
+        const tapMoveThreshold = 10;
+
+        kategoriStripInner.addEventListener('touchstart', (event) => {
+            if (!event.touches || event.touches.length !== 1) return;
+            touchMoved = false;
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        }, { passive: true });
+
+        kategoriStripInner.addEventListener('touchmove', (event) => {
+            if (!event.touches || event.touches.length !== 1) return;
+            const dx = Math.abs(event.touches[0].clientX - touchStartX);
+            const dy = Math.abs(event.touches[0].clientY - touchStartY);
+            if (dx > tapMoveThreshold || dy > tapMoveThreshold) {
+                touchMoved = true;
+            }
+        }, { passive: true });
+
+        // Reliable mobile tap handling for category chips inside a horizontal scroller.
+        kategoriStripInner.addEventListener('touchend', (event) => {
+            if (window.innerWidth >= 768 || touchMoved) return;
+            const chip = event.target.closest('.kategori-chip');
+            if (!chip) return;
+            event.preventDefault();
+            valjKategori(chip);
+        }, { passive: false });
+    }
+
     const sokruta = document.getElementById('sokruta');
     const antalTraffar = document.getElementById('antal-traffar-container');
     const prisSortering = document.getElementById('pris-sortering');
