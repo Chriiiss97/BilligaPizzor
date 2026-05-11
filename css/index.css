@@ -2227,23 +2227,23 @@ hr {
     padding: 14px 18px;
     font-size: 0.95rem;
     font-weight: 700;
-    border: 1.5px solid rgba(31, 122, 76, 0.6);
-    background: linear-gradient(135deg, rgba(31, 122, 76, 0.15) 0%, rgba(31, 122, 76, 0.08) 100%);
-    color: #fff;
+    border: 1px solid rgba(120, 255, 143, 0.20);
+    background: rgba(16, 24, 32, 0.92);
+    color: #f5f7fa;
     border-radius: 12px;
     cursor: pointer;
     align-items: center;
     justify-content: center;
     gap: 12px;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(31, 122, 76, 0.15);
+    box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.06), 0 4px 20px rgba(0, 0, 0, 0.50), 0 0 22px rgba(120, 255, 143, 0.08);
     letter-spacing: 0.3px;
   }
 
   .mobil-las-mer-btn:active {
-    background: linear-gradient(135deg, rgba(31, 122, 76, 0.25) 0%, rgba(31, 122, 76, 0.15) 100%);
-    border-color: #1f7a4c;
-    box-shadow: 0 2px 6px rgba(31, 122, 76, 0.2);
+    background: rgba(16, 24, 32, 0.98);
+    border-color: rgba(120, 255, 143, 0.45);
+    box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.18), 0 8px 28px rgba(0, 0, 0, 0.55), 0 0 32px rgba(120, 255, 143, 0.25);
     transform: scale(0.98);
   }
 
@@ -3791,10 +3791,9 @@ body.index-kort-lage .pizza-kort {
   }
 
   #resultat-lista .pizza-kort {
-    padding: 6px 7px;
+    padding: 24px 22px 20px 22px;
     border: 1px solid rgba(126, 244, 163, 0.14);
     border-radius: 16px;
-    border-bottom: 1px solid rgba(126, 244, 163, 0.14);
     background:
       radial-gradient(circle at 0% 50%, rgba(45, 161, 100, 0.1), transparent 56%),
       linear-gradient(180deg, rgba(18, 23, 21, 0.94) 0%, rgba(11, 14, 13, 0.97) 100%);
@@ -3804,6 +3803,60 @@ body.index-kort-lage .pizza-kort {
       inset 0 1px 0 rgba(255, 255, 255, 0.03),
       0 0 14px rgba(46, 170, 103, 0.05);
     backdrop-filter: blur(12px);
+  }
+
+  #resultat-lista .pizza-kort h3 {
+    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+    line-height: 1.14;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  #resultat-lista .pizza-beskrivning {
+    font-size: clamp(1rem, 1.7vw, 1.28rem);
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
+  }
+
+  #resultat-lista .pizza-pizzeria {
+    font-size: clamp(1.08rem, 1.95vw, 1.8rem);
+  }
+
+  #resultat-lista .pris-badge {
+    font-size: clamp(1.25rem, 1.85vw, 1.7rem);
+    padding: 10px 16px;
+    border-color: rgba(120, 255, 143, 0.35);
+    box-shadow: none;
+  }
+
+  #resultat-lista .pris-badge--billig {
+    border-color: rgba(120, 255, 143, 0.5);
+    box-shadow: 0 0 12px rgba(120, 255, 143, 0.25);
+  }
+
+  #resultat-lista .pizza-telefon-link {
+    width: 58px;
+    height: 58px;
+    margin-top: 10px;
+    border: 2px solid rgba(120, 255, 143, 0.55);
+    background: rgba(16, 24, 32, 0.85);
+    box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.08), 0 0 22px rgba(120, 255, 143, 0.20);
+  }
+
+  #resultat-lista .pizza-telefon-ikon {
+    font-size: 1.4rem;
+  }
+
+  #resultat-lista .pizza-store-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  #resultat-lista .pizza-divider {
+    display: block;
   }
 
   #resultat-lista .pizza-rad {
@@ -3816,100 +3869,6 @@ body.index-kort-lage .pizza-kort {
   #resultat-lista .pizza-body {
     flex: 1 1 0;
     min-width: 0;
-  }
-
-  #resultat-lista .pizza-top-row {
-    gap: 6px;
-  }
-
-  #resultat-lista .pizza-tags {
-    margin-top: 2px;
-    gap: 3px;
-    width: 100%;
-  }
-
-  #resultat-lista .ingrediens-chip {
-    font-size: 0.58rem;
-    padding: 1px 5px;
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(225, 232, 238, 0.76);
-  }
-
-  #resultat-lista .pizza-divider {
-    display: none;
-  }
-
-  #resultat-lista .pizza-bottom-row {
-    margin-top: 4px;
-    gap: 6px;
-  }
-
-  #resultat-lista .pizza-pizzeria-row {
-    gap: 6px;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    min-width: 0;
-    flex: 1;
-  }
-
-  #resultat-lista .pizza-store-icon {
-    width: 20px;
-    height: 20px;
-    flex: 0 0 20px;
-    border-radius: 999px;
-    font-size: 0.6rem;
-    background: rgba(10, 18, 14, 0.9);
-    border-color: rgba(109, 255, 123, 0.18);
-    box-shadow: inset 0 0 0 1px rgba(126, 244, 163, 0.03), 0 0 14px rgba(56, 184, 108, 0.08);
-  }
-
-  #resultat-lista .pizza-pizzeria {
-    font-size: 0.69rem;
-    line-height: 1.1;
-    flex: 0 1 auto;
-    min-width: 0;
-  }
-
-  #resultat-lista .pizza-pizzeria-link {
-    color: rgba(126, 244, 163, 0.92);
-  }
-
-  #resultat-lista .pizza-verified-dot {
-    width: 5px;
-    height: 5px;
-    box-shadow: 0 0 0 2px rgba(109, 255, 123, 0.12), 0 0 10px rgba(109, 255, 123, 0.14);
-  }
-
-  #resultat-lista .pris-badge {
-    font-size: 0.78rem;
-    padding: 4px 8px;
-    border-radius: 999px;
-    border-color: rgba(255, 94, 110, 0.34);
-    box-shadow: 0 0 14px rgba(255, 72, 92, 0.1);
-    line-height: 1.2;
-    flex-shrink: 0;
-  }
-
-  #resultat-lista .pizza-telefon-link {
-    width: 34px;
-    height: 34px;
-    margin-top: 0;
-    flex-shrink: 0;
-    border-color: rgba(126, 244, 163, 0.26);
-    background: radial-gradient(circle at 30% 30%, rgba(126, 244, 163, 0.18), rgba(38, 116, 73, 0.16) 68%, rgba(16, 40, 26, 0.38));
-    box-shadow: 0 0 0 1px rgba(126, 244, 163, 0.04), 0 0 16px rgba(59, 188, 105, 0.12);
-  }
-
-  #resultat-lista .pizza-telefon-ikon {
-    font-size: 0.9rem;
-  }
-
-  #resultat-lista .avstand-badge {
-    margin-top: 3px;
-    font-size: 0.68rem;
-    text-align: left;
-    width: 100%;
   }
 
   #pizzerior-lista .pizza-kort {
@@ -3960,37 +3919,6 @@ body.index-kort-lage .pizza-kort {
 }
 
 @media (max-width: 480px) {
-  #resultat-lista .pizza-kort h3 {
-    font-size: 0.96rem;
-  }
-
-  #resultat-lista .pizza-beskrivning {
-    font-size: 0.7rem;
-  }
-
-  #resultat-lista .pizza-pizzeria {
-    font-size: 0.68rem;
-  }
-
-  #resultat-lista .ingrediens-chip {
-    font-size: 0.58rem;
-    padding: 2px 5px;
-  }
-
-  #resultat-lista .pris-badge {
-    font-size: 0.72rem;
-    padding: 3px 7px;
-  }
-
-  #resultat-lista .pizza-telefon-link {
-    width: 31px;
-    height: 31px;
-  }
-
-  #resultat-lista .pizza-telefon-ikon {
-    font-size: 0.82rem;
-  }
-
   #pizzerior-lista .pizza-kort h3 {
     font-size: 1.78rem;
   }
@@ -5862,6 +5790,116 @@ img {
 
   .bottom-nav-link {
     font-size: 0.78rem;
+  }
+}
+
+/* Lock card layout on mobile so index cards keep desktop structure */
+@media (max-width: 768px) {
+  #resultat-lista .pizza-kort {
+    padding: 20px 18px 16px !important;
+    min-height: 186px;
+    background: rgba(16, 24, 32, 0.92) !important;
+    border: 1px solid rgba(120, 255, 143, 0.20) !important;
+    box-shadow:
+      0 0 0 1px rgba(120, 255, 143, 0.06),
+      0 4px 20px rgba(0, 0, 0, 0.50),
+      0 0 22px rgba(120, 255, 143, 0.08) !important;
+  }
+
+  #resultat-lista .pizza-rad {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  #resultat-lista .pizza-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  #resultat-lista .pizza-hoger {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    align-self: stretch;
+    gap: 12px;
+  }
+
+  #resultat-lista .pizza-kort h3 {
+    margin: 0 0 8px 0 !important;
+    font-size: clamp(2rem, 7vw, 3rem) !important;
+    line-height: 1.08 !important;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #f5f7fa !important;
+  }
+
+  #resultat-lista .pizza-beskrivning {
+    margin: 0 0 12px 0 !important;
+    font-size: clamp(1.2rem, 4.2vw, 1.75rem) !important;
+    line-height: 1.25 !important;
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
+    color: rgba(184, 192, 204, 0.9) !important;
+  }
+
+  #resultat-lista .pizza-divider {
+    display: block !important;
+    margin: 10px 0 !important;
+  }
+
+  #resultat-lista .pizza-pizzeria-row {
+    margin-top: auto;
+    gap: 10px;
+  }
+
+  #resultat-lista .pizza-store-icon {
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+    border-radius: 10px !important;
+    font-size: 1rem !important;
+  }
+
+  #resultat-lista .pizza-pizzeria {
+    font-size: clamp(1.08rem, 3.9vw, 1.4rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  #resultat-lista .pizza-pizzeria-link {
+    color: rgba(120, 255, 143, 0.95) !important;
+  }
+
+  #resultat-lista .pris-badge {
+    padding: 6px 12px !important;
+    font-size: clamp(1rem, 3.6vw, 1.35rem) !important;
+    line-height: 1 !important;
+    background: rgba(16, 24, 32, 0.92) !important;
+    color: rgb(120, 255, 143) !important;
+    border: 1px solid rgba(120, 255, 143, 0.35) !important;
+    box-shadow: none !important;
+  }
+
+  #resultat-lista .pris-badge--billig {
+    border-color: rgba(120, 255, 143, 0.5) !important;
+    box-shadow: 0 0 12px rgba(120, 255, 143, 0.25) !important;
+  }
+
+  #resultat-lista .pizza-telefon-link {
+    width: 56px !important;
+    height: 56px !important;
+    margin-top: 0 !important;
+    border: 2px solid rgba(120, 255, 143, 0.55) !important;
+    background: rgba(16, 24, 32, 0.85) !important;
+    color: rgb(120, 255, 143) !important;
+    box-shadow: 0 0 0 1px rgba(120, 255, 143, 0.08), 0 0 22px rgba(120, 255, 143, 0.20) !important;
+  }
+
+  #resultat-lista .pizza-telefon-ikon {
+    font-size: 1.35rem !important;
   }
 }
 
