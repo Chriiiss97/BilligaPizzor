@@ -2145,31 +2145,6 @@ function togglaOmOss() {
     }
 }
 
-function togglaAvanceradeFilter() {
-    const filterGrid = document.getElementById('filter-grid');
-    const knapp = document.getElementById('avancerade-filter-toggle');
-    if (!filterGrid || !knapp) return;
-
-    const arOppen = filterGrid.classList.contains('avf-synlig');
-    if (arOppen) {
-        filterGrid.classList.remove('avf-synlig');
-        filterGrid.classList.add('avf-dold');
-        knapp.setAttribute('aria-expanded', 'false');
-    } else {
-        filterGrid.classList.add('avf-synlig');
-        filterGrid.classList.remove('avf-dold');
-        knapp.setAttribute('aria-expanded', 'true');
-    }
-}
-
-function uppdateraAvfCount() {
-    const badge = document.getElementById('avf-count');
-    if (!badge) return;
-    const omradeCount = document.querySelectorAll('#omrade-lista input:checked').length;
-    const total = omradeCount + (window.valdaPizzerior ? valdaPizzerior.length : 0) + (window.valdaIngredienser ? valdaIngredienser.length : 0);
-    badge.textContent = total > 0 ? String(total) : '';
-}
-
 function togglaLasMer() {
     const textContent = document.getElementById('hero-text-content');
     const btn = document.getElementById('las-mer-btn');
@@ -2186,104 +2161,6 @@ function toglaLasMer() {
     togglaLasMer();
 }
 
-// Öppna/stäng dropdowns
-function togglaPizzeriaMeny(e) {
-    if (e) e.stopPropagation(); 
-    document.getElementById("pizzeria-lista").classList.toggle("visa");
-}
-
-function togglaOmradeMeny(e) {
-    if (e) e.stopPropagation();
-    document.getElementById("omrade-lista").classList.toggle("visa");
-}
-
-function togglaIngrediensMeny(e) {
-    if (e) e.stopPropagation(); 
-    const meny = document.getElementById("dropdown-lista");
-    if (!meny) return;
-    meny.classList.toggle("visa");
-    if (meny.classList.contains('visa')) {
-        const sokInput = document.getElementById('ingrediens-sok-input');
-        if (sokInput) {
-            setTimeout(() => sokInput.focus(), 0);
-        }
-    }
-}
-
-function renderValdaIngrediensChips() {
-    const container = document.getElementById('valda-ingredienser-chips');
-    if (!container) return;
-
-    container.innerHTML = '';
-    valdaIngredienser.forEach((ingrediens) => {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'vald-ingrediens-chip';
-        chip.setAttribute('aria-label', 'Ta bort ingrediens ' + ingrediens);
-        chip.innerHTML = '<span>' + ingrediens + '</span><span class="vald-ingrediens-chip-x">✕</span>';
-        chip.onclick = (e) => {
-            e.stopPropagation();
-            const cb = Array.from(document.querySelectorAll('#dropdown-lista input')).find((c) => c.value === ingrediens);
-            if (cb) {
-                cb.checked = false;
-                togglaIngrediens(ingrediens, cb);
-            }
-        };
-        container.appendChild(chip);
-    });
-}
-
-function konfigureraMobilVisaFler(listElement, synligaAntal) {
-    if (!listElement) return;
-
-    listElement.classList.add('mob-limit');
-    const labels = Array.from(listElement.querySelectorAll('.dropdown-item'));
-    labels.forEach((label, index) => {
-        label.classList.toggle('mob-extra', index >= synligaAntal);
-    });
-
-    const befintligKnapp = listElement.querySelector('.chip-visa-fler');
-    if (befintligKnapp) befintligKnapp.remove();
-
-    if (labels.length <= synligaAntal) return;
-
-    const visaFlerKnapp = document.createElement('button');
-    visaFlerKnapp.type = 'button';
-    visaFlerKnapp.className = 'chip-visa-fler';
-    visaFlerKnapp.innerText = 'Visa fler';
-    visaFlerKnapp.onclick = (e) => {
-        e.stopPropagation();
-        listElement.classList.toggle('show-all');
-        const expanded = listElement.classList.contains('show-all');
-        visaFlerKnapp.innerText = expanded ? 'Visa färre' : 'Visa fler';
-
-        if (!expanded) {
-            requestAnimationFrame(() => {
-                scrollaTillFilterStart(listElement.closest('.filter-grupp') || listElement);
-            });
-        }
-
-        // Samma hint-logik för område, pizzerior och ingredienser.
-        if (['omrade-lista', 'pizzeria-lista', 'dropdown-lista'].includes(listElement.id)) {
-            mobilScrollHintEfterVisaFler = expanded;
-            uppdateraMobilScrollHint();
-        }
-    };
-    listElement.appendChild(visaFlerKnapp);
-}
-
-function scrollaTillFilterStart(element) {
-    if (!element) return;
-
-    const navbar = document.querySelector('.navbar');
-    const navbarOffset = window.matchMedia('(max-width: 768px)').matches
-        ? 12
-        : (navbar?.offsetHeight || 0) + 16;
-
-    const topPosition = element.getBoundingClientRect().top + window.scrollY - navbarOffset;
-    window.scrollTo({ top: Math.max(0, topPosition), behavior: 'smooth' });
-}
-
 window.onclick = function(event) {
     if (!event.target.closest('.dropdown-container') && !event.target.closest('.hamburger-ikon') && !event.target.closest('.nav-links')) {
         const dropdowns = document.getElementsByClassName("dropdown-innehall");
@@ -2297,27 +2174,12 @@ window.onclick = function(event) {
 
 // --- FILTER LOGIK ---
 function uppdateraFilterStegCount() {
-    const omradeCount = document.querySelectorAll('#omrade-lista input:checked').length;
-    const pizzeriaCount = valdaPizzerior.length;
-    const ingrediensCount = valdaIngredienser.length;
-
-    const omradeEl = document.getElementById('omrade-steg-count');
-    const pizzeriaEl = document.getElementById('pizzeria-steg-count');
-    const ingrediensEl = document.getElementById('ingrediens-steg-count');
-
-    if (omradeEl) omradeEl.textContent = omradeCount > 0 ? String(omradeCount) : '';
-    if (pizzeriaEl) pizzeriaEl.textContent = pizzeriaCount > 0 ? String(pizzeriaCount) : '';
-    if (ingrediensEl) ingrediensEl.textContent = ingrediensCount > 0 ? String(ingrediensCount) : '';
-
-    // Update mobile toggle button count
+    // Toggle button count
     const toggleCount = document.getElementById('filter-toggle-count');
     if (toggleCount) {
-        const total = omradeCount + pizzeriaCount + ingrediensCount;
+        const total = valdaPizzerior.length + valdaIngredienser.length;
         toggleCount.textContent = total > 0 ? String(total) : '';
     }
-
-    // Update avancerade filter badge
-    uppdateraAvfCount();
 }
 
 function skapaFilterKnappar() {
@@ -2420,59 +2282,7 @@ function skapaFilterKnappar() {
     renderValdaIngrediensChips();
 }
 
-function togglaPizzeria(namn, checkbox) {
-    if (checkbox.checked) {
-        if (!valdaPizzerior.includes(namn)) valdaPizzerior.push(namn);
-    } else {
-        valdaPizzerior = valdaPizzerior.filter(v => v !== namn);
-    }
-    const menyKnapp = document.getElementById('pizzeria-meny-knapp');
-    menyKnapp.innerText = valdaPizzerior.length > 0 ? `Pizzerior (${valdaPizzerior.length}) ▼` : `Välj pizzerior... ▼`;
-    uppdateraFilterStegCount();
-    pizzorSomVisas = 100;
-    uppdateraVisning();
-}
 
-function togglaIngrediens(ingr, checkbox) {
-    if (checkbox.checked) {
-        if (!valdaIngredienser.includes(ingr)) valdaIngredienser.push(ingr);
-    } else {
-        valdaIngredienser = valdaIngredienser.filter(v => v !== ingr);
-    }
-    const menyKnapp = document.getElementById('ingrediens-meny-knapp');
-    menyKnapp.innerText = valdaIngredienser.length > 0 ? `Ingredienser (${valdaIngredienser.length}) ▼` : `Välj ingredienser... ▼`;
-    renderValdaIngrediensChips();
-    uppdateraFilterStegCount();
-    gtmPushKlick({ event: 'klick', typ: 'ingrediens', namn: ingr }); // GTM tracking
-    pizzorSomVisas = 100;
-    uppdateraVisning();
-}
-
-function valjOmrade(omrade, checkboxElement) {
-    gtmPushKlick({ event: 'klick', typ: 'omrade', namn: omrade }); // GTM tracking
-    const pizzeriorIOmrade = [...new Set(allaPizzor.filter(p => p.omrade === omrade).map(p => p.pizzeria))];
-
-    if (checkboxElement.checked) {
-        pizzeriorIOmrade.forEach(p => { if (!valdaPizzerior.includes(p)) valdaPizzerior.push(p); });
-    } else {
-        const andraValdaOmraden = [...document.querySelectorAll('#omrade-lista input:checked')].map(cb => cb.value);
-        pizzeriorIOmrade.forEach(p => {
-            const tillhorAnnatValtOmrade = allaPizzor.some(pizza => pizza.pizzeria === p && andraValdaOmraden.includes(pizza.omrade));
-            if (!tillhorAnnatValtOmrade) valdaPizzerior = valdaPizzerior.filter(v => v !== p);
-        });
-    }
-
-    document.querySelectorAll('#pizzeria-lista input').forEach(cb => { cb.checked = valdaPizzerior.includes(cb.value); });
-    const omradeMenyKnapp = document.getElementById('omrade-meny-knapp');
-    const valdaOmraden = [...document.querySelectorAll('#omrade-lista input:checked')];
-    omradeMenyKnapp.innerText = valdaOmraden.length > 0 ? `Områden (${valdaOmraden.length}) ▼` : `Välj område... ▼`;
-    const menyKnapp = document.getElementById('pizzeria-meny-knapp');
-    menyKnapp.innerText = valdaPizzerior.length > 0 ? `Pizzerior (${valdaPizzerior.length}) ▼` : `Välj pizzerior... ▼`;
-    uppdateraFilterStegCount();
-    pizzorSomVisas = 100;
-    uppdateraVisning();
-}
-// Filter/sök rendering är flyttad till js/filter-core.js och mobil-UI till js/filter-mobile.js.
 
 function registrerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;

@@ -71,13 +71,11 @@ function uppdateraVisning() {
     const sokStrang = document.getElementById('sokruta').value.toLowerCase();
     const soktaOrd = sokStrang.split(',').map(ord => ord.trim()).filter(ord => ord !== '');
     const soktaOrdText = soktaOrd.filter((ord) => !arVegetariskSokterm(ord));
-    const valdaOmraden = [...document.querySelectorAll('#omrade-lista input:checked')].map(cb => cb.value);
 
     let resultat = allaPizzor;
     const vegetarLageAktivt = soktaOrd.some((ord) => arVegetariskSokterm(ord));
 
     if (valdaPizzerior.length > 0) resultat = resultat.filter(p => valdaPizzerior.includes(p.pizzeria));
-    if (valdaOmraden.length > 0) resultat = resultat.filter(p => valdaOmraden.includes(p.omrade));
 
     resultat = filtreraEfterKategori(resultat, aktivaKategorier);
 
@@ -87,9 +85,8 @@ function uppdateraVisning() {
 
     resultat = resultat.filter(pizza => {
         const pizzaText = byggPizzaSokText(pizza);
-        const matcharDropdown = valdaIngredienser.every(vald => hittarOrdet(pizzaText, vald));
         const matcharSokruta = soktaOrdText.every((sokt) => matcharSoktermForPizza(pizza, sokt, pizzaText));
-        return matcharDropdown && matcharSokruta;
+        return matcharSokruta;
     });
 
     if (window.liveInsightsState?.oppetSentAktiv && typeof window.pizzeriaHarOppetSent === 'function') {
