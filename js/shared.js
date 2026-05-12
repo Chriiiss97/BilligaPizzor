@@ -201,6 +201,13 @@ function byggPizzaSokText(pizza) {
     return normaliseraText(`${pizza.pizzeria || ''} ${pizza.pizza_namn || ''} ${ingrediensText} ${kategoriText} ${pizza.omrade || ''} ${pizza.stad || ''}`);
 }
 
+function byggKategoriSokText(pizza) {
+    const ingrediensText = Array.isArray(pizza?.ingredienser) ? pizza.ingredienser.join(' ') : '';
+    const kategoriText = `${pizza?.kategori || ''} ${pizza?._bpKategoriId || ''}`;
+    // Intentionally exclude pizzeria name/location so category matching only uses the dish itself.
+    return normaliseraText(`${pizza?.pizza_namn || ''} ${ingrediensText} ${kategoriText}`);
+}
+
 function normaliseraText(text) {
     return String(text || '')
         .toLowerCase()
@@ -319,7 +326,7 @@ function matcharKategori(item, kategori) {
 
     switch (kategori) {
         case 'Vegetariska':
-            return arVegetariskText(byggPizzaSokText(item));
+            return arVegetariskText(byggKategoriSokText(item));
 
         case 'Inbakade':
             return normNamn.includes('inbakad');
@@ -445,7 +452,7 @@ const CATEGORY_MAP = {
     kebab: {
         label: 'Kebab',
         emoji: '🥙',
-        match: ['kebab', 'tallrik', 'gyros', 'shawarma', 'falafel']
+        match: ['kebab', 'tallrik', 'gyros', 'shawarma']
     },
     rulle: {
         label: 'Rullar',
@@ -475,7 +482,7 @@ const CATEGORY_MAP = {
     vegetar: {
         label: 'Vegetariskt',
         emoji: '🥬',
-        match: ['vegetar', 'vegansk', 'vego', 'halloumi', 'gronsaker', 'mozzarella']
+        match: ['vegetar', 'vegansk', 'vego', 'halloumi', 'gronsaker', 'mozzarella', 'falafel']
     },
     special: {
         label: 'Special',
@@ -504,7 +511,7 @@ function arSpecial(pizzaText) {
 }
 
 function hamtaPrimarKategoriForPizza(pizza) {
-    const pizzaText = byggPizzaSokText(pizza);
+    const pizzaText = byggKategoriSokText(pizza);
 
     // Inbakad always wins first.
     if (arInbakadPizzaText(pizzaText)) return 'inbakad';

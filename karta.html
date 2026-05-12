@@ -1291,8 +1291,57 @@
             (tidKvarText ? '<p class="karta-popup-tid-kvar">' + tidKvarText + '</p>' : '');
           var oppetBadge = '<span class="karta-popup-oppet karta-popup-oppet--' + oppetKlass + '" style="margin-left:8px;font-size:0.78em;vertical-align:middle">' + (oppetStatus === true ? '● Öppet' : oppetStatus === false ? '● Stängt' : '') + '</span>';
           oppetTiderHtml = '<div class="karta-popup-oppettider"><p class="karta-popup-oppettider-rubrik">🕐 ÖPPETTIDER' + oppetBadge + '</p><ul class="karta-popup-oppettider-lista">';
-          Object.keys(obj.oppettider).forEach(function (dag) {
-            oppetTiderHtml += '<li><span class="karta-popup-oppettider-dag">' + dag + '</span><span class="karta-popup-oppettider-tid">' + obj.oppettider[dag] + '</span></li>';
+          var dayOrder = ['måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'];
+          var dayAliases = {
+            'mån': 'måndag', 'man': 'måndag', 'måndag': 'måndag',
+            'tis': 'tisdag', 'tisdag': 'tisdag',
+            'ons': 'onsdag', 'onsdag': 'onsdag',
+            'tor': 'torsdag', 'tors': 'torsdag', 'torsdag': 'torsdag',
+            'fre': 'fredag', 'fredag': 'fredag',
+            'lör': 'lördag', 'lor': 'lördag', 'lördag': 'lördag',
+            'sön': 'söndag', 'son': 'söndag', 'söndag': 'söndag'
+          };
+          var dayLabels = {
+            'måndag': 'Måndag', 'tisdag': 'Tisdag', 'onsdag': 'Onsdag', 'torsdag': 'Torsdag',
+            'fredag': 'Fredag', 'lördag': 'Lördag', 'söndag': 'Söndag'
+          };
+          function normalizeDay(value) {
+            return String(value || '').toLowerCase().trim().replace(/[^a-zåäö]/g, '');
+          }
+          function expandDays(key, time) {
+            var parts = String(key || '').split(/[-–—]/).map(function(item) {
+              return normalizeDay(item);
+            }).filter(function(p) { return p; });
+            if (parts.length === 2) {
+              var start = dayAliases[parts[0]];
+              var end = dayAliases[parts[1]];
+              var startIndex = dayOrder.indexOf(start);
+              var endIndex = dayOrder.indexOf(end);
+              if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+                return dayOrder.slice(startIndex, endIndex + 1).map(function(day) {
+                  return { day: day, label: dayLabels[day], time: time };
+                });
+              }
+            }
+            var singleDay = dayAliases[normalizeDay(key)];
+            return singleDay ? [{ day: singleDay, label: dayLabels[singleDay], time: time }] : [];
+          }
+          var todayIndex = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+          var todayName = dayOrder[todayIndex];
+          var expanded = {};
+          Object.keys(obj.oppettider).forEach(function(key) {
+            var entries = expandDays(key, String(obj.oppettider[key] || '').trim());
+            entries.forEach(function(entry) {
+              expanded[entry.day] = entry;
+            });
+          });
+          dayOrder.forEach(function(day) {
+            var entry = expanded[day] || { day: day, label: dayLabels[day], time: 'Stängt' };
+            var liClass = '';
+            if (day === todayName) {
+              liClass = oppetStatus === true ? ' class="is-oppet"' : (oppetStatus === false ? ' class="is-stangt"' : '');
+            }
+            oppetTiderHtml += '<li' + liClass + '><span class="karta-popup-oppettider-dag">' + entry.label + '</span><span class="karta-popup-oppettider-tid">' + entry.time + '</span></li>';
           });
           oppetTiderHtml += '</ul></div>';
         }

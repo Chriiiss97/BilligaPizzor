@@ -606,6 +606,32 @@
   font-weight: 600;
   color: #f0f0f0;
 }
+.karta-popup-oppettider-lista li.is-oppet {
+  background-color: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 2px 0;
+}
+.karta-popup-oppettider-lista li.is-oppet .karta-popup-oppettider-dag {
+  color: #4caf50;
+}
+.karta-popup-oppettider-lista li.is-oppet .karta-popup-oppettider-tid {
+  color: #4caf50;
+}
+.karta-popup-oppettider-lista li.is-stangt {
+  background-color: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 2px 0;
+}
+.karta-popup-oppettider-lista li.is-stangt .karta-popup-oppettider-dag {
+  color: #f44336;
+}
+.karta-popup-oppettider-lista li.is-stangt .karta-popup-oppettider-tid {
+  color: #f44336;
+}
 
 /* Menyöversikt (sida 3) */
 .karta-popup-stats-lista {

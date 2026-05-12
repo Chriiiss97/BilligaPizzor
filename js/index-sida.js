@@ -117,7 +117,6 @@ function byggPizzeriaPosterFranPizzor(pizzor) {
         let post = map.get(nyckel);
         if (!post) {
             const oppettider = pizza?.oppettider || hamtaOppettimerForPizzeria(pizza?.pizzeria) || null;
-            const oppetText = hamtaOppetText(oppettider);
             post = {
                 nyckel,
                 pizzeria: pizza?.pizzeria || 'Okand pizzeria',
@@ -130,7 +129,7 @@ function byggPizzeriaPosterFranPizzor(pizzor) {
                 snittPris: null,
                 oppettider,
                 menyStats: liveMenyStatsMapCache.get(normaliseraText(pizza?.pizzeria || '')) || null,
-                arOppet: Boolean(oppetText) && oppetText !== 'Stangt',
+                arOppet: arOppetNu(oppettider) === true,
                 _prisSum: 0,
                 _prisCount: 0,
                 _prisMin: Infinity
