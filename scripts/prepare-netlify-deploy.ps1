@@ -3,6 +3,12 @@ $ErrorActionPreference = "Stop"
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $outDir = Join-Path $projectRoot "netlify-dist"
 
+Write-Host "Syncing pizzeria pages and sitemap from Supabase..."
+& node (Join-Path $projectRoot "scripts\sync-pizzeria-pages.js")
+if ($LASTEXITCODE -ne 0) {
+    throw "Pizzeria sync failed."
+}
+
 if (Test-Path $outDir) {
     Remove-Item $outDir -Recurse -Force
 }
